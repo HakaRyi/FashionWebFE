@@ -1,15 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Dashboard.module.scss';
-import { FaUsers, FaUserTie, FaNewspaper, FaShirt } from 'react-icons/fa6';
+import { FaUsers, FaUserTie, FaNewspaper, FaShirt, FaCoins, FaCrown } from 'react-icons/fa6';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 function Dashboard() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     // State cho Chart
-    const [activeTab, setActiveTab] = useState('users'); // users, experts, posts, items
-    const [timeRange, setTimeRange] = useState('week'); // week, month, custom
+    const [activeTab, setActiveTab] = useState('users');
+    const [timeRange, setTimeRange] = useState('week');
     const [chartData, setChartData] = useState([]);
+
+    const [revenueMonth, setRevenueMonth] = useState('2026-02');
+
+    const [coinPackages] = useState([
+        { id: 1, name: 'Gói Cơ Bản', price: '50k', sales: 120, total: 200, color: '#3b82f6' },
+        { id: 2, name: 'Gói Nâng Cao', price: '200k', sales: 85, total: 200, color: '#10b981' },
+        { id: 3, name: 'Gói VIP', price: '500k', sales: 45, total: 200, color: '#f59e0b' },
+        { id: 4, name: 'Gói Kim Cương', price: '1tr', sales: 20, total: 200, color: '#8b5cf6' },
+    ]);
+
+    const [transactions] = useState([
+        { id: 101, user: 'Nguyễn Văn A', pkgId: 3, date: '02/02/2026', amount: '500.000đ' },
+        { id: 102, user: 'Trần Thị B', pkgId: 1, date: '02/02/2026', amount: '50.000đ' },
+        { id: 103, user: 'Phạm Minh C', pkgId: 2, date: '01/02/2026', amount: '200.000đ' },
+        { id: 104, user: 'Lê Hoàng D', pkgId: 1, date: '01/02/2026', amount: '50.000đ' },
+        { id: 105, user: 'Hoàng Thùy E', pkgId: 4, date: '31/01/2026', amount: '1.000.000đ' },
+    ]);
+
+    const getPackageInfo = (id) => {
+        return coinPackages.find((p) => p.id === id) || coinPackages[0];
+    };
 
     const [stats] = useState([
         {
@@ -108,6 +129,18 @@ function Dashboard() {
     const getCurrentColor = () => {
         const stat = stats.find((s) => s.type === activeTab);
         return stat ? stat.color : '#4f46e5';
+    };
+
+    const calculateTotalRevenue = () => {
+        return transactions.reduce((total, trans) => {
+            // 1. Xóa dấu chấm và chữ 'đ' để lấy số nguyên (VD: "500.000đ" -> 500000)
+            const numericValue = parseInt(trans.amount.replace(/\./g, '').replace('đ', ''));
+            return total + numericValue;
+        }, 0);
+    };
+
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
     };
 
     return (
@@ -233,6 +266,109 @@ function Dashboard() {
                             />
                         </AreaChart>
                     </ResponsiveContainer>
+                </div>
+            </div>
+
+            <div className={styles.coinSection}>
+                {/* 1. Ô TRÁI: THỐNG KÊ GÓI BÁN CHẠY */}
+                <div className={styles.panel}>
+                    <div className={styles.panelHeader}>
+                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <FaCrown style={{ color: '#f59e0b' }} /> Top Gói Coin
+                        </h3>
+                    </div>
+                    <div className={styles.packageList}>
+                        {coinPackages.map((pkg) => (
+                            <div key={pkg.id} className={styles.packageItem}>
+                                <div className={styles.packageInfo}>
+                                    <span style={{ color: pkg.color, fontWeight: 'bold' }}>{pkg.name}</span>
+                                    <span style={{ color: 'var(--text-muted)' }}>{pkg.sales} lượt mua</span>
+                                </div>
+                                {/* Thanh Progress Bar */}
+                                <div className={styles.progressBarBg}>
+                                    <div
+                                        className={styles.progressBarFill}
+                                        style={{
+                                            width: `${(pkg.sales / 150) * 100}%`, // Giả sử max là 150 để tính %
+                                            backgroundColor: pkg.color,
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 2. Ô PHẢI: DOANH THU THEO THÁNG (RỘNG HƠN) */}
+                <div className={styles.panel}>
+                    <div className={styles.panelHeader}>
+                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <FaCoins style={{ color: '#3b82f6' }} /> Doanh Thu Bán Coin
+                        </h3>
+                        {/* Input chọn tháng năm */}
+                        <input
+                            type="month"
+                            className={styles.dateInput}
+                            value={revenueMonth}
+                            onChange={(e) => setRevenueMonth(e.target.value)}
+                        />
+                    </div>
+
+                    <div className={styles.tableWrapper}>
+                        <table className={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th>Khách hàng</th>
+                                    <th>Gói đã mua</th>
+                                    <th>Ngày mua</th>
+                                    <th style={{ textAlign: 'right' }}>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {transactions.map((trans) => {
+                                    const pkg = getPackageInfo(trans.pkgId);
+                                    return (
+                                        <tr key={trans.id}>
+                                            <td style={{ fontWeight: 500 }}>{trans.user}</td>
+                                            <td>
+                                                <span
+                                                    className={styles.packageBadge}
+                                                    style={{ backgroundColor: pkg.color }}
+                                                >
+                                                    {pkg.name}
+                                                </span>
+                                            </td>
+                                            <td style={{ color: 'var(--text-muted)' }}>{trans.date}</td>
+                                            <td style={{ textAlign: 'right', fontWeight: 'bold' }}>{trans.amount}</td>
+                                        </tr>
+                                    );
+                                })}
+                                {/* Giả lập thêm dữ liệu để test scroll */}
+                                {transactions.map((trans) => {
+                                    const pkg = getPackageInfo(trans.pkgId);
+                                    return (
+                                        <tr key={`clone-${trans.id}`}>
+                                            <td style={{ fontWeight: 500 }}>{trans.user} (Clone)</td>
+                                            <td>
+                                                <span
+                                                    className={styles.packageBadge}
+                                                    style={{ backgroundColor: pkg.color }}
+                                                >
+                                                    {pkg.name}
+                                                </span>
+                                            </td>
+                                            <td style={{ color: 'var(--text-muted)' }}>{trans.date}</td>
+                                            <td style={{ textAlign: 'right', fontWeight: 'bold' }}>{trans.amount}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className={styles.panelFooter}>
+                        <span className={styles.footerLabel}>Tổng doanh thu tháng:</span>
+                        <span className={styles.footerValue}>{formatCurrency(calculateTotalRevenue())}</span>
+                    </div>
                 </div>
             </div>
 
