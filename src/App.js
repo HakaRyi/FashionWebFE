@@ -1,13 +1,12 @@
-import './App.css';
 import { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
 
 function App() {
-  return (
-    <Router>
+    return (
+        <Router>
             <div className="App">
-                 <Routes>
+                <Routes>
                     {publicRoutes.map((route, index) => {
                         let Layout = Fragment;
                         if (route.layout) {
@@ -39,7 +38,7 @@ function App() {
                 </Routes>
             </div>
         </Router>
-  );
+    );
 }
 
 export default App;
