@@ -1,0 +1,179 @@
+.wrapper {
+    padding: 24px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    h2 { font-size: 1.6rem; color: #0f172a; margin: 0; }
+    p { color: #64748b; margin-top: 5px; }
+}
+
+.filterBar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.searchBox {
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    width: 350px;
+    input {
+        border: none;
+        padding: 10px;
+        outline: none;
+        width: 100%;
+    }
+}
+
+.btnSync {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    &:hover { background: #f8fafc; }
+}
+
+.tableContainer {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    th {
+        background: #f8fafc;
+        padding: 15px 20px;
+        text-align: left;
+        color: #475569;
+        font-size: 0.9rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+    td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+}
+
+.expertInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    .avatar {
+        width: 40px; height: 40px;
+        background: #6366f1; color: white;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold;
+    }
+    .name { font-weight: 600; color: #1e293b; }
+    .email { font-size: 0.8rem; color: #64748b; }
+}
+
+.specialtyBadge {
+    background: #eff6ff;
+    color: #3b82f6;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.btnVerify {
+    background: #f1f5f9;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #475569;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.2s;
+    &:hover { background: #e2e8f0; color: #1e293b; }
+}
+
+.status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    &.verified { color: #10b981; }
+    &.pending { color: #f59e0b; }
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    button {
+        background: none; border: none; cursor: pointer; color: #94a3b8;
+        &:hover.edit { color: #3b82f6; }
+        &:hover.delete { color: #ef4444; }
+    }
+}
+
+/* Modal Styling */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: white;
+    width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.modalHeader {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    background: #f8fafc;
+    h3 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+    button { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+}
+
+.modalBody {
+    padding: 20px;
+    img { width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; }
+}
+
+.certMeta {
+    margin-top: 15px;
+    p { margin: 5px 0; font-size: 0.9rem; color: #475569; }
+}
+
+.modalFooter {
+    padding: 15px 20px;
+    display: flex;
+    gap: 10px;
+    background: #f8fafc;
+    .btnApprove {
+        background: #10b981; color: white; border: none; flex: 1;
+        padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btnReject {
+        background: #fee2e2; color: #ef4444; border: none;
+        padding: 10px 20px; border-radius: 6px; cursor: pointer;
+    }
+}

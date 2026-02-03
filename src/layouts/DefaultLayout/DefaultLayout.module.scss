@@ -5,7 +5,7 @@
 
 .sidebar {
     width: 260px;
-    background-color: var(--sidebar-bg);
+    background-color: rgb(40, 5, 18);
     color: white;
     display: flex;
     flex-direction: column;
@@ -29,7 +29,7 @@
 }
 
 .brand span {
-    color: var(--secondary-color);
+    color: rgb(255, 0, 140);
 }
 
 .navMenu {
@@ -49,6 +49,7 @@
     gap: 12px;
     color: #c7c7cc;
     transition: var(--transition);
+    text-decoration: none;
 }
 
 .navItem:hover,
