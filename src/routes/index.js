@@ -1,11 +1,11 @@
-import Dashboard from '~/pages/Dashboard';
-import DefaultLayout from '~/layouts/DefaultLayout';
-import UserManagement from '~/pages/User/index';
-import ExpertManagement from '~/pages/Expert/index';
-import PostManagement from '~/pages/Post/index';
-import ProductManagement from '~/pages/Product/index';
-import TransactionManagement from '~/pages/Transaction/index';
-import ReportManagement from '~/pages/Report/index';
+import Dashboard from '../pages/Dashboard';
+import DefaultLayout from '../layouts/DefaultLayout';
+import UserManagement from '../pages/User';
+import ExpertManagement from '../pages/Expert';
+import PostManagement from '../pages/Post';
+import ProductManagement from '../pages/Product';
+import TransactionManagement from '../pages/Transaction';
+import ReportManagement from '../pages/Report';
 
 const publicRoutes = [
     {

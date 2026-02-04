@@ -1,6 +1,6 @@
 import React, { useState,useMemo } from 'react';
 import styles from './Post.module.scss';
-import PostDetailModal from '~/components/Modal/PostDetailModal/index.js';
+import PostDetailModal from '../../components/Modal/PostDetailModal/index.jsx';
 import { 
     FaSearch, FaPlus, FaRegCalendarAlt, FaEdit, 
     FaTrashAlt, FaEye, FaFilter, FaCheckCircle, FaClock,FaCheck
