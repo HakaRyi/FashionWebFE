@@ -1,3 +1,4 @@
+// src/routes/index.js
 import Dashboard from '../pages/Dashboard';
 import DefaultLayout from '../layouts/DefaultLayout';
 import UserManagement from '../pages/User';
