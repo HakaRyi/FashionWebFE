@@ -1,0 +1,79 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa; // Màu nền xám nhẹ tinh tế
+    font-family: 'Playfair Display', serif; // Hoặc font bạn đang dùng
+    padding: 20px;
+    text-align: center;
+}
+
+.content {
+    max-width: 500px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.iconWrapper {
+    color: #1a1a1a;
+    margin-bottom: 30px;
+    opacity: 0.8;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.message {
+    font-family: 'Inter', sans-serif;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    font-size: 1rem;
+}
+
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #1a1a1a;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+
+    &:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.footer {
+    position: absolute;
+    bottom: 30px;
+    font-size: 0.7rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

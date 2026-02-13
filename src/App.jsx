@@ -1,44 +1,59 @@
-// src/App.jsx
 import { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { publicRoutes } from './routes/index';
+import { guestRoutes, privateRoutes } from './routes/index';
 import GlobalStyle from './components/GlobalStyle/GlobalStyle';
+import PublicRoute from './routes/PublicRoute';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
+    const renderRoutes = (routes, isPrivate = false) => {
+        return routes.map((route, index) => {
+            const Page = route.component;
+
+            let Layout = Fragment;
+            if (route.layout) {
+                Layout = route.layout;
+            }
+
+            return (
+                <Route
+                    key={index}
+                    path={route.path}
+                    element={
+                        isPrivate ? (
+                            <ProtectedRoute allowedRoles={route.roles}>
+                                <Layout>
+                                    <Page />
+                                </Layout>
+                            </ProtectedRoute>
+                        ) : (
+                            <Layout>
+                                <Page />
+                            </Layout>
+                        )
+                    }
+                >
+                    {route.children?.map((child, i) => {
+                        const ChildPage = child.component;
+                        return <Route key={i} path={child.path} element={<ChildPage />} />;
+                    })}
+                </Route>
+            );
+        });
+    };
+
     return (
         <Router>
-            {/* Thêm GlobalStyle bao bọc ở đây */}
             <GlobalStyle>
                 <div className="App">
                     <Routes>
-                        {publicRoutes.map((route, index) => {
-                            let Layout = Fragment;
-                            if (route.layout) {
-                                Layout = route.layout;
-                            }
+                        <Route element={<PublicRoute />}>
+                            {renderRoutes(guestRoutes)}
+                        </Route>
 
-                            const Page = route.component;
-                            const DefaultComponent = route.children?.[0]?.component;
+                        {renderRoutes(privateRoutes, true)}
 
-                            return (
-                                <Route
-                                    path={route.path}
-                                    element={
-                                        <Layout>
-                                            <Page />
-                                        </Layout>
-                                    }
-                                    key={index}
-                                >
-                                    {DefaultComponent && <Route index element={<DefaultComponent />} />}
-
-                                    {route.children?.map((child, i) => {
-                                        const ChildPage = child.component;
-                                        return <Route path={child.path} element={<ChildPage />} key={i} />;
-                                    })}
-                                </Route>
-                            );
-                        })}
+                        <Route path="*" element={<div style={{ padding: '20px' }}>404 - Not Found</div>} />
                     </Routes>
                 </div>
             </GlobalStyle>

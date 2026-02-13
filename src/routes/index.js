@@ -1,4 +1,3 @@
-// src/routes/index.js
 import Dashboard from '../pages/Dashboard';
 import DefaultLayout from '../layouts/DefaultLayout';
 import UserManagement from '../pages/User';
@@ -7,51 +6,76 @@ import PostManagement from '../pages/Post';
 import ProductManagement from '../pages/Product';
 import TransactionManagement from '../pages/Transaction';
 import ReportManagement from '../pages/Report';
+import AuthPage from '../pages/Authentication';
+import Unauthorized from '../pages/Unauthorized';
 
-const publicRoutes = [
+const guestRoutes = [
+    {
+        path: '/login',
+        component: AuthPage,
+        layout: null,
+    }
+];
+
+const privateRoutes = [
+    {
+        path: '/unauthorized',
+        component: Unauthorized,
+        layout: null,
+    },
     {
         path: '/',
         component: Dashboard,
         layout: DefaultLayout,
+        roles: ['admin'],
     },
     {
-        path: '/dashboard', // Thêm đường dẫn tường minh cho Dashboard
+        path: '/dashboard',
         component: Dashboard,
         layout: DefaultLayout,
+        roles: ['admin'],
     },
     {
-        path: '/users', // Đường dẫn cho trang Quản lý User
+        path: '/users',
         component: UserManagement,
         layout: DefaultLayout,
+        roles: ['admin'],
     },
     {
-        path: '/experts', // Đường dẫn cho trang Quản lý Expert
+        path: '/experts',
         component: ExpertManagement,
         layout: DefaultLayout,
+        roles: ['admin'],
     },
     {
-        path: '/posts', // Đường dẫn cho trang Quản lý Bài viết
+        path: '/posts',
         component: PostManagement,
         layout: DefaultLayout,
+        roles: ['admin'],
     },
     {
-        path: '/products', // Đường dẫn cho trang Quản lý Sản phẩm
+        path: '/products',
         component: ProductManagement,
         layout: DefaultLayout,
+        roles: ['admin'],
     },
     {
-        path: '/transactions', // Đường dẫn cho trang Quản lý Giao dịch
+        path: '/transactions',
         component: TransactionManagement,
         layout: DefaultLayout,
+        roles: ['admin'],
     },
     {
-        path: '/reports', // Đường dẫn cho trang Báo cáo
+        path: '/reports',
         component: ReportManagement,
         layout: DefaultLayout,
+        roles: ['admin'],
+    },
+    {
+        path: '/unauthorized',
+        component: Unauthorized,
+        layout: null,
     }
-    
 ];
 
-const privateRoutes = [];
-
-export { publicRoutes, privateRoutes };
+export { guestRoutes, privateRoutes };
