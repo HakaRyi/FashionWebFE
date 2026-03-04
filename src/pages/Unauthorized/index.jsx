@@ -7,7 +7,6 @@ const Unauthorized = () => {
     const navigate = useNavigate();
 
     const handleGoBack = () => {
-        // Quay lại trang trước đó hoặc về dashboard nếu không có lịch sử
         if (window.history.length > 2) {
             navigate(-1);
         } else {

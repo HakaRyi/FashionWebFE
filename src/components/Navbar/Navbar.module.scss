@@ -1,0 +1,194 @@
+// VARIABLES
+$primary-black: #0a0a0a;
+$accent-pink: #ff008c;
+$bg-light: rgba(255, 255, 255, 0.8);
+$border-color: rgba(0, 0, 0, 0.06);
+$transition-main: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+
+.navbar {
+    position: fixed;
+    top: 0; width: 100%; z-index: 1000;
+    padding: 24px 0;
+    background: transparent;
+    transition: $transition-main;
+
+    &.scrolled, &.authMode {
+        padding: 12px 0;
+        background: $bg-light;
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid $border-color;
+    }
+}
+
+.navContainer {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+// LOGO
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    span { color: $accent-pink; font-weight: 300; }
+}
+
+// CENTRAL ISLAND (THE "XỊN" PART)
+.centralIsland {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 6px;
+    border-radius: 14px;
+    gap: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+
+    .navItem {
+        width: 42px; height: 42px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 10px;
+        color: #666;
+        position: relative;
+        transition: $transition-main;
+
+        &.active {
+            background: #fff;
+            color: $primary-black;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            
+            .indicator {
+                position: absolute; bottom: 6px;
+                width: 4px; height: 4px;
+                background: $accent-pink;
+                border-radius: 50%;
+            }
+        }
+        &:hover:not(.active) { color: $accent-pink; background: rgba(255,255,255,0.5); }
+    }
+
+    .searchBox {
+        position: relative;
+        input {
+            width: 160px;
+            padding: 10px 12px 10px 36px;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            transition: $transition-main;
+            &:focus {
+                width: 240px;
+                background: #fff;
+                border-radius: 10px;
+                outline: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            }
+        }
+        .searchIcon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #999; }
+    }
+
+    .createButton {
+        display: flex; align-items: center; gap: 8px;
+        background: $primary-black;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: none;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: $transition-main;
+
+        &:hover {
+            background: $accent-pink;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 140, 0.3);
+        }
+    }
+}
+
+// RIGHT SECTION
+.userControls {
+    display: flex; align-items: center; gap: 20px;
+
+    .iconButton {
+        background: none; border: none; color: #444;
+        cursor: pointer; transition: 0.3s;
+        &:hover { color: $accent-pink; }
+    }
+
+    .notifBadge {
+        position: relative;
+        .pulseDot {
+            position: absolute; top: 2px; right: 2px;
+            width: 8px; height: 8px;
+            background: $accent-pink;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            &::after {
+                content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+                border-radius: 50%; border: 1px solid $accent-pink;
+                animation: pulse 2s infinite;
+            }
+        }
+    }
+}
+
+.profileArea {
+    position: relative;
+    .profileTrigger {
+        display: flex; align-items: center; gap: 8px;
+        background: none; border: none; cursor: pointer;
+        
+        .avatarFrame {
+            width: 36px; height: 36px;
+            border-radius: 50%; overflow: hidden;
+            border: 2px solid transparent;
+            transition: 0.3s;
+            img { width: 100%; height: 100%; object-fit: cover; }
+        }
+        &:hover .avatarFrame { border-color: $accent-pink; }
+    }
+}
+
+// DROPDOWN
+.dropdown {
+    position: absolute; top: 50px; right: 0;
+    width: 240px; background: #fff;
+    border-radius: 16px;
+    border: 1px solid $border-color;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    padding: 12px;
+
+    .dropdownHeader {
+        padding: 8px 12px;
+        .userName { font-weight: 700; margin: 0; font-size: 0.95rem; }
+        .userHandle { font-size: 0.75rem; color: #999; margin: 0; }
+    }
+
+    .dropdownDivider { height: 1px; background: $border-color; margin: 8px 0; }
+
+    .dropdownItem {
+        width: 100%; display: flex; align-items: center; gap: 12px;
+        padding: 10px 12px; border: none; background: none;
+        border-radius: 10px; color: #444; cursor: pointer;
+        transition: 0.2s;
+        span { font-size: 0.85rem; font-weight: 500; }
+        &:hover { background: #f5f5f5; color: $accent-pink; }
+        &.logout:hover { background: #fff1f1; color: #ff4d4d; }
+    }
+}
+
+// ANIMATIONS
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.6; }
+    70% { transform: scale(2.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
+}

@@ -1,0 +1,44 @@
+$gold: #c5a059;
+$black: #111;
+
+.votingRules {
+  margin-top: 10px;
+  .ruleRow {
+    margin-bottom: 15px;
+    .ruleLabel {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
+      span { color: #666; }
+      strong {
+        color: $black;
+        font-weight: 700;
+      }
+    }
+    input[type='range'] {
+      width: 100%;
+      accent-color: $gold;
+      height: 4px;
+      cursor: pointer;
+    }
+    .subBar {
+      width: 100%;
+      height: 4px;
+      background: #eee;
+      border-radius: 2px;
+      div {
+        height: 100%;
+        background: #ccc;
+        border-radius: 2px;
+        transition: 0.3s;
+      }
+    }
+  }
+  .ruleHint {
+    font-size: 11px;
+    color: #aaa;
+    font-style: italic;
+    margin: 0;
+  }
+}

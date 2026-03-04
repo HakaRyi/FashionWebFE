@@ -1,61 +1,69 @@
 import { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { guestRoutes, privateRoutes } from './routes/index';
+import { routes } from './routes/index';
 import GlobalStyle from './components/GlobalStyle/GlobalStyle';
 import PublicRoute from './routes/PublicRoute';
 import ProtectedRoute from './routes/ProtectedRoute';
+import HomeLayout from './layouts/HomeLayout';
+import Home from './pages/Home/index';
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
-    const renderRoutes = (routes, isPrivate = false) => {
-        return routes.map((route, index) => {
-            const Page = route.component;
 
-            let Layout = Fragment;
-            if (route.layout) {
-                Layout = route.layout;
-            }
+    const renderRoute = (route, index) => {
+        const Page = route.component;
+        const Layout = route.layout || Fragment;
 
+        const element = (
+            <Layout>
+                <Page />
+            </Layout>
+        );
+
+        if (route.isAuthRoute) {
+            return (
+                <Route
+                    key={index}
+                    element={<PublicRoute />}
+                >
+                    <Route path={route.path} element={element} />
+                </Route>
+            );
+        }
+
+        if (route.roles) {
             return (
                 <Route
                     key={index}
                     path={route.path}
                     element={
-                        isPrivate ? (
-                            <ProtectedRoute allowedRoles={route.roles}>
-                                <Layout>
-                                    <Page />
-                                </Layout>
-                            </ProtectedRoute>
-                        ) : (
-                            <Layout>
-                                <Page />
-                            </Layout>
-                        )
+                        <ProtectedRoute roles={route.roles}>
+                            {element}
+                        </ProtectedRoute>
                     }
-                >
-                    {route.children?.map((child, i) => {
-                        const ChildPage = child.component;
-                        return <Route key={i} path={child.path} element={<ChildPage />} />;
-                    })}
-                </Route>
+                />
             );
-        });
+        }
+
+        return (
+            <Route
+                key={index}
+                path={route.path}
+                element={element}
+            />
+        );
     };
 
     return (
         <Router>
             <GlobalStyle>
-                <div className="App">
-                    <Routes>
-                        <Route element={<PublicRoute />}>
-                            {renderRoutes(guestRoutes)}
-                        </Route>
+                <Routes>
 
-                        {renderRoutes(privateRoutes, true)}
+                    {routes.map(renderRoute)}
 
-                        <Route path="*" element={<div style={{ padding: '20px' }}>404 - Not Found</div>} />
-                    </Routes>
-                </div>
+                    <Route path="*" element={<div>404 - Not Found</div>} />
+
+                </Routes>
             </GlobalStyle>
         </Router>
     );

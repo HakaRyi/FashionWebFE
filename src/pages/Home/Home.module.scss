@@ -1,0 +1,188 @@
+// Variables
+$black: #0a0a0a;
+$white: #ffffff;
+$gray: #f5f5f7;
+$accent: #1a1a1a;
+
+.homeContainer {
+  background: $white;
+  color: $black;
+  font-family: 'Inter', sans-serif;
+}
+
+// Hero Section Nâng cấp
+.hero {
+  min-height: 100vh;
+  padding: 0 8%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+
+  .heroGrid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 80px;
+    width: 100%;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: $black;
+  color: $white;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+  
+  .dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; }
+}
+
+.mainTitle {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  line-height: 0.85;
+  font-weight: 700;
+  letter-spacing: -3px;
+
+  .italic { font-style: italic; font-weight: 400; }
+  .outline { -webkit-text-stroke: 1px $black; color: transparent; }
+}
+
+.heroSub {
+  max-width: 500px;
+  margin: 30px 0;
+  color: #555;
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.heroActions {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+
+  .primaryBtn {
+    background: $black;
+    color: $white;
+    padding: 22px 40px;
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    &:hover { letter-spacing: 1px; }
+  }
+
+  .videoBtn {
+    background: none; border: none; font-weight: 700; font-size: 0.8rem;
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    .playCircle {
+      width: 44px; height: 44px; border: 1px solid #ddd;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+  }
+}
+
+.imageCard {
+  position: relative;
+  img { width: 100%; height: 650px; object-fit: cover; border-radius: 8px; box-shadow: 40px 40px 80px rgba(0,0,0,0.1); }
+  
+  .floatingTag {
+    position: absolute;
+    top: 40px; right: -30px;
+    background: $white;
+    padding: 20px 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+}
+
+// Service Cards Nâng cấp
+.serviceSection {
+  padding: 150px 8%;
+  background: $black;
+  color: $white;
+
+  .sectionHeader {
+    margin-bottom: 80px;
+    .preTitle { color: #555; letter-spacing: 4px; font-size: 0.8rem; font-weight: 700; }
+    h2 { font-family: 'Playfair Display'; font-size: 3rem; margin-top: 10px; }
+  }
+
+  .serviceGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px; // Tạo đường line giữa các card
+    background: #222;
+
+    .serviceCard {
+      background: $black;
+      padding: 60px 40px;
+      position: relative;
+      transition: 0.5s;
+      cursor: pointer;
+
+      .cardNumber { font-family: 'Playfair Display'; font-size: 4rem; opacity: 0.1; position: absolute; top: 20px; right: 20px; }
+      .iconBox { font-size: 2.5rem; margin-bottom: 30px; }
+      h3 { font-size: 1.5rem; margin-bottom: 20px; }
+      p { color: #888; line-height: 1.6; font-size: 0.95rem; }
+      
+      .arrowBox { margin-top: 30px; opacity: 0; transform: translateX(-10px); transition: 0.3s; }
+
+      &:hover {
+        background: #111;
+        .arrowBox { opacity: 1; transform: translateX(0); }
+      }
+    }
+  }
+}
+
+// Bento Style
+.bentoSection {
+  padding: 120px 8%;
+  .bentoHeader {
+    display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px;
+    h2 { font-family: 'Playfair Display'; font-size: 2.5rem; }
+    .viewAll { background: none; border: none; border-bottom: 1px solid #000; font-weight: 700; cursor: pointer; }
+  }
+
+  .bentoGrid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+    height: 700px;
+
+    .bentoMain {
+      position: relative; border-radius: 12px; overflow: hidden;
+      img { width: 100%; height: 100%; object-fit: cover; }
+      .overlay {
+        position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        display: flex; flex-direction: column; justify-content: flex-end; padding: 50px; color: #fff;
+      }
+    }
+
+    .bentoSide {
+      display: grid; grid-template-rows: 1fr 1fr; gap: 30px;
+      .sideTop img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+      .sideBottom .darkCard {
+        background: $black; color: #fff; height: 100%; border-radius: 12px;
+        padding: 40px; display: flex; flex-direction: column; justify-content: space-between;
+        h4 { font-size: 1.5rem; line-height: 1.4; }
+      }
+    }
+  }
+}

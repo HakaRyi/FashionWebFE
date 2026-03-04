@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import styles from './Authentication.module.scss';
 import { Eye, EyeOff } from 'lucide-react';
 import authService from '../../services/authService';
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { PATHS } from "../../routes/paths";
 
 const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -9,6 +13,8 @@ const AuthPage = () => {
     const [isShaking, setIsShaking] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -65,29 +71,38 @@ const AuthPage = () => {
         return newErrors;
     };
 
-    //Submit Form
+    const triggerShake = () => {
+        setIsShaking(true);
+        setTimeout(() => {
+            setIsShaking(false);
+        }, 500);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = validateForm();
 
+        const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
         }
 
         setLoading(true);
+
         try {
             const data = isLogin
                 ? await authService.login(formData.email, formData.password)
                 : await authService.register(formData);
 
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('refreshToken', data.refreshToken);
-            localStorage.setItem('userRole', data.user.role);
+            login(data.accessToken, data.refreshToken);
 
-            redirectUser(data.user.role);
+            navigate(PATHS.USER_FEED, { replace: true });
+
         } catch (error) {
-            const serverMsg = error.response?.data?.message || 'Authentication failed. Please try again.';
+            const serverMsg =
+                error.response?.data?.message ||
+                "Authentication failed. Please try again.";
+
             setErrors({ apiError: serverMsg });
             triggerShake();
         } finally {
@@ -156,7 +171,6 @@ const AuthPage = () => {
                                 autoComplete="current-password"
                             />
 
-                            {/* Nút toggle xuất hiện dựa trên focus và độ dài text */}
                             {(isPasswordFocused || formData.password.length > 0) && (
                                 <button
                                     type="button"
@@ -179,7 +193,7 @@ const AuthPage = () => {
                             {loading ? (
                                 <div className={styles.spinner}></div>
                             ) : isLogin ? (
-                                'Authenticate'
+                                'Log In'
                             ) : (
                                 'Create Account'
                             )}

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: 'https://your-api-domain.com/api',
+  baseURL: 'http://localhost:5196/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -55,7 +55,7 @@ axiosClient.interceptors.response.use(
           const refreshToken = localStorage.getItem('refreshToken');
           
           // Gọi API refresh token (không dùng axiosClient để tránh loop vô tận)
-          const res = await axios.post('https://your-api-domain.com/api/auth/refresh', {
+          const res = await axios.post(`${axiosClient.defaults.baseURL}/auth/refresh`, {
             refreshToken: refreshToken
           });
 
@@ -74,7 +74,7 @@ axiosClient.interceptors.response.use(
           // Nếu refresh cũng lỗi (hết hạn cả refresh token) -> Logout luôn
           processQueue(refreshError, null);
           localStorage.clear();
-          window.location.href = '/login';
+          window.location.reload();
           reject(refreshError);
         } finally {
           isRefreshing = false;

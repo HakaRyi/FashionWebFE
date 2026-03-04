@@ -1,17 +1,18 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom'; // Dùng NavLink để xử lý active state
+import { NavLink } from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
 import { FaChartPie, FaUsers, FaUserTie, FaNewspaper, FaShirt,FaCoins, FaFlag,FaMoneyBill} from 'react-icons/fa6';
+import { PATHS } from '../../routes/paths';
 
 function DefaultLayout({ children }) {
     const menuItems = [
-        { path: '/dashboard', icon: <FaChartPie />, label: 'Dashboard' },
-        { path: '/users', icon: <FaUsers />, label: 'Quản lý Users' },
-        { path: '/experts', icon: <FaUserTie />, label: 'Quản lý Experts' },
-        { path: '/posts', icon: <FaNewspaper />, label: 'Bài viết' },
-        { path: '/products', icon: <FaCoins />, label: 'Coin' },
-        { path: '/reports', icon: <FaFlag />, label: 'Báo cáo vi phạm' },
-        { path: '/transactions', icon: <FaMoneyBill />, label: 'Giao dịch' },    
+        { path: PATHS.DASHBOARD, icon: <FaChartPie />, label: 'Dashboard' },
+        { path: PATHS.USERS, icon: <FaUsers />, label: 'Quản lý Users' },
+        { path: PATHS.EXPERTS, icon: <FaUserTie />, label: 'Quản lý Experts' },
+        { path: PATHS.POSTS, icon: <FaNewspaper />, label: 'Bài viết' },
+        { path: PATHS.PRODUCTS, icon: <FaCoins />, label: 'Coin' },
+        { path: PATHS.REPORTS, icon: <FaFlag />, label: 'Báo cáo vi phạm' },
+        { path: PATHS.TRANSACTIONS, icon: <FaMoneyBill />, label: 'Giao dịch' },    
     ];
 
     return (
