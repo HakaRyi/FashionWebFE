@@ -1,14 +1,17 @@
-// src/main.jsx
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import reportWebVitals from './reportWebVitals';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
-createRoot(document.getElementById('root')).render(
+import App from "./app/index";
+
+import "./shared/styles/index.scss";
+import "react-datepicker/dist/react-datepicker.css";
+
+import reportWebVitals from "./reportWebVitals";
+
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <App />
-  </StrictMode>,
-)
+  </StrictMode>
+);
 
 reportWebVitals(console.log);
