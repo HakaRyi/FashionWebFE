@@ -15,7 +15,7 @@ import {
 import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import styles from './Navbar.module.scss';
 import { PATHS } from '../../routes/paths';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../app/providers/AuthProvider';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -25,6 +25,7 @@ const Navbar = () => {
     const menuRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
+    const isExpert = user?.role === 'expert';
 
     const handleNavigation = (path) => {
         navigate(path);
@@ -145,9 +146,15 @@ const Navbar = () => {
                                             </button>
                                             <button
                                                 className={styles.dropdownItem}
-                                                onClick={() => handleNavigation(PATHS.EXPERT_APPLICATION)}
+                                                onClick={() => {
+                                                    if (isExpert) {
+                                                        handleNavigation(PATHS.EXPERT_EVENTS);
+                                                    } else {
+                                                        handleNavigation(PATHS.EXPERT_APPLICATION);
+                                                    }
+                                                }}
                                             >
-                                                <ShieldCheck size={18} /> <span>Pro Mode</span>
+                                                <ShieldCheck size={18} /> <span>Expert Mode</span>
                                             </button>
                                             <button className={styles.dropdownItem}>
                                                 <HelpCircle size={18} /> <span>Support</span>

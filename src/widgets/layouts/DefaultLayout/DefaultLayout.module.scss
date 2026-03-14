@@ -1,0 +1,106 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background-color: rgb(40, 5, 18);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    transition: var(--transition);
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.brand {
+    font-size: 1.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand span {
+    color: rgb(255, 0, 140);
+}
+
+.navMenu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    height: calc(100% - 60px);
+}
+
+.menuLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+}
+
+.navItem {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #c7c7cc;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.navItem:hover,
+.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(5px);
+}
+
+.content {
+    flex: 1;
+    padding: 2rem;
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    background-color: var(--bg-color);
+}
+
+.logoutWrapper {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.logoutBtn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    background: transparent;
+    border: none;
+    color: #ff4d4f;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 77, 79, 0.1);
+        transform: translateX(5px);
+    }
+
+    .icon {
+        margin-right: 12px;
+        font-size: 1.2rem;
+    }
+}

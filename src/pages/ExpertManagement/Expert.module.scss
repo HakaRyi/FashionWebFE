@@ -1,0 +1,272 @@
+/* Biến số */
+$primary: #6366f1;
+$success: #10b981;
+$warning: #f59e0b;
+$danger: #ef4444;
+$text-main: #1e293b;
+$text-sub: #64748b;
+$bg-light: #f8fafc;
+$border: #e2e8f0;
+$white: #ffffff;
+
+.wrapper {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 1.75rem;
+    color: $text-main;
+    margin: 0;
+  }
+
+  .stats {
+    background: $primary;
+    color: $white;
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Control Panel */
+.controlPanel {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 0 12px;
+  flex: 1;
+  min-width: 300px;
+
+  input {
+    border: none;
+    padding: 12px;
+    width: 100%;
+    outline: none;
+  }
+}
+
+.filterGroup {
+  display: flex;
+  gap: 12px;
+}
+
+.selectWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: $white;
+  border: 1px solid $border;
+  padding: 8px 12px;
+  border-radius: 10px;
+
+  select {
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+  }
+}
+
+/* Table */
+.tableContainer {
+  background: $white;
+  border-radius: 12px;
+  border: 1px solid $border;
+  overflow-x: auto;
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      background: $bg-light;
+      padding: 16px;
+      text-align: left;
+      color: $text-sub;
+      font-size: 0.85rem;
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid $bg-light;
+    }
+  }
+}
+
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background: $primary;
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  .name { font-weight: 600; color: $text-main; }
+  .sub { font-size: 0.8rem; color: $text-sub; }
+}
+
+/* Status Badges */
+.statusBadge {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+.pending { background: #fff7ed; color: #c2410c; }
+.approved { background: #f0fdf4; color: #15803d; }
+.rejected { background: #fef2f2; color: #b91c1c; }
+
+/* Modal Styles - Phần gây lỗi nhiều nhất */
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+.modalContent {
+  background: $white;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid $border;
+
+  h3 { margin: 0; color: $text-main; }
+  
+  .btnClose {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: $text-sub;
+    &:hover { color: $danger; }
+  }
+}
+
+.modalBody {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.infoSection {
+  margin-bottom: 20px;
+  h4 { border-left: 4px solid $primary; padding-left: 10px; margin-bottom: 12px; }
+  p { margin: 8px 0; line-height: 1.5; color: $text-main; }
+  a { color: $primary; text-decoration: none; font-weight: 500; }
+}
+
+.approvalForm {
+  background: $bg-light;
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 20px;
+
+  label { display: block; margin-bottom: 8px; font-weight: 600; }
+
+  textarea {
+    width: 100%;
+    height: 100px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid $border;
+    margin-bottom: 16px;
+    resize: none;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+
+  button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btnReject { background: #fee2e2; color: $danger; }
+  .btnApprove { background: $primary; color: white; }
+}
+
+.actionBtns {
+  display: flex;
+  gap: 8px;
+  
+  .btnView {
+    background: #eef2ff;
+    color: $primary;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .btnQuickApprove {
+    background: #f0fdf4;
+    color: $success;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+}
+
+.btnSync {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid $border;
+  background: white;
+  cursor: pointer;
+  &:hover { color: $primary; border-color: $primary; }
+}

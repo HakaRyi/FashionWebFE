@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { LayoutGrid, ShoppingBag, Users, Zap, ArrowRight, Play, Star, ChevronRight } from 'lucide-react';
 import styles from './Home.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { PATHS } from '../../routes/paths';
+import { PATHS } from '@/app/routes/paths';
 
 const Home = () => {
     const navigate = useNavigate();
