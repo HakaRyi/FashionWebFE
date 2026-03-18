@@ -1,61 +1,66 @@
-import React, { useState,useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styles from './Post.module.scss';
 import PostDetailModal from '@/widgets/Modal/PostDetailModal/index.jsx';
-import { 
-    FaSearch, FaPlus, FaRegCalendarAlt, FaEdit, 
-    FaTrashAlt, FaEye, FaFilter, FaCheckCircle, FaClock,FaCheck
+import axiosClient from '@/shared/lib/axios.js';
+import {
+    FaSearch,
+    FaPlus,
+    FaRegCalendarAlt,
+    FaEdit,
+    FaTrashAlt,
+    FaEye,
+    FaFilter,
+    FaCheckCircle,
+    FaClock,
+    FaCheck,
 } from 'react-icons/fa';
 
-const initialPosts = [
-    { 
-        id: 1, 
-        title: 'Xu hướng thời trang Xuân Hè 2026', 
-        author: 'User', 
-        category: 'Xu hướng', 
-        date: '02/02/2026', 
-        status: 'Published',
-        thumbnail: 'https://thebureaufashionweek.com/wp-content/uploads/sites/11/2021/08/What-to-wear-to-Fashion-Week.jpg'
-    },
-    { 
-        id: 2, 
-        title: 'Cách phối đồ cho người dáng cao', 
-        author: 'Expert_Hoang', 
-        category: 'Tips phối đồ', 
-        date: '01/02/2026', 
-        status: 'Draft',
-        thumbnail: 'https://publish.purewow.net/wp-content/uploads/sites/2/2025/12/2026-fashion-trends-UNIV.jpg?resize=720%2C780'
-    },
-    { 
-        id: 3, 
-        title: 'Top 5 thương hiệu bền vững', 
-        author: 'User', 
-        category: 'Thương hiệu', 
-        date: '30/01/2026', 
-        status: 'Pending',
-        thumbnail: 'https://i1.sndcdn.com/artworks-000337842834-6bghqf-t500x500.jpg'
-    },
-];
 function PostManagement() {
-    const [posts, setPosts] = useState(initialPosts);
+    const [posts, setPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
 
-    // Sắp xếp bài đăng: Pending lên đầu
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await axiosClient.get('/Post');
+                setPosts(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchPosts();
+    }, []);
+
     const sortedPosts = useMemo(() => {
         return [...posts].sort((a, b) => {
-            if (a.status === 'Pending' && b.status !== 'Pending') return -1;
-            if (a.status !== 'Pending' && b.status === 'Pending') return 1;
+            if (a.status === 'PendingAdmin' && b.status !== 'PendingAdmin') return -1;
+            if (a.status !== 'PendingAdmin' && b.status === 'PendingAdmin') return 1;
             return 0;
         });
     }, [posts]);
 
-    const handleApprove = (id) => {
-        setPosts(posts.map(p => p.id === id ? { ...p, status: 'Published' } : p));
-        setSelectedPost(null);
+    const handleApprove = async (id) => {
+        try {
+            await axiosClient.put(`/Post/admin/post-status/${id}`, JSON.stringify('Published'), {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            setPosts(posts.map((p) => (p.postId === id ? { ...p, status: 'Published' } : p)));
+            setSelectedPost(null);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const handleReject = (id) => {
-        setPosts(posts.filter(p => p.id !== id)); // Ví dụ: Xóa nếu bị reject
-        setSelectedPost(null);
+    const handleReject = async (id) => {
+        try {
+            await axiosClient.put(`/admin/post-status/${id}`, JSON.stringify('Rejected'), {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            setPosts(posts.filter((p) => p.postId !== id));
+            setSelectedPost(null);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -65,10 +70,11 @@ function PostManagement() {
                     <h2>Quản Lý Bài Viết</h2>
                     <p>Ưu tiên xử lý các bài viết đang chờ duyệt</p>
                 </div>
-                <button className={styles.btnAdd}><FaPlus /> Viết bài mới</button>
+                <button className={styles.btnAdd}>
+                    <FaPlus /> Viết bài mới
+                </button>
             </div>
 
-            {/* Toolbar giữ nguyên như cũ */}
             <div className={styles.toolbar}>
                 <div className={styles.searchGroup}>
                     <div className={styles.searchBox}>
@@ -90,39 +96,78 @@ function PostManagement() {
                     </thead>
                     <tbody>
                         {sortedPosts.map((post) => (
-                            <tr key={post.id} className={post.status === 'Pending' ? styles.pendingRow : ''}>
+                            <tr key={post.postId} className={post.status === 'PendingAdmin' ? styles.pendingRow : ''}>
                                 <td className={styles.postCell}>
-                                    <img src={post.thumbnail} alt="thumb" className={styles.thumb} />
-                                    <span className={styles.postTitle}>{post.title}</span>
+                                    <div className={styles.imageStack}>
+                                        {post.imageUrls && post.imageUrls.length > 0 ? (
+                                            <>
+                                                <img
+                                                    src={post.imageUrls[0]}
+                                                    alt="thumb 1"
+                                                    className={styles.stackItem}
+                                                    style={{ zIndex: 3 }}
+                                                />
+
+                                                {post.imageUrls.length >= 2 && (
+                                                    <img
+                                                        src={post.imageUrls[1]}
+                                                        alt="thumb 2"
+                                                        className={styles.stackItem}
+                                                        style={{ zIndex: 2 }}
+                                                    />
+                                                )}
+
+                                                {post.imageUrls.length >= 3 && (
+                                                    <div className={styles.moreOverlayWrapper} style={{ zIndex: 1 }}>
+                                                        <img src={post.imageUrls[2]} alt="thumb 3" />
+                                                        <div className={styles.overlay}>
+                                                            +{post.imageUrls.length - 2}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className={styles.noImage}>No image</div>
+                                        )}
+                                    </div>
+
+                                    <div className={styles.postInfo}>
+                                        <span className={styles.postTitle}>{post.title || post.content}</span>
+                                    </div>
                                 </td>
+
                                 <td>
                                     <span className={`${styles.status} ${styles[post.status.toLowerCase()]}`}>
                                         {post.status === 'Published' ? <FaCheckCircle /> : <FaClock />}
                                         {post.status}
                                     </span>
                                 </td>
-                                <td>{post.author}</td>
+
+                                <td>{post.userName}</td>
+
                                 <td>
                                     <div className={styles.actions}>
-                                        <button 
-                                            className={styles.btnView} 
+                                        <button
+                                            className={styles.btnView}
                                             onClick={() => setSelectedPost(post)}
                                             title="Xem chi tiết & Duyệt"
                                         >
                                             <FaEye />
                                         </button>
-                                        
-                                        {post.status === 'Pending' && (
-                                            <button 
+
+                                        {post.status === 'PendingAdmin' && (
+                                            <button
                                                 className={styles.btnQuickApprove}
-                                                onClick={() => handleApprove(post.id)}
+                                                onClick={() => handleApprove(post.postId)}
                                                 title="Duyệt nhanh"
                                             >
                                                 <FaCheck />
                                             </button>
                                         )}
-                                        
-                                        <button className={styles.btnDelete}><FaTrashAlt /></button>
+
+                                        <button className={styles.btnDelete}>
+                                            <FaTrashAlt />
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -131,9 +176,8 @@ function PostManagement() {
                 </table>
             </div>
 
-            {/* Render Modal */}
             {selectedPost && (
-                <PostDetailModal 
+                <PostDetailModal
                     post={selectedPost}
                     onClose={() => setSelectedPost(null)}
                     onApprove={handleApprove}

@@ -7,8 +7,15 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
-    h2 { font-size: 1.6rem; color: #1e293b; margin: 0; }
-    p { color: #64748b; margin-top: 4px; }
+    h2 {
+        font-size: 1.6rem;
+        color: #1e293b;
+        margin: 0;
+    }
+    p {
+        color: #64748b;
+        margin-top: 4px;
+    }
 }
 
 .btnAdd {
@@ -23,7 +30,9 @@
     gap: 8px;
     cursor: pointer;
     transition: 0.2s;
-    &:hover { background-color: #4338ca; }
+    &:hover {
+        background-color: #4338ca;
+    }
 }
 
 .toolbar {
@@ -66,7 +75,9 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    &:hover { background: #f8fafc; }
+    &:hover {
+        background: #f8fafc;
+    }
 }
 
 .quickStats {
@@ -74,13 +85,15 @@
     gap: 20px;
     font-size: 0.9rem;
     color: #64748b;
-    b { color: #1e293b; }
+    b {
+        color: #1e293b;
+    }
 }
 
 .tableContainer {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
@@ -107,21 +120,85 @@
 .postCell {
     display: flex;
     align-items: center;
-    gap: 12px;
-    .thumb {
-        width: 60px;
-        height: 45px;
+    gap: 16px;
+}
+
+.imageStack {
+    display: flex;
+    align-items: center;
+    min-width: 90px;
+}
+
+.stackItem {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &:not(:first-child) {
+        margin-left: -24px;
+    }
+}
+
+.moreOverlayWrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    margin-left: -24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    img {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
-        border-radius: 6px;
+        display: block;
+        filter: blur(2px);
     }
-    .postTitle {
-        font-weight: 600;
-        color: #1e293b;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+
+    .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 700;
     }
+}
+
+.noImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.postInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.postTitle {
+    font-weight: 600;
+    color: #111827;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 280px;
+    line-height: 1.4;
 }
 
 .categoryBadge {
@@ -148,10 +225,19 @@
     border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 700;
-    
-    &.published { background: #dcfce7; color: #10b981; }
-    &.pending { background: #fef9c3; color: #a16207; }
-    &.draft { background: #f1f5f9; color: #64748b; }
+
+    &.published {
+        background: #dcfce7;
+        color: #10b981;
+    }
+    &.pending {
+        background: #fef9c3;
+        color: #a16207;
+    }
+    &.draft {
+        background: #f1f5f9;
+        color: #64748b;
+    }
 }
 
 .actions {
@@ -165,10 +251,25 @@
         padding: 6px;
         border-radius: 6px;
         transition: 0.2s;
-        
-        &.btnView { color: #3b82f6; &:hover { background: #eff6ff; } }
-        &.btnEdit { color: #10b981; &:hover { background: #f0fdf4; } }
-        &.btnDelete { color: #ef4444; &:hover { background: #fef2f2; } }
+
+        &.btnView {
+            color: #3b82f6;
+            &:hover {
+                background: #eff6ff;
+            }
+        }
+        &.btnEdit {
+            color: #10b981;
+            &:hover {
+                background: #f0fdf4;
+            }
+        }
+        &.btnDelete {
+            color: #ef4444;
+            &:hover {
+                background: #fef2f2;
+            }
+        }
     }
 }
 .pendingRow {
