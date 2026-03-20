@@ -181,4 +181,34 @@
         }
         &:disabled { cursor: not-allowed; opacity: 0.5; }
     }
+}.userInfo {
+    .avatar {
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .userName {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+}
+
+.onlineDot {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Đảm bảo tên class role khớp với dữ liệu API (viết thường) */
+.roleBadge {
+    &.admin { background: #fee2e2; color: #ef4444; }
+    &.expert { background: #dcfce7; color: #10b981; }
+    &.user { background: #f1f5f9; color: #64748b; }
 }

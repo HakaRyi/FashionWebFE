@@ -22,7 +22,7 @@ function PostManagement() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await axiosClient.get('/Post');
+                const response = await axiosClient.get('/post/feed');
                 setPosts(response.data);
             } catch (error) {
                 console.error(error);
@@ -99,29 +99,29 @@ function PostManagement() {
                             <tr key={post.postId} className={post.status === 'PendingAdmin' ? styles.pendingRow : ''}>
                                 <td className={styles.postCell}>
                                     <div className={styles.imageStack}>
-                                        {post.imageUrls && post.imageUrls.length > 0 ? (
+                                        {post.images && post.images.length > 0 ? (
                                             <>
                                                 <img
-                                                    src={post.imageUrls[0]}
+                                                    src={post.images[0]}
                                                     alt="thumb 1"
                                                     className={styles.stackItem}
                                                     style={{ zIndex: 3 }}
                                                 />
 
-                                                {post.imageUrls.length >= 2 && (
+                                                {post.images.length >= 2 && (
                                                     <img
-                                                        src={post.imageUrls[1]}
+                                                        src={post.images[1]}
                                                         alt="thumb 2"
                                                         className={styles.stackItem}
                                                         style={{ zIndex: 2 }}
                                                     />
                                                 )}
 
-                                                {post.imageUrls.length >= 3 && (
+                                                {post.images.length >= 3 && (
                                                     <div className={styles.moreOverlayWrapper} style={{ zIndex: 1 }}>
-                                                        <img src={post.imageUrls[2]} alt="thumb 3" />
+                                                        <img src={post.images[2]} alt="thumb 3" />
                                                         <div className={styles.overlay}>
-                                                            +{post.imageUrls.length - 2}
+                                                            +{post.images.length - 2}
                                                         </div>
                                                     </div>
                                                 )}

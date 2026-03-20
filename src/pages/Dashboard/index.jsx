@@ -1,27 +1,27 @@
 import React from "react";
 import styles from "@/features/Dashboard/styles/Dashboard.module.scss";
-
+import useDashboardChart from "@/features/Dashboard/hooks/useDashboardChart";
 import {
   DashboardHeader,
   StatsGrid,
   ChartSection,
-  CoinPackages,
   RevenueTable,
   RecentUsers,
   ActivityList
 } from "@/features/Dashboard";
 
 function Dashboard() {
+  const { overview } = useDashboardChart("revenue", "week", "", "");
   return (
     <div className={styles.wrapper}>
       <DashboardHeader />
 
-      <StatsGrid />
+      <StatsGrid data={overview}/>
 
       <ChartSection />
 
-      <div className={styles.coinSection}>
-        <CoinPackages />
+      <div className={styles.revenueSection}>
+
         <RevenueTable />
       </div>
 

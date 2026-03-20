@@ -1,4 +1,5 @@
-import { useState } from "react";
+//src/features/Dashboard/components/ChartSection.jsx
+import { useState,useMemo } from "react";
 import styles from "../styles/Dashboard.module.scss";
 import {
   AreaChart,
@@ -14,15 +15,38 @@ import useDashboardChart from "../hooks/useDashboardChart";
 
 function ChartSection() {
 
-  const [startDate,setStartDate] = useState("")
-  const [endDate,setEndDate] = useState("")
   const [activeTab,setActiveTab] = useState("users")
   const [timeRange,setTimeRange] = useState("week")
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const { finalStart, finalEnd } = useMemo(() => {
+    if (timeRange === "custom") return { finalStart: startDate, finalEnd: endDate };
+    
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - (timeRange === "week" ? 7 : 30));
+    
+    return { 
+      finalStart: start.toISOString().split('T')[0], 
+      finalEnd: end.toISOString().split('T')[0] 
+    };
+  }, [timeRange, startDate, endDate]);
+  
+  const {chartData: allCharts, loading} = useDashboardChart(activeTab,timeRange,finalStart,finalEnd)
 
-  const chartData = useDashboardChart(activeTab,timeRange,startDate,endDate)
+  const displayData = useMemo(() => {
+    if (!allCharts) return [];
 
+    switch (activeTab) {
+      case "revenue": return allCharts.revenueChart || [];
+      case "users": return allCharts.userChart || [];     
+      case "experts": return allCharts.expertChart || []; 
+      case "posts": return allCharts.postChart || [];     
+      default: return [];
+    }
+  }, [activeTab, allCharts]);
   const getColor = () => {
-
+    if (activeTab === "revenue") return "#10b981";
     if(activeTab==="users") return "#4f46e5"
     if(activeTab==="experts") return "#10b981"
     if(activeTab==="posts") return "#f59e0b"
@@ -31,12 +55,13 @@ function ChartSection() {
   }
 
   const tabs = [
+    {type: "revenue", label: "Revenue" },
     {type:"users",label:"Users"},
     {type:"experts",label:"Experts"},
     {type:"posts",label:"Posts"},
-    {type:"items",label:"Items"}
+    // {type:"items",label:"Items"}
   ]
-
+  console.log("Dữ liệu đang hiển thị:", displayData);
   return (
     <div className={styles.chartSection}>
 
@@ -89,17 +114,25 @@ function ChartSection() {
       </div>
 
       <div className={styles.chartContainer}>
-
+      {loading ? (
+                <div className={styles.loadingOverlay}>Đang tải dữ liệu...</div>
+              ) : (
         <ResponsiveContainer width="100%" height="100%">
 
-          <AreaChart data={chartData}>
+          <AreaChart data={displayData}>
 
             <XAxis dataKey="name" />
             <YAxis />
 
             <CartesianGrid strokeDasharray="3 3"/>
 
-            <Tooltip/>
+            <Tooltip
+              formatter={(value) => 
+                   activeTab === 'revenue' 
+                   ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value)
+                   : value
+                }
+            />
 
             <Area
               type="monotone"
@@ -112,7 +145,7 @@ function ChartSection() {
           </AreaChart>
 
         </ResponsiveContainer>
-
+       )}
       </div>
 
     </div>

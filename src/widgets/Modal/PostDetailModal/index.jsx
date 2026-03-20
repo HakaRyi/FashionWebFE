@@ -22,9 +22,9 @@ function PostDetailModal({ post, onClose, onApprove, onReject }) {
                 </div>
 
                 <div className={styles.body}>
-                    {post.imageUrls && post.imageUrls.length > 0 && (
+                    {post.images && post.images.length > 0 && (
                         <div className={styles.imageGallery}>
-                            {post.imageUrls.map((url, index) => (
+                            {post.images.map((url, index) => (
                                 <img key={index} src={url} alt={`post-img-${index}`} className={styles.postImg} />
                             ))}
                         </div>

@@ -1,3 +1,4 @@
+//src/features/Dashboard/components/CoinPackages.jsx
 import styles from "../styles/Dashboard.module.scss"
 import { FaCrown } from "react-icons/fa6"
 

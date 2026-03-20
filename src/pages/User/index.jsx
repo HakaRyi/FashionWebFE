@@ -1,21 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from './User.module.scss';
+import { usertApi } from '../../pages/User/api/userApi';
 import { 
     FaSearch, FaUserPlus, FaEllipsisV, FaFilter, 
-    FaUserEdit, FaUserSlash, FaCheckCircle, FaUserShield 
+    FaUserEdit, FaUserSlash, FaUserShield, FaChevronLeft, FaChevronRight 
 } from 'react-icons/fa';
 
-const initialUsers = [
-    { id: 1, name: 'Nguyễn Văn A', email: 'vana@gmail.com', role: 'User', status: 'Active', joinedDate: '2026-01-15' },
-    { id: 2, name: 'Trần Thị B', email: 'thib@gmail.com', role: 'User', status: 'Active', joinedDate: '2026-01-20' },
-    { id: 3, name: 'Lê Hoàng C', email: 'hoangc@gmail.com', role: 'User', status: 'Banned', joinedDate: '2026-02-01' },
-    { id: 4, name: 'Phạm Minh D', email: 'minhd@gmail.com', role: 'User', status: 'Active', joinedDate: '2025-12-10' },
-    { id: 5, name: 'Hoàng Thùy E', email: 'thuye@gmail.com', role: 'User', status: 'Pending', joinedDate: '2026-02-02' },
-];
-
 function UserManagement() {
-    const [users, setUsers] = useState(initialUsers);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [roleFilter, setRoleFilter] = useState('');
+    
+    // --- PHẦN THÊM MỚI: State cho phân trang ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setLoading(true);
+            try {
+                const response = await usertApi.getAllUser();
+                setUsers(response.data || []);
+            } catch (error) {
+                console.error("Lỗi lấy danh sách người dùng:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUsers();
+    }, []);
+
+    // Reset về trang 1 mỗi khi search hoặc lọc vai trò
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, roleFilter]);
 
     const getStatusStyle = (status) => {
         switch (status) {
@@ -26,10 +45,28 @@ function UserManagement() {
         }
     };
 
-    const filteredUsers = users.filter(user => 
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // 1. Lọc và tìm kiếm dữ liệu
+    const filteredUsers = useMemo(() => {
+        return users.filter(user => {
+            const matchesSearch = 
+                user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesRole = roleFilter === '' || user.role === roleFilter;
+            return matchesSearch && matchesRole;
+        });
+    }, [users, searchTerm, roleFilter]);
+
+    // --- PHẦN THÊM MỚI: Tính toán dữ liệu hiển thị theo trang ---
+    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+    const displayedUsers = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+    }, [filteredUsers, currentPage]);
+
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        return new Date(dateString).toLocaleDateString('vi-VN');
+    };
 
     return (
         <div className={styles.wrapper}>
@@ -48,14 +85,18 @@ function UserManagement() {
                     <FaSearch />
                     <input 
                         type="text" 
-                        placeholder="Tìm theo tên, email..." 
+                        placeholder="Tìm theo username, email..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
                 <div className={styles.actions}>
                     <button className={styles.btnFilter}><FaFilter /> Lọc</button>
-                    <select className={styles.selectRole}>
+                    <select 
+                        className={styles.selectRole}
+                        value={roleFilter}
+                        onChange={(e) => setRoleFilter(e.target.value)}
+                    >
                         <option value="">Tất cả vai trò</option>
                         <option value="Admin">Admin</option>
                         <option value="Expert">Expert</option>
@@ -76,46 +117,79 @@ function UserManagement() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUsers.map((user) => (
-                            <tr key={user.id}>
-                                <td className={styles.userInfo}>
-                                    <div className={styles.avatar}>{user.name.charAt(0)}</div>
-                                    <div>
-                                        <div className={styles.userName}>{user.name}</div>
-                                        <div className={styles.userEmail}>{user.email}</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className={`${styles.roleBadge} ${styles[user.role.toLowerCase()]}`}>
-                                        {user.role === 'Admin' && <FaUserShield />} {user.role}
-                                    </span>
-                                </td>
-                                <td>{user.joinedDate}</td>
-                                <td>
-                                    <span className={`${styles.statusBadge} ${getStatusStyle(user.status)}`}>
-                                        {user.status}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div className={styles.rowActions}>
-                                        <button title="Chỉnh sửa"><FaUserEdit /></button>
-                                        <button title="Khóa tài khoản" className={styles.btnBan}><FaUserSlash /></button>
-                                        <button title="Khác"><FaEllipsisV /></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
+                        {loading ? (
+                            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '30px' }}>Đang tải...</td></tr>
+                        ) : displayedUsers.length > 0 ? (
+                            displayedUsers.map((user) => (
+                                <tr key={user.id}>
+                                    <td className={styles.userInfo}>
+                                        <div className={styles.avatar}>
+                                            {user.avatar ? <img src={user.avatar} alt="avatar" /> : user.username?.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <div className={styles.userName}>
+                                                {user.username} 
+                                                {user.isOnline === "Online" && <span className={styles.onlineDot}></span>}
+                                            </div>
+                                            <div className={styles.userEmail}>{user.email}</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span className={`${styles.roleBadge} ${styles[user.role?.toLowerCase()]}`}>
+                                            {user.role === 'Admin' && <FaUserShield />} {user.role}
+                                        </span>
+                                    </td>
+                                    <td>{formatDate(user.createdAt)}</td>
+                                    <td>
+                                        <span className={`${styles.statusBadge} ${getStatusStyle(user.status)}`}>
+                                            {user.status}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className={styles.rowActions}>
+                                            <button title="Chỉnh sửa"><FaUserEdit /></button>
+                                            <button title="Khóa tài khoản" className={styles.btnBan}><FaUserSlash /></button>
+                                            <button title="Khác"><FaEllipsisV /></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '30px' }}>Không có dữ liệu.</td></tr>
+                        )}
                     </tbody>
                 </table>
             </div>
             
+            {/* --- PHẦN THÊM MỚI: Giao diện phân trang --- */}
             <div className={styles.pagination}>
-                <span>Hiển thị {filteredUsers.length} / {users.length} người dùng</span>
+                <span>
+                    Hiển thị <b>{(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredUsers.length)}</b> trên <b>{filteredUsers.length}</b> người dùng
+                </span>
                 <div className={styles.pageBtns}>
-                    <button disabled>Trước</button>
-                    <button className={styles.activePage}>1</button>
-                    <button>2</button>
-                    <button>Sau</button>
+                    <button 
+                        disabled={currentPage === 1} 
+                        onClick={() => setCurrentPage(prev => prev - 1)}
+                    >
+                        <FaChevronLeft size={12} /> Trước
+                    </button>
+                    
+                    {[...Array(totalPages)].map((_, index) => (
+                        <button 
+                            key={index + 1}
+                            className={currentPage === index + 1 ? styles.activePage : ''}
+                            onClick={() => setCurrentPage(index + 1)}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+
+                    <button 
+                        disabled={currentPage === totalPages || totalPages === 0} 
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                    >
+                        Sau <FaChevronRight size={12} />
+                    </button>
                 </div>
             </div>
         </div>
