@@ -1,0 +1,166 @@
+$blue: #3b82f6;
+$green: #10b981;
+$yellow: #f59e0b;
+$red: #ef4444;
+$gray-light: #f8fafc;
+$border-color: #e2e8f0;
+
+.quartz-container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+
+    .quartz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        .header-content {
+            h1 {
+                margin: 0;
+                font-size: 24px;
+                color: #1e293b;
+            }
+            p {
+                margin: 4px 0 0;
+                font-size: 14px;
+                color: #64748b;
+            }
+        }
+
+        .btn-refresh {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid $border-color;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            &:hover { background: $gray-light; }
+            &.spinning { animation: spin 1s linear infinite; }
+        }
+    }
+
+    .quartz-search {
+        position: relative;
+        margin-bottom: 20px;
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid $border-color;
+            border-radius: 12px;
+            outline: none;
+            &:focus { border-color: $blue; box-shadow: 0 0 0 3px rgba($blue, 0.1); }
+        }
+    }
+
+    .quartz-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid $border-color;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .quartz-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th {
+            background: $gray-light;
+            padding: 16px;
+            text-align: left;
+            font-size: 13px;
+            color: #64748b;
+            border-bottom: 1px solid $border-color;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .job-name { font-weight: 700; color: #334155; }
+        .job-subinfo { font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-top: 4px; }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid transparent;
+
+            &.normal { background: #f0fdf4; color: $green; border-color: #dcfce7; }
+            &.paused { background: #fffbeb; color: $yellow; border-color: #fef3c7; }
+            &.error { background: #fef2f2; color: $red; border-color: #fee2e2; }
+            &.blocked { background: #faf5ff; color: #a855f7; border-color: #f3e8ff; }
+        }
+
+        .time-row {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            gap: 8px;
+            &.history { font-size: 12px; color: #94a3b8; margin-top: 6px; font-style: italic; }
+            .icon-blue { color: $blue; }
+        }
+
+        .actions {
+            .btn-icon {
+                padding: 8px;
+                border: none;
+                background: none;
+                cursor: pointer;
+                border-radius: 8px;
+                margin-left: 4px;
+                transition: background 0.2s;
+
+                &.run { color: $blue; &:hover { background: rgba($blue, 0.1); } }
+                &.resume { color: $green; &:hover { background: rgba($green, 0.1); } }
+                &.pause { color: $yellow; &:hover { background: rgba($yellow, 0.1); } }
+            }
+        }
+    }
+
+    .empty-state {
+        padding: 60px;
+        text-align: center;
+        color: #cbd5e1;
+        p { margin-top: 12px; }
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+}
+
+// Thêm vào QuartzManager.scss
+.job-subinfo {
+    display: flex;
+    gap: 8px;
+    .group-label { color: $blue; font-weight: 600; }
+    .type-label { background: #eee; padding: 0 4px; border-radius: 4px; }
+}
+
+.job-ref {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.btn-icon.delete {
+    color: $red;
+    &:hover { background: rgba($red, 0.1); }
+}
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

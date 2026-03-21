@@ -1,9 +1,11 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
-import { FaChartPie, FaUsers, FaUserTie, FaNewspaper, FaShirt, FaCoins, FaFlag, FaMoneyBill, FaRightFromBracket } from 'react-icons/fa6';
+import { FaChartPie, FaUsers, FaUserTie, FaNewspaper, FaShirt, FaCoins, FaFlag, FaMoneyBill, FaRightFromBracket, FaClock } from 'react-icons/fa6';
 import { PATHS } from '@/app/routes/paths';
 import { useAuth } from '@/app/providers/AuthProvider';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
 function DefaultLayout({ children }) {
     const { logout } = useAuth();
@@ -17,13 +19,29 @@ function DefaultLayout({ children }) {
         { path: PATHS.PRODUCTS, icon: <FaCoins />, label: 'Coin' },
         { path: PATHS.REPORTS, icon: <FaFlag />, label: 'Báo cáo vi phạm' },
         { path: PATHS.TRANSACTIONS, icon: <FaMoneyBill />, label: 'Giao dịch' },
+        { path: PATHS.QUARTZ, icon: <FaClock />, label: 'Quartz Manager' },
     ];
 
     const handleLogout = () => {
-        if (window.confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-            logout();
-            navigate(PATHS.HOME);
-        }
+        Swal.fire({
+            title: 'Đăng xuất?',
+            text: "Bạn có chắc chắn muốn rời khỏi hệ thống quản trị?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Đồng ý, đăng xuất!',
+            cancelButtonText: 'Hủy',
+            reverseButtons: true,
+            background: '#ffffff',
+            borderRadius: '16px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logout();
+                toast.success("Đã đăng xuất thành công!");
+                navigate(PATHS.HOME);
+            }
+        });
     };
 
     return (

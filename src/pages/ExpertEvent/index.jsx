@@ -1,101 +1,127 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Plus, Calendar, MapPin, Users, MoreVertical, Search } from 'lucide-react';
-import styles from './MyEvents.module.scss';
-import { PATHS } from '@/app/routes/paths';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from "react";
+import { Plus, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const MyEvents = () => {
+import styles from "@/features/events/styles/MyEvents.module.scss";
+
+import { PATHS } from "@/app/routes/paths";
+import { EmptyEvents, EventToolbar, EventCard, useMyEvents } from '@/features/events';
+
+const ITEMS_PER_PAGE = 6; // Số lượng event mỗi trang
+
+const MyEventsPage = () => {
     const navigate = useNavigate();
-    const events = [
-        {
-            id: 1,
-            title: "Autumn Fashion Workshop 2024",
-            date: "Oct 24, 2024",
-            location: "Le Jardin, Dist 1",
-            attendees: 45,
-            status: "Upcoming",
-            image: "https://images.unsplash.com/photo-1523199455310-87b16c0ebe11?w=400&h=250&fit=crop"
-        },
-        {
-            id: 2,
-            title: "Personal Styling Masterclass",
-            date: "Nov 02, 2024",
-            location: "Online (Zoom)",
-            attendees: 120,
-            status: "Draft",
-            image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=250&fit=crop"
-        }
-    ];
+    const { events, loading } = useMyEvents();
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+
+    // Reset về trang 1 khi tìm kiếm
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
+
+    // 1. Filter events theo search
+    const filteredEvents = useMemo(() => {
+        return events.filter((event) =>
+            event.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [events, searchTerm]);
+
+    // 2. Tính toán phân trang
+    const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
+    
+    const paginatedEvents = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return filteredEvents.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [filteredEvents, currentPage]);
+
+    if (loading) {
+        return (
+            <div className={styles.loadingContainer}>
+                <Loader2 className={styles.spinner} size={40} />
+                <p>Loading your events...</p>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>
-            {/* HEADER SECTION */}
             <header className={styles.header}>
                 <div className={styles.titleArea}>
                     <h1>My Events</h1>
-                    <p>Manage and track your fashion workshops or seminars.</p>
+                    <p>Manage and track your fashion workshops.</p>
                 </div>
-                <button className={styles.btnCreate} onClick={() => navigate(PATHS.EXPERT_CREATE_EVENTS)}>
+
+                <button
+                    className={styles.btnCreate}
+                    onClick={() => navigate(PATHS.EXPERT_CREATE_EVENTS)}
+                >
                     <Plus size={20} />
-                    <span>Create New Event</span>
+                    <span>Create Event</span>
                 </button>
             </header>
 
-            {/* FILTER & SEARCH BAR */}
-            <div className={styles.toolbar}>
-                <div className={styles.searchBox}>
-                    <Search size={18} />
-                    <input type="text" placeholder="Search events..." />
-                </div>
-                <div className={styles.filters}>
-                    <button className={styles.activeFilter}>All</button>
-                    <button>Upcoming</button>
-                    <button>Past</button>
-                </div>
-            </div>
+            {events.length > 0 ? (
+                <>
+                    <EventToolbar
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                    />
 
-            {/* EVENTS GRID */}
-            <div className={styles.eventGrid}>
-                {events.map((event, index) => (
-                    <motion.div
-                        key={event.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className={styles.eventCard}
-                    >
-                        <div className={styles.imageWrapper}>
-                            <img src={event.image} alt={event.title} />
-                            <span className={`${styles.statusBadge} ${styles[event.status.toLowerCase()]}`}>
-                                {event.status}
-                            </span>
-                        </div>
+                    {filteredEvents.length > 0 ? (
+                        <>
+                            <div className={styles.eventGrid}>
+                                {paginatedEvents.map((event, index) => (
+                                    <EventCard
+                                        key={event.eventId}
+                                        event={event}
+                                        index={index}
+                                        onClick={() =>
+                                            navigate(PATHS.EXPERT_EVENT_DETAIL.replace(':id', event.eventId))
+                                        }
+                                    />
+                                ))}
+                            </div>
 
-                        <div className={styles.cardContent}>
-                            <h3>{event.title}</h3>
-                            <div className={styles.infoRow}>
-                                <Calendar size={14} /> <span>{event.date}</span>
-                            </div>
-                            <div className={styles.infoRow}>
-                                <MapPin size={14} /> <span>{event.location}</span>
-                            </div>
-                            <div className={styles.infoRow}>
-                                <Users size={14} /> <span>{event.attendees} registered</span>
-                            </div>
-                        </div>
+                            {/* Bộ điều khiển phân trang */}
+                            {totalPages > 1 && (
+                                <div className={styles.pagination}>
+                                    <button 
+                                        className={styles.pageBtn}
+                                        disabled={currentPage === 1}
+                                        onClick={() => setCurrentPage(p => p - 1)}
+                                    >
+                                        <ChevronLeft size={18} />
+                                    </button>
+                                    
+                                    <div className={styles.pageNumbers}>
+                                        Trang <strong>{currentPage}</strong> trên {totalPages}
+                                    </div>
 
-                        <div className={styles.cardFooter}>
-                            <button className={styles.btnEdit}>Edit</button>
-                            <button className={styles.btnMore}>
-                                <MoreVertical size={18} />
-                            </button>
+                                    <button 
+                                        className={styles.pageBtn}
+                                        disabled={currentPage === totalPages}
+                                        onClick={() => setCurrentPage(p => p + 1)}
+                                    >
+                                        <ChevronRight size={18} />
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <div className={styles.noResults}>
+                            <p>Không tìm thấy sự kiện nào khớp với "{searchTerm}"</p>
                         </div>
-                    </motion.div>
-                ))}
-            </div>
+                    )}
+                </>
+            ) : (
+                <EmptyEvents
+                    onCreate={() => navigate(PATHS.EXPERT_CREATE_EVENTS)}
+                />
+            )}
         </div>
     );
 };
 
-export default MyEvents;
+export default MyEventsPage;

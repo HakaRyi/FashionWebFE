@@ -1,0 +1,290 @@
+.container {
+    /* 1. LAYOUT & SCROLLING */
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 2rem;
+    scroll-behavior: smooth;
+
+    // Wrapper để giới hạn nội dung không bị quá rộng trên màn hình lớn
+    & > .contentWrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    /* 2. HEADER SECTION */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        .titleSection {
+            h1 {
+                font-size: 1.85rem;
+                font-weight: 700;
+                color: #0f172a;
+                margin: 0 0 0.25rem 0;
+                letter-spacing: -0.02em;
+            }
+            p {
+                color: #64748b;
+                font-size: 0.95rem;
+                margin: 0;
+            }
+        }
+
+        .timeFilter {
+            display: flex;
+            gap: 0.25rem;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 10px;
+
+            button {
+                padding: 0.5rem 1.25rem;
+                border: none;
+                background: transparent;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: #64748b;
+                cursor: pointer;
+                border-radius: 8px;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+                &:hover:not(.active) {
+                    background: rgba(255, 255, 255, 0.5);
+                    color: #0f172a;
+                }
+
+                &.active {
+                    background: #ffffff;
+                    color: #6366f1; // Màu Primary (Indigo)
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                }
+            }
+        }
+    }
+
+    /* 3. STATS CARDS GRID */
+    .statsGrid {
+        display: grid;
+        // Sử dụng auto-fill để tự nhảy dòng khi zoom hoặc màn hình nhỏ
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.5rem;
+
+        .statCard {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+                border-color: #e2e8f0;
+            }
+
+            .cardHeader {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.25rem;
+
+                .iconWrapper {
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #f8fafc;
+                    border-radius: 12px;
+                    font-size: 1.25rem;
+                    color: #6366f1;
+                }
+
+                .badge {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    padding: 0.25rem 0.75rem;
+                    border-radius: 20px;
+
+                    &.up {
+                        background: #dcfce7;
+                        color: #15803d;
+                    }
+                    &.down {
+                        background: #fee2e2;
+                        color: #dc2626;
+                    }
+                }
+            }
+
+            .cardContent {
+                h3 {
+                    font-size: 1.75rem;
+                    font-weight: 700;
+                    color: #0f172a;
+                    margin: 0;
+                }
+                p {
+                    color: #64748b;
+                    font-size: 0.875rem;
+                    margin: 0.25rem 0 0 0;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+
+    /* 4. CHARTS & LISTS ROW */
+    .chartsRow {
+        display: grid;
+        // Mặc định 2 cột trên Desktop, tự chuyển 1 cột trên Tablet/Mobile
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+
+        @media (min-width: 1400px) {
+            grid-template-columns: 2fr 1fr; // Chia tỷ lệ 2/3 cho biểu đồ chính
+        }
+
+        section {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chartHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+
+            h3 {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #1e293b;
+            }
+            p {
+                margin: 0.25rem 0 0;
+                font-size: 0.85rem;
+                color: #64748b;
+            }
+            .trendIcon {
+                color: #6366f1;
+            }
+        }
+
+        .chartContent {
+            flex: 1;
+            min-height: 320px;
+            width: 100%;
+            position: relative;
+            display: block;
+        }
+    }
+
+    /* 5. TOP EVENTS LIST (Sidebar nội bộ) */
+    .topEventsList {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        margin-top: 0.5rem;
+
+        .eventItem {
+            .eventInfo {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 0.6rem;
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: #334155;
+
+                small {
+                    color: #94a3b8;
+                    font-weight: 400;
+                }
+            }
+            .progressTrack {
+                height: 8px;
+                background: #f1f5f9;
+                border-radius: 10px;
+                overflow: hidden;
+
+                .progressBar {
+                    height: 100%;
+                    background: linear-gradient(90deg, #6366f1, #818cf8);
+                    border-radius: 10px;
+                    transition: width 1s ease-in-out;
+                }
+            }
+        }
+    }
+}
+
+/* 6. RESPONSIVE ADJUSTMENTS */
+@media (max-width: 768px) {
+    .container {
+        padding: 1.25rem;
+
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.25rem;
+
+            .timeFilter {
+                width: 100%;
+                button {
+                    flex: 1;
+                }
+            }
+        }
+
+        .chartsRow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+
+            min-height: 0;
+            min-width: 0;
+
+            section {
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                min-width: 0;
+            }
+
+            .chartContent {
+                flex: 1;
+                width: 100%;
+                min-height: 300px;
+                position: relative;
+                display: block;
+            }
+        }
+    }
+}
+
+/* Custom scrollbar cho tinh tế */
+.container::-webkit-scrollbar {
+    width: 6px;
+}
+.container::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+    &:hover {
+        background: #cbd5e1;
+    }
+}

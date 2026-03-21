@@ -1,89 +1,95 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:5196/api',
-  headers: { 'Content-Type': 'application/json' },
+    baseURL: 'http://localhost:5196/api',
+    headers: { 'Content-Type': 'application/json' },
 });
 
 let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error, token = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) prom.reject(error);
-    else prom.resolve(token);
-  });
-  failedQueue = [];
+    failedQueue.forEach((prom) => {
+        if (error) prom.reject(error);
+        else prom.resolve(token);
+    });
+    failedQueue = [];
 };
 
 // 1. Request Interceptor
 axiosClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  },
-  (error) => Promise.reject(error)
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+        return config;
+    },
+    (error) => Promise.reject(error),
 );
 
-// 2. Response Interceptor (Nơi xử lý Refresh Token)
+// 2. Response Interceptor
 axiosClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
 
-    // Nếu lỗi 401 và chưa thử lại lần nào
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      
-      if (isRefreshing) {
-        // Nếu đang trong quá trình refresh, đưa request này vào hàng đợi
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return axiosClient(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
+        // Check if 401 Unauthorized and not retried yet
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            
+            if (isRefreshing) {
+                // Wait for existing refresh process
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                })
+                    .then((token) => {
+                        originalRequest.headers.Authorization = `Bearer ${token}`;
+                        return axiosClient(originalRequest);
+                    })
+                    .catch((err) => Promise.reject(err));
+            }
 
-      originalRequest._retry = true;
-      isRefreshing = true;
+            originalRequest._retry = true;
+            isRefreshing = true;
 
-      return new Promise(async (resolve, reject) => {
-        try {
-          const refreshToken = localStorage.getItem('refreshToken');
-          
-          // Gọi API refresh token (không dùng axiosClient để tránh loop vô tận)
-          const res = await axios.post(`${axiosClient.defaults.baseURL}/auth/refresh`, {
-            refreshToken: refreshToken
-          });
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const storedRefreshToken = localStorage.getItem('refreshToken');
 
-          const { token, newRefreshToken } = res.data;
+                    // Use plain axios to avoid interceptor loop
+                    const res = await axios.post(`${axiosClient.defaults.baseURL}/auth/refresh`, {
+                        refreshToken: storedRefreshToken,
+                    });
 
-          // Lưu token mới
-          localStorage.setItem('token', token);
-          localStorage.setItem('refreshToken', newRefreshToken);
+                    const { accessToken, refreshToken } = res.data;
 
-          // Cập nhật header cho request hiện tại và các request trong hàng đợi
-          axiosClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          processQueue(null, token);
-          
-          resolve(axiosClient(originalRequest));
-        } catch (refreshError) {
-          // Nếu refresh cũng lỗi (hết hạn cả refresh token) -> Logout luôn
-          processQueue(refreshError, null);
-          localStorage.clear();
-          window.location.reload();
-          reject(refreshError);
-        } finally {
-          isRefreshing = false;
+                    // Update local storage
+                    localStorage.setItem('token', accessToken);
+                    localStorage.setItem('refreshToken', refreshToken);
+
+                    // Update default header
+                    axiosClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
+                    processQueue(null, accessToken);
+                    
+                    // Reset refreshing state
+                    isRefreshing = false;
+
+                    // Retry original request
+                    originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                    resolve(axiosClient(originalRequest));
+                } catch (refreshError) {
+                    processQueue(refreshError, null);
+                    isRefreshing = false;
+
+                    // Handle total expiration
+                    localStorage.clear();
+                    window.location.href = '/login';
+                    reject(refreshError);
+                }
+            });
         }
-      });
-    }
 
-    return Promise.reject(error);
-  }
+        return Promise.reject(error);
+    },
 );
 
 export default axiosClient;

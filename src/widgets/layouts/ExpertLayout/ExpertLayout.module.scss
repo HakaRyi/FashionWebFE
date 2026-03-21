@@ -25,14 +25,15 @@ $border-color: #eeeeee;
 .workspace {
     flex: 1;
     height: 100%;
-    overflow-y: auto;
+    
+    overflow: hidden; 
+    
     background-color: $bg-workspace;
-    padding: 2rem;
-    scroll-behavior: smooth;
-
+    padding: 0;
+    
     & > div {
-        max-width: 1400px;
-        margin: 0 auto;
+        height: 100%;
+        max-width: 100%;
     }
 }
 

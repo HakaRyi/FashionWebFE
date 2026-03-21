@@ -9,7 +9,7 @@ import {
   RevenueTable,
   RecentUsers,
   ActivityList
-} from "@/features/Dashboard";
+} from "@/features/dashboard";
 
 function Dashboard() {
   return (
