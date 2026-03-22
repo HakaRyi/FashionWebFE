@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
 import { FaChartPie, FaUsers, FaUserTie, FaNewspaper, FaShirt, FaCoins, FaFlag, FaMoneyBill, FaRightFromBracket, FaClock } from 'react-icons/fa6';
+import { MdEventNote } from "react-icons/md";
 import { PATHS } from '@/app/routes/paths';
 import { useAuth } from '@/app/providers/AuthProvider';
 import Swal from 'sweetalert2';
@@ -15,6 +16,7 @@ function DefaultLayout({ children }) {
         { path: PATHS.DASHBOARD, icon: <FaChartPie />, label: 'Dashboard' },
         { path: PATHS.USERS, icon: <FaUsers />, label: 'Quản lý Users' },
         { path: PATHS.EXPERTS, icon: <FaUserTie />, label: 'Quản lý Experts' },
+        { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
         { path: PATHS.POSTS, icon: <FaNewspaper />, label: 'Bài viết' },
         { path: PATHS.PRODUCTS, icon: <FaCoins />, label: 'Coin' },
         { path: PATHS.REPORTS, icon: <FaFlag />, label: 'Báo cáo vi phạm' },

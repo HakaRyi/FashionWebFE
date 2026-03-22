@@ -6,6 +6,7 @@ import ProductManagement from '../../pages/Product';
 import TransactionManagement from '../../pages/Transaction';
 import ReportManagement from '../../pages/Report';
 import QuartzManager from '../../pages/Jobs';
+import EventManagement from '../../pages/EventManagement';
 
 import AuthPage from '../../pages/Authentication';
 import Unauthorized from '../../pages/Unauthorized';
@@ -129,6 +130,12 @@ export const routes = [
     {
         path: PATHS.EXPERTS,
         component: ExpertManagement,
+        layout: DefaultLayout,
+        roles: ['admin'],
+    },
+    {
+        path: PATHS.EVENTS,
+        component: EventManagement,
         layout: DefaultLayout,
         roles: ['admin'],
     },

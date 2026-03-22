@@ -231,3 +231,52 @@
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+/* Wrapper của Card */
+.eventCardWrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    .btnReview {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+/* Nút Review kiểu Floating */
+.btnReview {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 20px;
+  
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-10px);
+//   opacity: 0;
+}
+
+.btnReview:hover {
+  background: #2563eb;
+  color: #fff;
+  transform: scale(1.05);
+}

@@ -23,6 +23,7 @@ export const PATHS = {
     DASHBOARD: '/dashboard',
     USERS: '/users',
     EXPERTS: '/experts',
+    EVENTS: '/events',
     POSTS: '/posts',
     PRODUCTS: '/products',
     TRANSACTIONS: '/transactions',

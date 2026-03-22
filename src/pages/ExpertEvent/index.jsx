@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Plus, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Loader2, ChevronLeft, ChevronRight, ClipboardCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "@/features/events/styles/MyEvents.module.scss";
@@ -7,7 +7,7 @@ import styles from "@/features/events/styles/MyEvents.module.scss";
 import { PATHS } from "@/app/routes/paths";
 import { EmptyEvents, EventToolbar, EventCard, useMyEvents } from '@/features/events';
 
-const ITEMS_PER_PAGE = 6; // Số lượng event mỗi trang
+const ITEMS_PER_PAGE = 6;
 
 const MyEventsPage = () => {
     const navigate = useNavigate();
@@ -16,19 +16,16 @@ const MyEventsPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Reset về trang 1 khi tìm kiếm
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm]);
 
-    // 1. Filter events theo search
     const filteredEvents = useMemo(() => {
         return events.filter((event) =>
             event.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [events, searchTerm]);
 
-    // 2. Tính toán phân trang
     const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
     
     const paginatedEvents = useMemo(() => {
@@ -73,18 +70,35 @@ const MyEventsPage = () => {
                         <>
                             <div className={styles.eventGrid}>
                                 {paginatedEvents.map((event, index) => (
-                                    <EventCard
-                                        key={event.eventId}
-                                        event={event}
-                                        index={index}
-                                        onClick={() =>
-                                            navigate(PATHS.EXPERT_EVENT_DETAIL.replace(':id', event.eventId))
-                                        }
-                                    />
+                                    <div key={event.eventId} className={styles.eventCardWrapper}>
+                                        <EventCard
+                                            event={event}
+                                            index={index}
+                                            onClick={() =>
+                                                navigate(PATHS.EXPERT_EVENT_DETAIL.replace(':id', event.eventId))
+                                            }
+                                        />
+                                        
+                                        {/* Nút Submission Review: Ẩn nếu status là Cancelled */}
+                                        {event.status?.toLowerCase() !== "cancelled" && (
+                                            <div className={styles.cardActions}>
+                                                <button 
+                                                    className={styles.btnReview}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        // Điều hướng đến trang chấm điểm bài thi
+                                                        navigate(`/expert/events/${event.eventId}/submissions`);
+                                                    }}
+                                                >
+                                                    <ClipboardCheck size={16} />
+                                                    <span>Submission Review</span>
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
                                 ))}
                             </div>
 
-                            {/* Bộ điều khiển phân trang */}
                             {totalPages > 1 && (
                                 <div className={styles.pagination}>
                                     <button 

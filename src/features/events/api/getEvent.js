@@ -7,7 +7,7 @@ export const getEventApi = {
     // --- CHO EXPERT (Người tạo) ---
 
     // Lấy sự kiện của tôi (Expert hiện tại tạo)
-    getMyCreatedEvents: () => axiosClient.get('/events/my-events'),
+    getMyCreatedEvents: () => axiosClient.get('/events/expert/my-created'),
 
     // Chốt giải thưởng và giải ngân
     finalizeEvent: (eventId) => axiosClient.post(`/events/${eventId}/finalize`),
@@ -25,15 +25,11 @@ export const getEventApi = {
         reason: payload.reason
     }),
 
-
-    // --- CHO USER & CÔNG KHAI ---
-
-    // Lấy tất cả sự kiện công khai (cho trang chủ/khám phá)
     getAllPublicEvents: () => axiosClient.get('/events/public/all'),
 
-    // Xem chi tiết sự kiện
     getEventDetail: (id) => axiosClient.get(`/events/${id}`),
 
-    // Lấy danh sách bài post trong sự kiện (để chấm điểm hoặc xem bảng xếp hạng)
     getEventPosts: (id) => axiosClient.get(`/events/${id}/posts`),
+
+    finalizeEvent: (id) => axios.post(`/events/${id}/finalize`),
 };

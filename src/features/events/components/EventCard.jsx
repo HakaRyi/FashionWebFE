@@ -17,18 +17,11 @@ const EventCard = ({ event, index, onClick }) => {
                 <img
                     src={
                         event.images?.[0]?.imageUrl ||
-                        "https://via.placeholder.com/400x250?text=No+Image"
+                        "https://vcdn1-giaitri.vnecdn.net/2014/11/18/16-1416303991.jpg?w=460&h=0&q=100&dpr=2&fit=crop&s=lPy8nhYwXlhdwyafxTFWIA"
                     }
                     alt={event.title}
                 />
 
-                <span
-                    className={`${styles.statusBadge} ${
-                        styles[event.status?.toLowerCase()]
-                    }`}
-                >
-                    {event.status}
-                </span>
             </div>
 
             <div className={styles.cardContent}>
@@ -49,6 +42,14 @@ const EventCard = ({ event, index, onClick }) => {
                 <div className={styles.infoRow}>
                     <Users size={14} />
                     <span>{event.posts?.length || 0} Submissions</span>
+                </div>
+                <div className={styles.infoRow}>
+                    <span
+                        className={`${styles.statusBadge} ${styles[event.status?.toLowerCase()]
+                            }`}
+                    >
+                        {event.status}
+                    </span>
                 </div>
             </div>
 
