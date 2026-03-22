@@ -1,12 +1,18 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink,useNavigate} from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
 import { 
     FaChartPie, FaUsers, FaUserTie, FaNewspaper, 
-    FaCoins, FaFlag, FaMoneyBillTransfer, FaGear 
+    FaCoins, FaFlag, FaMoneyBillTransfer, FaGear, FaStarAndCrescent,FaRightFromBracket
 } from 'react-icons/fa6';
 
 function DefaultLayout({ children }) {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.clear(); // Xóa token
+        navigate('/login');   // Chuyển hướng
+    };
     const menuGroups = [
         {
             title: 'Tổng quan',
@@ -26,6 +32,12 @@ function DefaultLayout({ children }) {
             items: [
                 { path: '/posts', icon: <FaNewspaper />, label: 'Bài viết Blog' },
                 { path: '/reports', icon: <FaFlag />, label: 'Báo cáo vi phạm' },
+            ]
+        },
+        {
+            title: 'Sự kiện',
+            items: [
+                { path: '/admin-events', icon: <FaStarAndCrescent />, label: 'Quản lý sự kiện' },
             ]
         },
         {
@@ -73,6 +85,10 @@ function DefaultLayout({ children }) {
                             <span>Trực tuyến</span>
                         </div>
                     </div>
+                    <button className={styles.logoutBtn} onClick={handleLogout}>
+                        <FaRightFromBracket className={styles.icon} />
+                        <span>Đăng xuất</span>
+                    </button>
                 </div>
             </aside>
 

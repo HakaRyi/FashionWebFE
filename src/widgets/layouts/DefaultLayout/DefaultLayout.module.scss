@@ -221,33 +221,54 @@
     padding: 32px;
 }
 
-.logoutWrapper {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 1rem;
-    margin-top: 1rem;
+.sidebarFooter {
+    padding: 24px 16px; // Tăng khoảng cách để nút thở hơn
+    background-color: rgba(0, 0, 0, 0.3); // Làm nền footer đậm hơn một chút
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .logoutBtn {
     display: flex;
     align-items: center;
+    justify-content: center; // Căn giữa nội dung
     width: 100%;
-    padding: 0.8rem 1.5rem;
-    background: transparent;
-    border: none;
-    color: #ff4d4f;
-    font-size: 1rem;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03); // Nền mờ nhẹ
+    border: 2px solid rgba(255, 77, 79, 0.3); // Viền đỏ mờ
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-
-    &:hover {
-        background: rgba(255, 77, 79, 0.1);
-        transform: translateX(5px);
-    }
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 
     .icon {
-        margin-right: 12px;
-        font-size: 1.2rem;
+        margin-right: 10px;
+        font-size: 1.1rem;
+        color: #ff00d9; // Icon hồng đặc trưng của bạn
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        background: white;
+        color: #3d122d;
+        border-color: #ff4d5000;
+        box-shadow: 0 4px 15px rgba(255, 77, 79, 0.2);
+        transform: translateY(-2px); // Bay nhẹ lên khi hover
+
+        .icon {
+            transform: translateX(-3px) scale(1.1);
+            filter: drop-shadow(0 0 5px #ff00d9);
+        }
+    }
+
+    &:active {
+        transform: translateY(0); // Nhấn xuống khi click
     }
 }
 

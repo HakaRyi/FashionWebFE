@@ -1,14 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
+import { useAuth } from "@/app/providers/AuthProvider";
 // import {  } from '@/app/routes/paths';
 // import {  } from '@/app/providers/AuthProvider';
 import { 
     FaChartPie, FaUsers, FaUserTie, FaNewspaper, 
-    FaCoins, FaFlag, FaMoneyBillTransfer, FaGear 
+    FaCoins, FaFlag, FaMoneyBillTransfer, FaGear ,FaRightFromBracket
 } from 'react-icons/fa6';
 
 function DefaultLayout({ children }) {
+    const { logout } = useAuth();
+    const handleLogout = () => {
+        logout()
+    };
     const menuGroups = [
         {
             title: 'Tổng quan',
@@ -75,6 +80,10 @@ function DefaultLayout({ children }) {
                             <span>Trực tuyến</span>
                         </div>
                     </div>
+                    <button className={styles.logoutBtn} onClick={handleLogout}>
+                        <FaRightFromBracket className={styles.icon} />
+                        <span>Đăng xuất</span>
+                    </button>
                 </div>
             </aside>
 
