@@ -42,4 +42,6 @@ export const expertApi = {
 
   // Xem chi tiết hồ sơ công khai
   getDetails: (profileId) => axiosClient.get(`/expert/details/${profileId}`),
+
+  getMyStatus: () => axiosClient.get('/expert/my-status'),
 };

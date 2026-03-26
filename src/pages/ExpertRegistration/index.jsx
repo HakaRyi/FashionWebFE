@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
+import { PATHS } from "@/app/routes/paths";
 import styles from "@/features/expert/styles/ExpertApplication.module.scss";
 
 import {
@@ -14,16 +15,50 @@ import {
 
 const ExpertApplicationPage = () => {
 
+    const navigate = useNavigate();
     const [showForm, setShowForm] = useState(false);
 
     const {
         step,
         setStep,
         loading,
+        initialLoading,
+        applicationStatus,
         formData,
         updateFormData,
         submitApplication
     } = useExpertApplication();
+
+    if (initialLoading) return <div>Loading...</div>;
+
+    if (applicationStatus === "Approved") {
+        return (
+            <div className={styles.container}>
+                <div className={styles.infoState}>
+                    <h2>Bạn đã là Chuyên gia!</h2>
+                    <p>Hồ sơ của bạn đã được xác thực. Bạn có thể bắt đầu cung cấp dịch vụ ngay bây giờ.</p>
+                    <button className={styles.btnPrimary} onClick={() => navigate(PATHS.EXPERT_DASHBOARD)}>
+                        Go to Expert Dashboard
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (applicationStatus === "Pending" && step !== 3) { // step 3 là SuccessState vừa mới nộp xong
+        return (
+            <div className={styles.container}>
+                <div className={styles.infoState}>
+                    <div className={styles.pendingIcon}>⏳</div>
+                    <h2>Đơn đăng ký đang được xét duyệt</h2>
+                    <p>Chúng tôi đã nhận được hồ sơ của bạn. Vui lòng đợi trong khi hội đồng chuyên môn kiểm tra (thường mất 24-48h).</p>
+                    <button className={styles.btnSecondary} onClick={() => navigate(PATHS.USER_FEED)}>
+                        Quay lại trang chủ
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>
@@ -122,118 +157,3 @@ const ExpertApplicationPage = () => {
 };
 
 export default ExpertApplicationPage;
-
-
-// import React, { useState } from 'react';
-// import { AnimatePresence, motion } from 'framer-motion';
-// import { ArrowLeft } from 'lucide-react';
-// import styles from './ExpertApplication.module.scss';
-// import { registerExpert } from '@/services/expertService';
-
-// import LandingSection from '@/components/events/LandingSection';
-// import StepExpertise from '@/components/events/StepExpertise';
-// import StepVerification from '@/components/events/StepVerification';
-// import SuccessState from '@/components/events/SuccessState';
-
-// const ExpertApplication = () => {
-//     const [showForm, setShowForm] = useState(false);
-//     const [step, setStep] = useState(1);
-//     const [loading, setLoading] = useState(false);
-//     const [formData, setFormData] = useState({
-//         style: 'Stylist',
-//         customStyle: '',
-//         styleAesthetic: 'Minimalism',
-//         customAesthetic: '',
-//         yearsOfExperience: 1,
-//         bio: '',
-//         evidenceType: 'pdf',
-//         portfolioUrl: '',
-//         file: null,
-//     });
-
-//     const updateFormData = (newData) => {
-//         setFormData(prev => ({ ...prev, ...newData }));
-//     };
-
-//     const handleSubmit = async () => {
-//         setLoading(true);
-//         try {
-//             const isOtherRole = formData.style === 'Other';
-//             const isOtherAesthetic = formData.styleAesthetic === 'Other';
-
-//             const finalPayload = {
-//                 ...formData,
-//                 style: isOtherRole ? formData.customStyle : formData.style,
-//                 styleAesthetic: isOtherAesthetic ? formData.customAesthetic : formData.styleAesthetic,
-//                 file: formData.file
-//             };
-
-//             await registerExpert(finalPayload);
-//             setStep(3);
-//         } catch (error) {
-//             alert(error.response?.data || "Có lỗi xảy ra khi đăng ký.");
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     return (
-//         <div className={styles.container}>
-//             <AnimatePresence mode="wait">
-//                 {!showForm ? (
-//                     <LandingSection onStart={() => setShowForm(true)} />
-//                 ) : (
-//                     <motion.div
-//                         key="form-container"
-//                         initial={{ opacity: 0, y: 20 }}
-//                         animate={{ opacity: 1, y: 0 }}
-//                         exit={{ opacity: 0 }}
-//                         className={styles.pageWrapper}
-//                     >
-//                         <button className={styles.btnBackIntro} onClick={() => setShowForm(false)}>
-//                             <ArrowLeft size={16} /> Quay lại giới thiệu
-//                         </button>
-
-//                         <div className={styles.mainCard}>
-//                             {/* Sidebar tiến độ */}
-//                             <div className={styles.sidebar}>
-//                                 <div className={styles.stepInfo}>
-//                                     <div className={styles.activeStep}>0{step}</div>
-//                                     <div className={styles.stepTotal}>
-//                                         <p>Current Phase</p>
-//                                         <span>{step === 1 ? 'Expertise' : step === 2 ? 'Verification' : 'Complete'}</span>
-//                                     </div>
-//                                 </div>
-//                             </div>
-
-//                             {/* Nội dung Form */}
-//                             <div className={styles.contentArea}>
-//                                 <AnimatePresence mode="wait">
-//                                     {step === 1 && (
-//                                         <StepExpertise
-//                                             formData={formData}
-//                                             updateData={updateFormData}
-//                                             onNext={() => setStep(2)}
-//                                         />
-//                                     )}
-//                                     {step === 2 && (
-//                                         <StepVerification
-//                                             formData={formData}
-//                                             updateData={updateFormData}
-//                                             onBack={() => setStep(1)}
-//                                             onSubmit={handleSubmit}
-//                                             loading={loading}
-//                                         />
-//                                     )}
-//                                     {step === 3 && <SuccessState />}
-//                                 </AnimatePresence>
-//                             </div>
-//                         </div>
-//                     </motion.div>
-//                 )}
-//             </AnimatePresence>
-//         </div>
-//     );
-// };
-
-// export default ExpertApplication;

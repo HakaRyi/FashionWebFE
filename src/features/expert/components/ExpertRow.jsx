@@ -2,8 +2,8 @@ import styles from "../styles/Expert.module.scss";
 import { FaIdCard } from "react-icons/fa";
 
 function ExpertRow({ expert, onView }) {
-  // Chuẩn hóa status về chữ thường để khớp với class SCSS (&.pending, &.approved, ...)
-  const status = expert.expertFile?.status || "Pending";
+  const latestRequest = expert.expertRequests?.[0]; 
+  const status = latestRequest?.status || "Pending";
   const statusClass = status.toLowerCase();
 
   return (
@@ -15,7 +15,7 @@ function ExpertRow({ expert, onView }) {
             {(expert.account?.userName || "E").charAt(0).toUpperCase()}
           </div>
           <div>
-            <div className={styles.name}>{expert.account?.userName}</div>
+            <div className={styles.name}>{expert.account?.userName || expert.userName}</div>
             <div className={styles.sub}>ID: #{expert.expertProfileId}</div>
           </div>
         </div>
