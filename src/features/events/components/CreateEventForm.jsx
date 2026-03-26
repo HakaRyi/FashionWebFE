@@ -43,6 +43,7 @@ const CreateEventForm = () => {
     const {
         form, setForm, prizes, setPrizes,
         startDate, setStartDate, endDate, setEndDate,
+        submissionDeadline, setSubmissionDeadline,
         expertBalance, totalBudget, totalRequired, isOverBudget,
         createEvent, invitedExpertIds, toggleExpert, loading, fetchBalance,
         validateStep, platformFee,
@@ -157,6 +158,8 @@ const CreateEventForm = () => {
                                     form={form} setForm={setForm}
                                     prizes={prizes} setPrizes={setPrizes}
                                     startDate={startDate} setStartDate={setStartDate}
+                                    submissionDeadline={submissionDeadline}
+                                    setSubmissionDeadline={setSubmissionDeadline}
                                     endDate={endDate} setEndDate={setEndDate}
                                     previewUrl={previewUrl}
                                     fileInputRef={fileInputRef}

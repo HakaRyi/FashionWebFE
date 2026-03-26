@@ -5,6 +5,7 @@ import styles from "../../styles/CreateEventForm.module.scss";
 const StepBasicInfo = ({
     form, setForm,
     startDate, setStartDate,
+    submissionDeadline, setSubmissionDeadline,
     endDate, setEndDate,
     previewUrl,
     fileInputRef,
@@ -13,14 +14,18 @@ const StepBasicInfo = ({
 }) => {
     const now = new Date();
 
-    // Mốc 1: 24h kể từ bây giờ (cho Ngày bắt đầu)
+    // Mốc 1: Ngày bắt đầu ít nhất sau 24h kể từ bây giờ
     const minStart = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
-    // Mốc 2: 24h kể từ Ngày bắt đầu (cho Ngày kết thúc)
-    // Nếu chưa chọn startDate thì mặc định là minStart + 24h
-    const minEnd = startDate
-        ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000)
-        : new Date(minStart.getTime() + 24 * 60 * 60 * 1000);
+    // Mốc 2: Hạn nộp bài ít nhất sau StartDate 1h
+    const minSubmission = startDate
+        ? new Date(startDate.getTime() + 1 * 60 * 60 * 1000)
+        : minStart;
+
+    // Mốc 3: Ngày kết thúc phải sau Hạn nộp bài đúng 24h
+    const minEndLimit = submissionDeadline
+        ? new Date(submissionDeadline.getTime() + 24 * 60 * 60 * 1000)
+        : new Date(minSubmission.getTime() + 24 * 60 * 60 * 1000);
 
     // Hàm chặn giờ cho Ngày bắt đầu (chỉ chặn nếu đang chọn đúng ngày minStart)
     const filterStartTime = (date) => {
@@ -30,9 +35,10 @@ const StepBasicInfo = ({
 
     // Hàm chặn giờ cho Ngày kết thúc (chỉ chặn nếu đang chọn đúng ngày minEnd)
     const filterEndTime = (date) => {
-        const isSameDay = date.toDateString() === minEnd.toDateString();
-        return isSameDay ? date.getTime() >= minEnd.getTime() : true;
+        const isSameDay = date.toDateString() === minEndLimit.toDateString();
+        return isSameDay ? date.getTime() >= minEndLimit.getTime() : true;
     };
+
     return (
         <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Thông tin cơ bản</h2>
@@ -51,7 +57,7 @@ const StepBasicInfo = ({
             </div>
 
             {/* DATE */}
-            <div className={styles.grid2}>
+            <div className={styles.grid3} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
                 <div className={styles.inputGroup}>
                     <label>
                         <Calendar size={14} /> Ngày bắt đầu
@@ -74,18 +80,36 @@ const StepBasicInfo = ({
                 </div>
 
                 <div className={styles.inputGroup}>
+                    <label style={{ color: '#e67e22' }}><Calendar size={14} /> Hạn nộp bài</label>
+                    <DatePicker
+                        selected={submissionDeadline}
+                        onChange={(date) => {
+                            setSubmissionDeadline(date);
+                            // Tự động gợi ý EndDate = Deadline + 24h
+                            const suggestedEnd = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+                            setEndDate(suggestedEnd);
+                        }}
+                        minDate={minSubmission}
+                        disabled={!startDate}
+                        showTimeSelect
+                        dateFormat="dd/MM/yyyy h:mm aa"
+                        placeholderText="Trước kết thúc 24h"
+                    />
+                </div>
+
+                <div className={styles.inputGroup}>
                     <label>
                         <Calendar size={14} /> Ngày kết thúc
                     </label>
                     <DatePicker
                         selected={endDate}
                         onChange={setEndDate}
-                        minDate={minEnd}
+                        minDate={minEndLimit}
                         filterTime={filterEndTime}
                         showTimeSelect
                         dateFormat="dd/MM/yyyy h:mm aa"
                         placeholderText="Sau ngày bắt đầu 24h"
-                        disabled={!startDate}
+                        disabled={!submissionDeadline}
                     />
                 </div>
             </div>

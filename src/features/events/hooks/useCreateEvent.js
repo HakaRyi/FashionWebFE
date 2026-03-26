@@ -18,7 +18,9 @@ export const useCreateEvent = () => {
         banner: null,
         expertWeight: 70,
         isAutoActivate: false,
-        minExpertsRequired: 1,
+        minExpertsRequired: 2,
+        pointPerLike: 1,
+        pointPerShare: 3,
     });
 
     const [prizes, setPrizes] = useState([
@@ -33,6 +35,7 @@ export const useCreateEvent = () => {
         [defaultStartDate],
     );
     const [startDate, setStartDate] = useState(defaultStartDate);
+    const [submissionDeadline, setSubmissionDeadline] = useState(null);
     const [endDate, setEndDate] = useState(defaultEndDate);
     const [invitedExpertIds, setInvitedExpertIds] = useState([]);
     const [expertBalance, setExpertBalance] = useState(0);
@@ -57,7 +60,7 @@ export const useCreateEvent = () => {
                 case 1:
                     return !!(form.title && form.description && form.banner);
                 case 2:
-                    return invitedExpertIds.length > 0;
+                    return invitedExpertIds.length > 2;
                 case 3:
                     return prizes.length > 0 && prizes.every((p) => p.amount > 0);
                 default:
@@ -85,11 +88,18 @@ export const useCreateEvent = () => {
             const isRemoving = prev.includes(id);
             const newList = isRemoving ? prev.filter((item) => item !== id) : [...prev, id];
 
-            // Tự động điều chỉnh số lượng expert tối thiểu nếu danh sách mời thay đổi
-            setForm((current) => ({
-                ...current,
-                minExpertsRequired: Math.max(1, Math.min(current.minExpertsRequired, newList.length || 1)),
-            }));
+            setForm((current) => {
+                const selectedCount = newList.length;
+
+                return {
+                    ...current,
+                    // Nếu chọn 0-2 người thì ép về 2.
+                    // Nếu chọn > 2 người thì có thể để bằng số lượng đã chọn hoặc giữ nguyên tùy bạn.
+                    minExpertsRequired: newList.length >= 2 ? newList.length : 2,
+                    // Hoặc: Math.max(2, selectedCount) nếu bạn muốn
+                    // tối thiểu phải là toàn bộ số người đã mời.
+                };
+            });
 
             return newList;
         });
@@ -100,22 +110,33 @@ export const useCreateEvent = () => {
 
         setLoading(true);
         try {
-            // CHỈ GỬI OBJECT SẠCH, không tạo FormData ở đây
             const payload = {
                 title: form.title,
                 description: form.description,
-                imageFile: form.banner, // Chú ý tên field này phải khớp với API bên dưới
+                imageFile: form.banner,
                 expertWeight: form.expertWeight,
+                userWeight: 100 - form.expertWeight,
                 startDate: startDate.toISOString(),
+                submissionDeadline: submissionDeadline ? submissionDeadline.toISOString() : null,
                 endDate: endDate.toISOString(),
                 prizes: prizes,
                 invitedExpertIds: invitedExpertIds,
-                // Các field khác nếu cần
+                pointPerLike: form.pointPerLike,
+                pointPerShare: form.pointPerShare,
+                minExpertsRequired: Math.max(2, form.minExpertsRequired || 2),
             };
+
+            console.group('🚀 [Step 1] Hook Payload');
+            console.log('Dữ liệu chuẩn bị gửi đi:', payload);
+            console.groupEnd();
 
             const response = await createEventApi(payload);
             return response;
         } catch (error) {
+            console.group('❌ [Error] Create Event Failed');
+            console.error('Status:', error.response?.status);
+            console.error('Data từ Server:', error.response?.data);
+            console.groupEnd();
             const errorMsg = error.response?.data?.message || error.message || 'Lỗi khi tạo sự kiện.';
             throw new Error(errorMsg);
         } finally {
@@ -139,6 +160,8 @@ export const useCreateEvent = () => {
         setStartDate,
         endDate,
         setEndDate,
+        submissionDeadline,
+        setSubmissionDeadline,
         invitedExpertIds,
 
         // Tài chính

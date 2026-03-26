@@ -73,7 +73,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                             <span>Expert: <strong>{form.expertWeight}%</strong></span>
                             <span>User: <strong>{100 - form.expertWeight}%</strong></span>
                         </div>
-                        <input 
+                        <input
                             type="range" min="0" max="100" step="5"
                             value={form.expertWeight || 70}
                             onChange={handleWeightChange}
@@ -91,8 +91,8 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                         <div className={styles.pointField}>
                             <ThumbsUp size={14} />
                             <label>Mỗi Like:</label>
-                            <input 
-                                type="number" 
+                            <input
+                                type="number"
                                 min="0"
                                 value={form.pointPerLike ?? 1}
                                 onChange={(e) => handlePointChange("pointPerLike", e.target.value)}
@@ -101,13 +101,16 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                         <div className={styles.pointField}>
                             <Share2 size={14} />
                             <label>Mỗi Share:</label>
-                            <input 
+                            <input
                                 type="number"
                                 min="0"
                                 value={form.pointPerShare ?? 3}
                                 onChange={(e) => handlePointChange("pointPerShare", e.target.value)}
                             />
                         </div>
+                        <p style={{ fontSize: '11px', color: '#888', marginTop: '8px' }}>
+                            * Điểm này dùng để tính toán thứ hạng dựa trên sự ủng hộ của cộng đồng.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -143,7 +146,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                                         <span>{ex.expertiseField}</span>
                                         <small>{ex.yearsOfExperience} năm kinh nghiệm</small>
                                     </div>
-                                    <button type="button" 
+                                    <button type="button"
                                         className={isSelected ? styles.btnInvited : styles.btnInvite}
                                         onClick={() => toggleExpert(ex.accountId)}
                                     >
@@ -157,7 +160,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                     {/* Điều khiển phân trang */}
                     {totalPages > 1 && (
                         <div className={styles.pagination}>
-                            <button 
+                            <button
                                 disabled={currentPage === 1}
                                 onClick={() => setCurrentPage(p => p - 1)}
                                 className={styles.pageBtn}
@@ -167,7 +170,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                             <span className={styles.pageInfo}>
                                 Trang <strong>{currentPage}</strong> / {totalPages}
                             </span>
-                            <button 
+                            <button
                                 disabled={currentPage === totalPages}
                                 onClick={() => setCurrentPage(p => p + 1)}
                                 className={styles.pageBtn}
