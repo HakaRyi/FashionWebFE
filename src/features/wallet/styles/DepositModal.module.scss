@@ -1,16 +1,13 @@
 $gold: #d4af37;
 $black: #1a1a1a;
+$gray-bg: #f8f9fa;
+$border-color: #eeeeee;
 
 .modalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,159 +18,258 @@ $black: #1a1a1a;
 .receiptCard {
   background: #fff;
   width: 100%;
-  max-width: 360px;
-  padding: 30px 20px;
+  max-width: 380px;
+  padding: 40px 30px;
   position: relative;
-  border-radius: 4px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-  font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  max-height: 90vh;
-  overflow-y: auto;
-
-  .receiptHeader {
-    text-align: center;
-    margin-bottom: 25px;
-    flex-shrink: 0;
-
-    .brandIcon {
-      color: $gold;
-      margin-bottom: 10px;
-    }
-    h3 {
-      font-size: 16px;
-      letter-spacing: 0.5px;
-      font-weight: 800;
-      line-height: 1.4;
-    }
-    p {
-      font-size: 11px;
-      color: #999;
-      font-family: 'Courier New', Courier, monospace;
-    }
-  }
-
-  .inputSection {
-    margin-bottom: 20px;
-    label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #666;
-      text-transform: uppercase;
-      display: block;
-    }
-    input {
-      width: 100%;
-      border: none;
-      border-bottom: 2px solid #eee;
-      font-size: 24px;
-      font-weight: 800;
-      padding: 10px 0;
-      outline: none;
-      background: transparent;
-      border-radius: 0;
-      &:focus {
-        border-color: $gold;
-      }
-    }
-  }
-
-  .divider {
-    border-top: 1px dashed #eee;
-    margin: 20px 0;
-    flex-shrink: 0;
-  }
-
-  .billDetail {
-    flex-grow: 1;
-    .billLine {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-      font-size: 13px;
-      color: #555;
-      gap: 10px;
-
-      span:last-child {
-        text-align: right;
-        white-space: nowrap;
-      }
-
-      &.totalLine {
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 2px solid #333;
-        color: #000;
-        font-weight: 900;
-        font-size: 16px;
-      }
-    }
-  }
-
-  .receiptFooter {
-    display: flex;
-    gap: 10px;
-    margin-top: 30px;
-    flex-shrink: 0;
-
-    button {
-      flex: 1;
-      padding: 14px 10px;
-      font-weight: 800;
-      font-size: 12px;
-      cursor: pointer;
-      border: 1.5px solid #000;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-transform: uppercase;
-
-      &:active {
-        transform: scale(0.98);
-      }
-    }
-    .btnCancel { background: #fff; color: #000; }
-    .btnPay { background: #000; color: #fff; }
-  }
-
-  .zigzag {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  
+  // Hiệu ứng răng cưa (Zigzag) ở cả trên và dưới cho giống hóa đơn xé
+  &::before, &::after {
+    content: "";
     position: absolute;
-    bottom: -10px;
     left: 0;
     width: 100%;
     height: 10px;
-    background:
-      linear-gradient(-135deg, #fff 5px, transparent 0) 0 5px,
-      linear-gradient(135deg, #fff 5px, transparent 0) 0 5px;
-    background-size: 10px 10px;
-    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.05));
+    background-size: 20px 10px;
+    z-index: 2;
+  }
+
+  &::before {
+    top: 0;
+    background-image: linear-gradient(45deg, transparent 33.333%, $black 33.333%, $black 66.666%, transparent 66.666%),
+                      linear-gradient(-45deg, transparent 33.333%, $black 33.333%, $black 66.666%, transparent 66.666%);
+    // Nếu muốn răng cưa màu trắng trên nền đen overlay thì đổi $black thành màu overlay hoặc giữ trắng
+    display: none; // Thường chỉ cần zigzag ở dưới
+  }
+
+  &::after {
+    bottom: 0;
+    background-image: linear-gradient(45deg, #fff 33.333%, transparent 33.333%, transparent 66.666%, #fff 66.666%),
+                      linear-gradient(-45deg, #fff 33.333%, transparent 33.333%, transparent 66.666%, #fff 66.666%);
+    background: repeat-x 0 100%;
+    background-size: 15px 10px;
+    // Tạo hình răng cưa bằng mask hoặc background
+    background-image: linear-gradient(-135deg, transparent 50%, #fff 50%), 
+                      linear-gradient(135deg, transparent 50%, #fff 50%);
+    background-position: top left;
+    filter: drop-shadow(0 -5px 5px rgba(0,0,0,0.05));
+  }
+}
+
+.receiptHeader {
+  text-align: center;
+  margin-bottom: 30px;
+
+  .brandIcon {
+    display: inline-flex;
+    padding: 12px;
+    background: rgba($gold, 0.1);
+    border-radius: 50%;
+    color: $gold;
+    margin-bottom: 15px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: $black;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  p {
+    font-size: 12px;
+    color: #888;
+    margin: 5px 0 0;
+    font-family: 'Courier New', monospace;
+  }
+}
+
+.inputSection {
+  background: $gray-bg;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+
+  label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #777;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .readOnlyInput {
+      width: 100%;
+      background: transparent;
+      border: none;
+      font-size: 32px;
+      font-weight: 800;
+      color: $black;
+      padding: 5px 0;
+      outline: none;
+      cursor: default;
+    }
+
+    .lockIndicator {
+      position: absolute;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: #e9ecef;
+      border-radius: 6px;
+      color: #6c757d;
+      
+      svg { width: 12px; }
+      span { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    }
+  }
+
+  .inputHint {
+    display: block;
+    margin-top: 10px;
+    font-size: 11px;
+    color: #999;
+    line-height: 1.4;
+  }
+}
+
+.divider {
+  height: 1px;
+  border-top: 2px dashed $border-color;
+  margin: 25px 0;
+  position: relative;
+
+  // Hai hình tròn khuyết ở 2 đầu divider tạo cảm giác vé/hóa đơn
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.6); // Khớp với màu overlay
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  &::before { left: -40px; }
+  &::after { right: -40px; }
+}
+
+.billDetail {
+  .billLine {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #444;
+
+    &.totalLine {
+      margin-top: 10px;
+      padding-top: 20px;
+      color: $black;
+
+      span:first-child {
+        font-weight: 700;
+        font-size: 13px;
+        color: #888;
+      }
+
+      .totalValue {
+        font-size: 24px;
+        font-weight: 900;
+        color: $gold;
+      }
+    }
+  }
+}
+
+.receiptFooter {
+  display: flex;
+  gap: 12px;
+  margin-top: 35px;
+
+  button {
+    flex: 1;
+    padding: 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+  }
+
+  .btnCancel {
+    background: transparent;
+    border: 1px solid $border-color;
+    color: #666;
+    &:hover:not(:disabled) {
+      background: #f8f9fa;
+      color: $black;
+    }
+  }
+
+  .btnPay {
+    background: $black;
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    &:hover:not(:disabled) {
+      background: #333;
+      transform: translateY(-2px);
+    }
+    &:active {
+      transform: translateY(0);
+    }
   }
 }
 
 .successState {
   text-align: center;
-  padding: 40px 10px;
+  padding: 40px 0;
+
   h3 {
-    margin: 15px 0;
-    font-size: 18px;
-    line-height: 1.4;
+    font-size: 20px;
     font-weight: 800;
+    margin: 20px 0 10px;
+    color: #2ecc71;
   }
+
   p {
-    font-size: 14px;
     color: #666;
-    line-height: 1.5;
-    strong { color: #000; }
+    font-size: 14px;
+    line-height: 1.6;
   }
 }
 
-@media (max-width: 320px) {
-  .receiptCard {
-    padding: 20px 15px;
-    .inputSection input { font-size: 20px; }
-    .receiptFooter { flex-direction: column; }
-  }
+// Răng cưa ở đáy modal
+.zigzag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background-image: linear-gradient(135deg, #fff 5px, transparent 0),
+                    linear-gradient(-135deg, #fff 5px, transparent 0);
+  background-size: 10px 10px;
+  background-repeat: repeat-x;
+  z-index: 10;
 }

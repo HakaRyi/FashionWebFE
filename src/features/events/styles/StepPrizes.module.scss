@@ -1,0 +1,220 @@
+$gold: #c5a059;
+$red: #ff4d4d;
+$blue: #3b82f6;
+$text-main: #0f172a;
+$text-sub: #64748b;
+$border-color: #eef2f6;
+
+.section {
+    background: white;
+    border-radius: 20px;
+    padding: 30px; // Giảm nhẹ padding để cân đối hơn
+    border: 1px solid $border-color;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+
+    .stepHeader {
+        margin-bottom: 25px;
+
+        .sectionTitle {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: $text-main;
+        }
+
+        .sectionSub {
+            font-size: 14px;
+            color: $text-sub;
+            margin: 0;
+        }
+    }
+}
+
+.configCard {
+    background: #fff;
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid $border-color; // Thêm border cho card bên trong
+
+    .cardHeader {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        color: $text-main;
+
+        h3 {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        svg {
+            color: $gold;
+        }
+
+        .totalBadge {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+
+            &.err {
+                background: #fef2f2;
+                color: $red;
+                animation: shake 0.4s ease-in-out;
+            }
+        }
+    }
+
+    .prizeScroll {
+        max-height: 280px; // Tăng thêm một chút để thấy được nhiều dòng hơn
+        overflow-y: auto;
+        padding-right: 8px;
+        margin-bottom: 15px;
+
+        &::-webkit-scrollbar { width: 5px; }
+        &::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+    }
+
+    .prizeRow {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+        align-items: center;
+
+        input[type="text"] {
+            flex: 2; // Cho phép input tên giải rộng hơn
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+
+            &:focus {
+                outline: none;
+                border-color: $blue;
+                background: #fff;
+            }
+        }
+
+        .inputWrap {
+            flex: 1.5;
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            input[type="number"] {
+                width: 100%;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                padding: 10px 35px 10px 14px; // Padding right rộng để né icon
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 700;
+                text-align: right;
+                transition: all 0.2s;
+
+                &:focus {
+                    outline: none;
+                    border-color: $blue;
+                    background: #fff;
+                }
+
+                // Ẩn mũi tên tăng giảm của input number
+                &::-webkit-inner-spin-button,
+                &::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+            }
+
+            svg {
+                position: absolute;
+                right: 12px;
+                color: $gold;
+                pointer-events: none;
+            }
+        }
+
+        button {
+            background: #f1f5f9;
+            border: none;
+            color: $text-sub;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+
+            &:hover:not(:disabled) {
+                background: #fef2f2;
+                color: $red;
+            }
+
+            &:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    .addBtn {
+        width: 100%;
+        padding: 12px;
+        border: 2px dashed #e2e8f0;
+        border-radius: 12px;
+        background: transparent;
+        color: $text-sub;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        &:hover {
+            border-color: $blue;
+            color: $blue;
+            background: #eff6ff;
+        }
+    }
+}
+
+// Style cho thông báo lỗi ngân sách
+.budgetError {
+    background: #fff1f0;
+    border: 1px solid #ffa39e;
+    color: #cf1322;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    &::before {
+        content: "⚠️";
+    }
+}
+
+// Hiệu ứng rung khi vượt ngân sách
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}

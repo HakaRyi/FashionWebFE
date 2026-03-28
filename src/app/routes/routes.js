@@ -5,17 +5,21 @@ import PostManagement from '../../pages/Post';
 import ProductManagement from '../../pages/Product';
 import TransactionManagement from '../../pages/Transaction';
 import ReportManagement from '../../pages/Report';
+import QuartzManager from '../../pages/Jobs';
+import EventManagement from '../../pages/EventManagement';
 
 import AuthPage from '../../pages/Authentication';
 import Unauthorized from '../../pages/Unauthorized';
 
-import ExpertApplication from '../../pages/ExpertApplication';
-import ExpertProfile from '../../pages/ExpertProfile';
-import CreateEvent from '../../pages/CreateEvent';
+import ExpertApplication from '../../pages/ExpertRegistration';
+import ProfilePage from '../../pages/Profile';
+import CreateEvent from '../../pages/ExpertCreateEvent';
 import MyEvents from '../../pages/ExpertEvent';
+import EventDetailPage from '../../pages/ExpertEventDetail';
+import ExpertInvitations from '../../pages/ExpertInvitations';
 import Analytics from '../../pages/ExpertAnalytics';
 import ExpertWallet from '../../pages/ExpertWallet';
-import SubmissionsReview from '../../pages/SubmissionsReview';
+import SubmissionsReview from '../../pages/ExpertSubmissionsReview';
 
 import Home from '../../pages/Home';
 import FashionFeed from '../../pages/Feed';
@@ -63,7 +67,7 @@ export const routes = [
     },
     {
         path: PATHS.EXPERT_PROFILE,
-        component: ExpertProfile,
+        component: ProfilePage,
         layout: HomeLayout,
         roles: ['expert'],
     },
@@ -76,6 +80,18 @@ export const routes = [
     {
         path: PATHS.EXPERT_EVENTS,
         component: MyEvents,
+        layout: ExpertLayout,
+        // roles: ['expert'],
+    },
+    {
+        path: PATHS.EXPERT_EVENT_DETAIL,
+        component: EventDetailPage,
+        layout: ExpertLayout,
+        // roles: ['expert'],
+    },
+     {
+        path: PATHS.EXPERT_INVITATIONS,
+        component: ExpertInvitations,
         layout: ExpertLayout,
         // roles: ['expert'],
     },
@@ -118,6 +134,12 @@ export const routes = [
         roles: ['admin'],
     },
     {
+        path: PATHS.EVENTS,
+        component: EventManagement,
+        layout: DefaultLayout,
+        roles: ['admin'],
+    },
+    {
         path: PATHS.POSTS,
         component: PostManagement,
         layout: DefaultLayout,
@@ -140,5 +162,11 @@ export const routes = [
         component: ReportManagement,
         layout: DefaultLayout,
         roles: ['admin'],
+    },
+    {
+        path: PATHS.QUARTZ,
+        component: QuartzManager,
+        layout: DefaultLayout,
+        // roles: ['admin'],
     },
 ];

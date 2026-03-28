@@ -36,4 +36,12 @@ export const expertApi = {
 
   deleteExpert: (profileId) =>
     axiosClient.delete(`/expert/${profileId}`),
+
+  // Lấy danh sách expert đang hoạt động để mời vào Event
+  getActiveList: () => axiosClient.get('/expert/active-list'),
+
+  // Xem chi tiết hồ sơ công khai
+  getDetails: (profileId) => axiosClient.get(`/expert/details/${profileId}`),
+
+  getMyStatus: () => axiosClient.get('/expert/my-status'),
 };

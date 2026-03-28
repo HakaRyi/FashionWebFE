@@ -8,7 +8,7 @@ import {
   RevenueTable,
   RecentUsers,
   ActivityList
-} from "@/features/Dashboard";
+} from "@/features/dashboard";
 
 function Dashboard() {
   const { overview } = useDashboardChart("revenue", "week", "", "");

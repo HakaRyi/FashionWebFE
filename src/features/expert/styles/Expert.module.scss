@@ -91,7 +91,7 @@ $white: #ffffff;
   background: $white;
   border-radius: 12px;
   border: 1px solid $border;
-  overflow-x: auto;
+  overflow: hidden; // Sửa từ overflow-x thành hidden để border-radius hoạt động
 
   .table {
     width: 100%;
@@ -103,11 +103,13 @@ $white: #ffffff;
       text-align: left;
       color: $text-sub;
       font-size: 0.85rem;
+      border-bottom: 1px solid $border;
     }
 
     td {
       padding: 16px;
       border-bottom: 1px solid $bg-light;
+      vertical-align: middle;
     }
   }
 }
@@ -127,6 +129,7 @@ $white: #ffffff;
     align-items: center;
     justify-content: center;
     font-weight: bold;
+    flex-shrink: 0;
   }
 
   .name { font-weight: 600; color: $text-main; }
@@ -141,13 +144,14 @@ $white: #ffffff;
   font-weight: bold;
   display: inline-block;
   text-transform: capitalize;
+
+  // Sử dụng lồng nhau cho các trạng thái
+  &.pending { background: #fff7ed; color: #c2410c; }
+  &.approved { background: #f0fdf4; color: #15803d; }
+  &.rejected { background: #fef2f2; color: #b91c1c; }
 }
 
-.pending { background: #fff7ed; color: #c2410c; }
-.approved { background: #f0fdf4; color: #15803d; }
-.rejected { background: #fef2f2; color: #b91c1c; }
-
-/* Modal Styles - Phần gây lỗi nhiều nhất */
+/* Modal Styles */
 .modalOverlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -161,11 +165,18 @@ $white: #ffffff;
 
 .modalContent {
   background: $white;
-  width: 90%;
+  width: 95%;
   max-width: 600px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  position: relative;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .modalHeader {
@@ -175,7 +186,7 @@ $white: #ffffff;
   padding: 16px 24px;
   border-bottom: 1px solid $border;
 
-  h3 { margin: 0; color: $text-main; }
+  h3 { margin: 0; color: $text-main; font-size: 1.25rem; }
   
   .btnClose {
     background: none;
@@ -183,21 +194,29 @@ $white: #ffffff;
     font-size: 1.2rem;
     cursor: pointer;
     color: $text-sub;
+    display: flex;
+    align-items: center;
     &:hover { color: $danger; }
   }
 }
 
 .modalBody {
   padding: 24px;
-  max-height: 70vh;
+  max-height: 80vh;
   overflow-y: auto;
 }
 
 .infoSection {
   margin-bottom: 20px;
-  h4 { border-left: 4px solid $primary; padding-left: 10px; margin-bottom: 12px; }
-  p { margin: 8px 0; line-height: 1.5; color: $text-main; }
-  a { color: $primary; text-decoration: none; font-weight: 500; }
+  h4 { 
+    border-left: 4px solid $primary; 
+    padding-left: 10px; 
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: $text-main;
+  }
+  p { margin: 10px 0; line-height: 1.5; color: $text-main; }
+  a { color: $primary; text-decoration: none; font-weight: 500; &:hover { text-decoration: underline; } }
 }
 
 .approvalForm {
@@ -206,7 +225,7 @@ $white: #ffffff;
   border-radius: 12px;
   margin-top: 20px;
 
-  label { display: block; margin-bottom: 8px; font-weight: 600; }
+  label { display: block; margin-bottom: 8px; font-weight: 600; color: $text-main; }
 
   textarea {
     width: 100%;
@@ -216,6 +235,8 @@ $white: #ffffff;
     border: 1px solid $border;
     margin-bottom: 16px;
     resize: none;
+    font-family: inherit;
+    &:focus { border-color: $primary; outline: none; }
   }
 }
 
@@ -230,10 +251,13 @@ $white: #ffffff;
     font-weight: 600;
     cursor: pointer;
     border: none;
+    transition: all 0.2s;
+    
+    &:active { transform: scale(0.98); }
   }
 
-  .btnReject { background: #fee2e2; color: $danger; }
-  .btnApprove { background: $primary; color: white; }
+  .btnReject { background: #fee2e2; color: $danger; &:hover { background: #fecaca; } }
+  .btnApprove { background: $primary; color: white; &:hover { opacity: 0.9; } }
 }
 
 .actionBtns {
@@ -250,15 +274,20 @@ $white: #ffffff;
     display: flex;
     align-items: center;
     gap: 5px;
+    font-size: 0.85rem;
+    &:hover { background: #e0e7ff; }
   }
 
   .btnQuickApprove {
     background: #f0fdf4;
     color: $success;
     border: none;
-    padding: 6px 10px;
+    padding: 8px 10px;
     border-radius: 6px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    &:hover { background: #dcfce7; }
   }
 }
 
@@ -268,5 +297,18 @@ $white: #ffffff;
   border: 1px solid $border;
   background: white;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover { color: $primary; border-color: $primary; }
+}
+
+// Helper class cho trường hợp không có dữ liệu
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: $text-sub;
+  background: $white;
+  border-radius: 12px;
+  border: 1px solid $border;
 }

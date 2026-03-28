@@ -1,18 +1,39 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink , useNavigate} from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
-import { useAuth } from "@/app/providers/AuthProvider";
-// import {  } from '@/app/routes/paths';
-// import {  } from '@/app/providers/AuthProvider';
-import { 
-    FaChartPie, FaUsers, FaUserTie, FaNewspaper, 
-    FaCoins, FaFlag, FaMoneyBillTransfer, FaGear ,FaRightFromBracket
-} from 'react-icons/fa6';
+
+import { FaChartPie, FaUsers, FaUserTie, FaNewspaper, FaMoneyBillTransfer , FaCoins, FaFlag, FaMoneyBill, FaRightFromBracket, FaClock } from 'react-icons/fa6';
+import { MdEventNote } from "react-icons/md";
+import { PATHS } from '@/app/routes/paths';
+import { useAuth } from '@/app/providers/AuthProvider';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
 function DefaultLayout({ children }) {
     const { logout } = useAuth();
+    const navigate = useNavigate();
+
+
     const handleLogout = () => {
-        logout()
+        Swal.fire({
+            title: 'Đăng xuất?',
+            text: "Bạn có chắc chắn muốn rời khỏi hệ thống quản trị?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Đồng ý, đăng xuất!',
+            cancelButtonText: 'Hủy',
+            reverseButtons: true,
+            background: '#ffffff',
+            borderRadius: '16px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logout();
+                toast.success("Đã đăng xuất thành công!");
+                navigate(PATHS.HOME);
+            }
+        });
     };
     const menuGroups = [
         {
@@ -40,6 +61,8 @@ function DefaultLayout({ children }) {
             items: [
                 { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
                 { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Lịch sử giao dịch' },
+                { path: PATHS.QUARTZ, icon: <FaClock />, label: 'Quartz Manager' },
+                { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
             ]
         }
     ];

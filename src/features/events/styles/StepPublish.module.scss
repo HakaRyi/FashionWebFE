@@ -1,0 +1,257 @@
+@use '../../../shared/styles/abstracts/variables' as *;
+@use '../../../shared/styles/abstracts/animations' as *;
+
+.section {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid #eef2f6;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+
+    .stepHeader {
+        margin-bottom: 30px;
+        .sectionTitle {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 8px 0;
+        }
+        .sectionSub {
+            font-size: 14px;
+            color: #64748b;
+        }
+    }
+}
+
+/* LỰA CHỌN XUẤT BẢN */
+.publishOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 30px;
+
+    .publishCard {
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        .cardHeader {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .radioCircle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            .radioInner {
+                width: 10px;
+                height: 10px;
+                background: #6366f1;
+                border-radius: 50%;
+            }
+        }
+
+        .cardInfo {
+            h4 {
+                margin: 0 0 4px 0;
+                font-size: 16px;
+                color: #1e293b;
+            }
+            p {
+                margin: 0;
+                font-size: 13px;
+                color: #64748b;
+                line-height: 1.5;
+            }
+        }
+
+        &.activeCard {
+            border-color: #6366f1;
+            background-color: #f5f7ff;
+            .radioCircle { border-color: #6366f1; }
+        }
+
+        &:hover:not(.activeCard) {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+    }
+}
+
+/* CẤU HÌNH TỰ ĐỘNG (Phần quan trọng để hiện nút) */
+.autoConfig {
+    overflow: hidden; // Để AnimatePresence hoạt động
+
+    .divider {
+        height: 1px;
+        background: #e2e8f0;
+        margin: 20px 0;
+    }
+
+    .configField {
+        padding-left: 36px; // Căn lề thẳng với text bên trên
+        
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 12px;
+        }
+    }
+
+    .counterWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .counterGroup {
+        display: flex;
+        align-items: center;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        width: fit-content;
+        overflow: hidden;
+
+        .countBtn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #f8fafc;
+            color: #1e293b;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover:not(:disabled) {
+                background: #e2e8f0;
+            }
+            &:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+            }
+        }
+
+        .countValue {
+            padding: 0 20px;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            border-left: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+
+            strong { font-size: 16px; color: #6366f1; }
+            span { font-size: 12px; color: #94a3b8; }
+        }
+    }
+
+    .configHint {
+        font-size: 12px;
+        color: #94a3b8;
+        font-style: italic;
+    }
+}
+
+/* TÀI CHÍNH */
+.billingContainer {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 30px 0;
+
+    .subTitle {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        &::before {
+            content: '';
+            width: 4px; height: 16px;
+            background: #6366f1; border-radius: 4px;
+        }
+    }
+}
+
+.billingTable {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .billingRow {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #64748b;
+
+        &.totalRow {
+            margin-top: 8px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 16px;
+            color: #1e293b;
+            .totalPrice strong { font-size: 20px; }
+        }
+    }
+}
+
+/* CÁC BOX THÔNG TIN KHÁC */
+.infoBox {
+    background: #f0fdf4;
+    border: 1px solid #dcfce7;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+
+    .infoIcon {
+        color: #16a34a;
+        flex-shrink: 0;
+    }
+
+    .infoContent {
+        strong { display: block; margin-bottom: 8px; color: #14532d; }
+        ul {
+            padding: 0; margin: 0; list-style: none;
+            li {
+                font-size: 13px; color: #166534; margin-bottom: 4px;
+                &::before { content: '•'; margin-right: 8px; color: #16a34a; }
+            }
+        }
+    }
+}
+
+.textDanger { color: #ef4444 !important; }
+.textSuccess { color: #10b981 !important; }
+.textWarning { color: #f59e0b; font-size: 13px; margin: 10px 0; }
+
+.budgetError {
+    margin-top: 16px;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    color: #b91c1c;
+    font-size: 13px;
+    strong { display: block; }
+}
