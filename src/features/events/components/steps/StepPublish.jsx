@@ -30,12 +30,12 @@ const StepPublish = ({
             <div className={styles.publishOptions}>
                 {/* LỰA CHỌN THỦ CÔNG */}
                 <div
-                    className={`${styles.publishCard} ${!form.isAutoActivate ? styles.activeCard : ''}`}
-                    onClick={() => updateFormField('isAutoActivate', false)}
+                    className={`${styles.publishCard} ${!form.isAutoStart ? styles.activeCard : ''}`}
+                    onClick={() => updateFormField('isAutoStart', false)}
                 >
                     <div className={styles.cardHeader}>
                         <div className={styles.radioCircle}>
-                            {!form.isAutoActivate && <div className={styles.radioInner} />}
+                            {!form.isAutoStart && <div className={styles.radioInner} />}
                         </div>
                         <div className={styles.cardInfo}>
                             <h4>Kích hoạt thủ công</h4>
@@ -46,12 +46,12 @@ const StepPublish = ({
 
                 {/* LỰA CHỌN TỰ ĐỘNG */}
                 <div
-                    className={`${styles.publishCard} ${form.isAutoActivate ? styles.activeCard : ''}`}
-                    onClick={() => updateFormField('isAutoActivate', true)}
+                    className={`${styles.publishCard} ${form.isAutoStart ? styles.activeCard : ''}`}
+                    onClick={() => updateFormField('isAutoStart', true)}
                 >
                     <div className={styles.cardHeader}>
                         <div className={styles.radioCircle}>
-                            {form.isAutoActivate && <div className={styles.radioInner} />}
+                            {form.isAutoStart && <div className={styles.radioInner} />}
                         </div>
                         <div className={styles.cardInfo}>
                             <h4>Kích hoạt tự động</h4>
@@ -60,7 +60,7 @@ const StepPublish = ({
                     </div>
 
                     <AnimatePresence>
-                        {form.isAutoActivate && (
+                        {form.isAutoStart && (
                             <motion.div
                                 className={styles.autoConfig}
                                 initial={{ height: 0, opacity: 0 }}

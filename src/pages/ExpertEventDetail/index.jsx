@@ -41,9 +41,9 @@ const EventDetailPage = () => {
                         className={styles.eventBanner}
                     />
                     <div className={styles.imageOverlay}>
-                        <span className={`${styles.statusBadge} ${styles[event.status.toLowerCase()]}`}>
+                        {/* <span className={`${styles.statusBadge} ${styles[event.status.toLowerCase()]}`}>
                             {event.status}
-                        </span>
+                        </span> */}
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@ const EventDetailPage = () => {
                         </span>
                         <h1>{event.title}</h1>
                         <div className={styles.creatorInfo}>
-                            <User size={16} /> Được tạo bởi: <strong>{event.creatorName}</strong> (ID: {event.creatorId})
+                            <User size={16} /> Được tạo bởi: <strong>{event.creatorName}</strong>
                         </div>
                     </div>
 

@@ -68,8 +68,10 @@ const CreateEventForm = () => {
     const handleNextStep = () => {
         const isValid = validateStep(step);
         if (!isValid) {
-            if (step === 2 && invitedExpertIds.length === 0) {
-                toast.warn("Chưa chọn Expert! Vui lòng chọn ít nhất 1 người để tiếp tục.");
+            if (step === 2) {
+                if (invitedExpertIds.length < 2) {
+                    toast.warn("Vui lòng chọn ít nhất 2 chuyên gia để tiếp tục.");
+                }
             } else if (step === 1) {
                 toast.warn("Vui lòng điền đầy đủ tiêu đề, mô tả và ảnh bìa.");
             }

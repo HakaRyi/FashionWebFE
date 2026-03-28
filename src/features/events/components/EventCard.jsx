@@ -2,8 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, Users, MoreVertical } from "lucide-react";
 import styles from "../styles/MyEvents.module.scss";
+import { getEventStatusInfo } from "../utils/eventStatus";
 
 const EventCard = ({ event, index, onClick }) => {
+    const statusInfo = getEventStatusInfo(event.status);
     return (
         <motion.div
             key={event.eventId}
@@ -45,10 +47,10 @@ const EventCard = ({ event, index, onClick }) => {
                 </div>
                 <div className={styles.infoRow}>
                     <span
-                        className={`${styles.statusBadge} ${styles[event.status?.toLowerCase()]
-                            }`}
+                        className={`${styles.statusBadge} ${styles[statusInfo.variant]}`}
+                        title={statusInfo.description} // Hiển thị mô tả khi di chuột vào
                     >
-                        {event.status}
+                        {statusInfo.label}
                     </span>
                 </div>
             </div>

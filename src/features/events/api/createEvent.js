@@ -15,7 +15,8 @@ export const createEventApi = async (eventData) => {
     formData.append('UserWeight', userWeight.toFixed(2));
     formData.append('PointPerLike', parseFloat(eventData.pointPerLike || 1));
     formData.append('PointPerShare', parseFloat(eventData.pointPerShare || 3));
-
+    formData.append('IsAutoStart', eventData.isAutoStart);
+    
     // Validation Range(2, 20)
     const minReq = parseInt(eventData.minExpertsRequired) || 2;
     formData.append('MinExpertsRequired', minReq);

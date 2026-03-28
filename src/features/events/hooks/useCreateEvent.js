@@ -17,7 +17,7 @@ export const useCreateEvent = () => {
         description: '',
         banner: null,
         expertWeight: 70,
-        isAutoActivate: false,
+        isAutoStart: false,
         minExpertsRequired: 2,
         pointPerLike: 1,
         pointPerShare: 3,
@@ -60,7 +60,7 @@ export const useCreateEvent = () => {
                 case 1:
                     return !!(form.title && form.description && form.banner);
                 case 2:
-                    return invitedExpertIds.length > 2;
+                    return invitedExpertIds.length >= 2;
                 case 3:
                     return prizes.length > 0 && prizes.every((p) => p.amount > 0);
                 default:
@@ -117,13 +117,14 @@ export const useCreateEvent = () => {
                 expertWeight: form.expertWeight,
                 userWeight: 100 - form.expertWeight,
                 startDate: startDate.toISOString(),
-                submissionDeadline: submissionDeadline ? submissionDeadline.toISOString() : null,
+                submissionDeadline: submissionDeadline.toISOString(),
                 endDate: endDate.toISOString(),
                 prizes: prizes,
                 invitedExpertIds: invitedExpertIds,
                 pointPerLike: form.pointPerLike,
                 pointPerShare: form.pointPerShare,
                 minExpertsRequired: Math.max(2, form.minExpertsRequired || 2),
+                isAutoStart: form.isAutoStart,
             };
 
             console.group('🚀 [Step 1] Hook Payload');
