@@ -66,9 +66,12 @@ const StepBasicInfo = ({
                         selected={startDate}
                         onChange={(date) => {
                             setStartDate(date);
-                            // Nếu chọn startDate mới mà endDate cũ không còn hợp lệ (vi phạm 24h), reset endDate
-                            if (endDate && endDate.getTime() < date.getTime() + 24 * 60 * 60 * 1000) {
-                                setEndDate(null);
+                            if (date) {
+                                const newSub = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+                                setSubmissionDeadline(newSub);
+
+                                const newEnd = new Date(newSub.getTime() + 24 * 60 * 60 * 1000);
+                                setEndDate(newEnd);
                             }
                         }}
                         minDate={minStart}

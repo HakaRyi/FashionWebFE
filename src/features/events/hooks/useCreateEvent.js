@@ -30,12 +30,16 @@ export const useCreateEvent = () => {
 
     // const [hashtags, setHashtags] = useState(['#StyleChallenge']);
     const defaultStartDate = useMemo(() => new Date(Date.now() + 24 * 60 * 60 * 1000), []);
+    const defaultSubmission = useMemo(
+        () => new Date(defaultStartDate.getTime() + 24 * 60 * 60 * 1000),
+        [defaultStartDate],
+    );
     const defaultEndDate = useMemo(
         () => new Date(defaultStartDate.getTime() + 1 * 24 * 60 * 60 * 1000),
         [defaultStartDate],
     );
     const [startDate, setStartDate] = useState(defaultStartDate);
-    const [submissionDeadline, setSubmissionDeadline] = useState(null);
+    const [submissionDeadline, setSubmissionDeadline] = useState(defaultSubmission);
     const [endDate, setEndDate] = useState(defaultEndDate);
     const [invitedExpertIds, setInvitedExpertIds] = useState([]);
     const [expertBalance, setExpertBalance] = useState(0);

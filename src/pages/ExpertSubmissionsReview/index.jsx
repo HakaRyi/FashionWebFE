@@ -1,126 +1,128 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-    Search, Star, CheckCircle, Clock,
-    ArrowUpDown, AlertCircle, X, Info, ChevronLeft
-} from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Search, ArrowUpDown, AlertCircle, ChevronLeft, Loader2, Award } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 
-import styles from './SubmissionsReview.module.scss';
+import { useExpertRating, expertRatingApi ,SubmissionCard, ReviewPanel} from '@/features/rating';
+
+import styles from '@/features/rating/styles/SubmissionsReview.module.scss';
 
 const SubmissionsReview = () => {
-    const { eventId } = useParams(); // Lấy ID từ URL: /expert/events/:eventId/submissions
+    const { eventId } = useParams();
     const navigate = useNavigate();
 
-    const [activeTab, setActiveTab] = useState('pending');
-    const [searchTerm, setSearchTerm] = useState("");
-    const [sortBy, setSortBy] = useState('deadline');
-    const [selectedSubmission, setSelectedSubmission] = useState(null);
+    // Custom Hook quản lý dữ liệu
+    const { submissions, isLoading, fetchMyReviews, updateLocalScore } = useExpertRating(eventId);
 
-    // State cho Form chấm điểm
+    // --- State local cho UI ---
+    const [eventInfo, setEventInfo] = useState({ name: "Đang tải...", id: eventId });
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortBy, setSortBy] = useState('newest');
+    const [selectedSubmission, setSelectedSubmission] = useState(null);
+    
+    // State cho form đánh giá
     const [score, setScore] = useState("");
     const [comment, setComment] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Mock Data mở rộng có ID sự kiện
-    const allSubmissions = [
-        {
-            id: 1, eventId: "EVT001", user: 'Minh Anh', avatar: 'https://i.pravatar.cc/150?u=1',
-            event: 'Street Style 2024', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500',
-            status: 'pending', date: new Date('2026-03-21T14:00:00'), deadline: 2,
-        },
-        {
-            id: 4, eventId: "EVT001", user: 'Quốc Khánh', avatar: 'https://i.pravatar.cc/150?u=4',
-            event: 'Street Style 2024', image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=500',
-            status: 'pending', date: new Date('2026-03-21T15:30:00'), deadline: 2,
-        },
-        {
-            id: 2, eventId: "EVT002", user: 'Lê Nam', avatar: 'https://i.pravatar.cc/150?u=2',
-            event: 'Minimalism Challenge', image: 'https://images.unsplash.com/photo-1539109132314-3475d24c2195?w=500',
-            status: 'pending', date: new Date('2026-03-20T10:00:00'), deadline: 1,
-        },
-        // ... thêm các data khác tương ứng với ID bạn test
-    ];
+    // Tải dữ liệu khi mount
+    useEffect(() => {
+        fetchMyReviews();
+    }, [fetchMyReviews]);
 
-    // Lọc submission theo eventId hiện tại
-    const currentEventSubmissions = useMemo(() => {
-        return allSubmissions.filter(sub => sub.eventId === eventId || !eventId);
-    }, [eventId]);
+    // Cập nhật tên sự kiện từ dữ liệu trả về
+    useEffect(() => {
+        if (submissions.length > 0) {
+            setEventInfo({ name: submissions[0].eventName, id: eventId });
+        }
+    }, [submissions, eventId]);
 
-    const eventName = currentEventSubmissions[0]?.event || "Event Submissions";
+    // Đồng bộ form khi chọn bài thi
+    useEffect(() => {
+        if (selectedSubmission) {
+            setScore(selectedSubmission.score !== null ? selectedSubmission.score.toString() : "");
+            setComment(selectedSubmission.reason || "");
+        }
+    }, [selectedSubmission]);
 
+    // --- Logic: Filter & Sort ---
     const filteredData = useMemo(() => {
-        let result = currentEventSubmissions.filter(sub => {
-            const matchesTab = sub.status === activeTab;
-            const matchesSearch = sub.user.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesTab && matchesSearch;
-        });
+        return submissions
+            .filter(sub => {
+                const matchesSearch = sub.userName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                     sub.title?.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesSearch;
+            })
+            .sort((a, b) => {
+                if (sortBy === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
+                if (sortBy === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt);
+                if (sortBy === 'score') return (b.score || 0) - (a.score || 0);
+                return 0;
+            });
+    }, [submissions, searchTerm, sortBy]);
 
-        result.sort((a, b) => {
-            if (sortBy === 'deadline') {
-                const deadlineA = a.deadline ?? 99;
-                const deadlineB = b.deadline ?? 99;
-                return deadlineA - deadlineB;
-            }
-            if (sortBy === 'newest') return b.date - a.date;
-            if (sortBy === 'oldest') return a.date - b.date;
-            return 0;
-        });
-
-        return result;
-    }, [currentEventSubmissions, activeTab, searchTerm, sortBy]);
-
-    const handleSubmitScore = () => {
-        if (!score || score < 0 || score > 10) {
-            toast.warn("Vui lòng nhập điểm từ 0 đến 10!");
-            return;
+    // --- Xử lý chấm điểm ---
+    const handleSubmitScore = async () => {
+        const numericScore = parseFloat(score);
+        if (isNaN(numericScore) || numericScore < 0 || numericScore > 10) {
+            return toast.warn("Điểm phải nằm trong khoảng từ 0 đến 10");
         }
 
-        const loadId = toast.loading("Đang lưu kết quả...");
-        setTimeout(() => {
+        setIsSubmitting(true);
+        const loadId = toast.loading("Đang lưu kết quả đánh giá...");
+
+        try {
+            await expertRatingApi.submitRating({
+                postId: selectedSubmission.postId,
+                score: numericScore,
+                reason: comment
+            });
+
             toast.update(loadId, {
-                render: `Đã chấm ${score} điểm cho ${selectedSubmission.user}!`,
+                render: "Đã cập nhật đánh giá thành công!",
                 type: "success",
+                isLoading: false,
+                autoClose: 2000,
+            });
+
+            // Cập nhật state local thông qua hook
+            updateLocalScore(selectedSubmission.postId, numericScore, comment);
+            
+            setTimeout(() => setSelectedSubmission(null), 300);
+        } catch (error) {
+            toast.update(loadId, {
+                render: "Lỗi: " + (error.response?.data?.message || "Không thể lưu điểm"),
+                type: "error",
                 isLoading: false,
                 autoClose: 3000,
             });
-            setSelectedSubmission(null);
-        }, 1000);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
         <div className={styles.reviewContainer}>
-            <ToastContainer theme="colored" />
+            <ToastContainer position="top-right" theme="colored" />
 
+            {/* Header Section */}
             <header className={styles.header}>
                 <div className={styles.topNav}>
                     <button className={styles.btnBack} onClick={() => navigate(-1)}>
-                        <ChevronLeft size={20} />
+                        <ChevronLeft size={20} /> Quay lại
                     </button>
-                    <div className={styles.badge}>Expert Panel</div>
+                    <div className={styles.badge}>
+                        <Award size={14} /> Hội đồng chuyên gia
+                    </div>
                 </div>
 
                 <div className={styles.titleSection}>
-                    <h1>{eventName}</h1>
-                    <p>Mã sự kiện: <span>{eventId}</span> • Quản lý và đánh giá bài dự thi từ thí sinh.</p>
+                    <h1>{eventInfo.name}</h1>
+                    <p>• Hệ thống quản lý chấm điểm</p>
                 </div>
 
                 <div className={styles.toolbar}>
-                    <nav className={styles.tabNav}>
-                        <button
-                            className={activeTab === 'pending' ? styles.active : ''}
-                            onClick={() => setActiveTab('pending')}
-                        >
-                            Đang chờ ({currentEventSubmissions.filter(s => s.status === 'pending').length})
-                        </button>
-                        <button
-                            className={activeTab === 'reviewed' ? styles.active : ''}
-                            onClick={() => setActiveTab('reviewed')}
-                        >
-                            Đã chấm điểm
-                        </button>
-                    </nav>
-
                     <div className={styles.filters}>
                         <div className={styles.searchBar}>
                             <Search size={16} />
@@ -133,59 +135,41 @@ const SubmissionsReview = () => {
                         <div className={styles.sortBox}>
                             <ArrowUpDown size={16} />
                             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                                <option value="deadline">Hạn chót</option>
                                 <option value="newest">Mới nhất</option>
                                 <option value="oldest">Cũ nhất</option>
+                                <option value="score">Điểm cao nhất</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </header>
 
+            {/* Main Content */}
             <main className={styles.content}>
-                {filteredData.length === 0 ? (
+                {isLoading ? (
+                    <div className={styles.loadingState}>
+                        <Loader2 className={styles.spinner} size={40} />
+                        <p>Đang tải dữ liệu bài thi...</p>
+                    </div>
+                ) : filteredData.length === 0 ? (
                     <div className={styles.emptyState}>
                         <AlertCircle size={40} />
-                        <p>Không có bài dự thi nào trong mục này.</p>
+                        <p>{searchTerm ? "Không tìm thấy kết quả." : "Chưa có bài dự thi nào."}</p>
                     </div>
                 ) : (
                     <div className={styles.submissionGrid}>
                         {filteredData.map((sub) => (
-                            <motion.div
-                                key={sub.id}
-                                layoutId={sub.id}
-                                className={styles.card}
-                                onClick={() => setSelectedSubmission(sub)}
-                            >
-                                <div className={styles.imageArea}>
-                                    <img src={sub.image} alt="Submission" />
-                                    {sub.deadline <= 1 && sub.status === 'pending' && (
-                                        <span className={styles.urgentTag}>Sắp hết hạn</span>
-                                    )}
-                                    <div className={styles.cardOverlay}>
-                                        <span>Xem chi tiết</span>
-                                    </div>
-                                </div>
-                                <div className={styles.cardInfo}>
-                                    <div className={styles.user}>
-                                        <img src={sub.avatar} alt="Avatar" />
-                                        <div>
-                                            <h4>{sub.user}</h4>
-                                            <small>{sub.date.toLocaleDateString('vi-VN')}</small>
-                                        </div>
-                                    </div>
-                                    {sub.status === 'reviewed' && (
-                                        <div className={styles.finalScore}>
-                                            {sub.score}<span>/10</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </motion.div>
+                            <SubmissionCard 
+                                key={sub.postId} 
+                                sub={sub} 
+                                onSelect={setSelectedSubmission} 
+                            />
                         ))}
                     </div>
                 )}
             </main>
 
+            {/* Review Panel Drawer */}
             <AnimatePresence>
                 {selectedSubmission && (
                     <>
@@ -194,57 +178,18 @@ const SubmissionsReview = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            onClick={() => setSelectedSubmission(null)}
+                            onClick={() => !isSubmitting && setSelectedSubmission(null)}
                         />
-                        <motion.div
-                            className={styles.reviewPanel}
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                        >
-                            <button className={styles.btnClose} onClick={() => setSelectedSubmission(null)}>
-                                <X size={20} />
-                            </button>
-
-                            <div className={styles.panelContent}>
-                                <h3>Đánh giá bài thi</h3>
-                                <div className={styles.mainImage}>
-                                    <img src={selectedSubmission.image} alt="Full view" />
-                                </div>
-
-                                <div className={styles.formSection}>
-                                    <div className={styles.infoRow}>
-                                        <label>Thí sinh:</label>
-                                        <span>{selectedSubmission.user}</span>
-                                    </div>
-
-                                    <div className={styles.inputField}>
-                                        <label>Chấm điểm (0 - 10)</label>
-                                        <input
-                                            type="number"
-                                            placeholder="Nhập số điểm..."
-                                            value={score}
-                                            onChange={(e) => setScore(e.target.value)}
-                                            autoFocus
-                                        />
-                                    </div>
-
-                                    <div className={styles.inputField}>
-                                        <label>Nhận xét chuyên môn</label>
-                                        <textarea
-                                            placeholder="Ghi chú về kỹ thuật, màu sắc, bố cục..."
-                                            value={comment}
-                                            onChange={(e) => setComment(e.target.value)}
-                                            rows={5}
-                                        />
-                                    </div>
-
-                                    <button className={styles.submitBtn} onClick={handleSubmitScore}>
-                                        Gửi đánh giá <CheckCircle size={18} />
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
+                        <ReviewPanel 
+                            submission={selectedSubmission}
+                            score={score}
+                            setScore={setScore}
+                            comment={comment}
+                            setComment={setComment}
+                            isSubmitting={isSubmitting}
+                            onClose={() => setSelectedSubmission(null)}
+                            onSubmit={handleSubmitScore}
+                        />
                     </>
                 )}
             </AnimatePresence>

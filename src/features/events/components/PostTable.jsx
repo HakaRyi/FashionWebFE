@@ -21,7 +21,7 @@ const PostTable = ({ posts }) => (
                         {posts.map((post) => (
                             <tr key={post.postId}>
                                 <td>
-                                    <img src={post.imageUrl || '/placeholder.png'} className={styles.postThumb} alt="" />
+                                    <img src={post.imageUrls?.[0] || '/placeholder.png'} className={styles.postThumb} alt="" />
                                 </td>
                                 <td><strong>{post.title}</strong></td>
                                 <td>{post.authorName || "Ẩn danh"}</td>

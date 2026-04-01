@@ -58,12 +58,12 @@ const EventCard = ({ event, index, onClick }) => {
             <div className={styles.cardFooter}>
                 <button className={styles.btnEdit}>Manage</button>
 
-                <button
+                {/* <button
                     className={styles.btnMore}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <MoreVertical size={18} />
-                </button>
+                </button> */}
             </div>
         </motion.div>
     );

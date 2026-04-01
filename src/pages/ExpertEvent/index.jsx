@@ -1,9 +1,8 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Plus, Loader2, ChevronLeft, ChevronRight, ClipboardCheck } from "lucide-react";
+import { Plus, Loader2, ChevronLeft, ChevronRight, ClipboardCheck, LayoutGrid, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "@/features/events/styles/MyEvents.module.scss";
-
 import { PATHS } from "@/app/routes/paths";
 import { EmptyEvents, EventToolbar, EventCard, useMyEvents } from '@/features/events';
 
@@ -11,21 +10,29 @@ const ITEMS_PER_PAGE = 6;
 
 const MyEventsPage = () => {
     const navigate = useNavigate();
-    const { events, loading } = useMyEvents();
+    const { hostedEvents, judgingEvents, loading } = useMyEvents();
 
+    const [activeTab, setActiveTab] = useState("hosted"); // "hosted" hoặc "judging"
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const now = new Date();
 
+    // Reset phân trang khi đổi tab hoặc tìm kiếm
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm]);
+    }, [searchTerm, activeTab]);
 
+    // Chọn danh sách dựa trên Tab
+    const currentRawList = useMemo(() => {
+        return activeTab === "hosted" ? hostedEvents : judgingEvents;
+    }, [activeTab, hostedEvents, judgingEvents]);
+
+    // Filter tìm kiếm
     const filteredEvents = useMemo(() => {
-        return events.filter((event) =>
+        return currentRawList.filter((event) =>
             event.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [events, searchTerm]);
+    }, [currentRawList, searchTerm]);
 
     const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
 
@@ -38,7 +45,7 @@ const MyEventsPage = () => {
         return (
             <div className={styles.loadingContainer}>
                 <Loader2 className={styles.spinner} size={40} />
-                <p>Loading your events...</p>
+                <p>Đang tải dữ liệu sự kiện...</p>
             </div>
         );
     }
@@ -47,20 +54,40 @@ const MyEventsPage = () => {
         <div className={styles.container}>
             <header className={styles.header}>
                 <div className={styles.titleArea}>
-                    <h1>My Events</h1>
-                    <p>Manage and track your fashion workshops.</p>
+                    <h1>Quản lý sự kiện</h1>
+                    <p>Theo dõi và quản lý các hoạt động workshop của bạn.</p>
                 </div>
 
-                <button
-                    className={styles.btnCreate}
-                    onClick={() => navigate(PATHS.EXPERT_CREATE_EVENTS)}
-                >
-                    <Plus size={20} />
-                    <span>Create Event</span>
-                </button>
+                {activeTab === "hosted" && (
+                    <button
+                        className={styles.btnCreate}
+                        onClick={() => navigate(PATHS.EXPERT_CREATE_EVENTS)}
+                    >
+                        <Plus size={20} />
+                        <span>Tạo sự kiện</span>
+                    </button>
+                )}
             </header>
 
-            {events.length > 0 ? (
+            {/* Hệ thống Tab Role */}
+            <div className={styles.tabWrapper}>
+                <button 
+                    className={`${styles.tabBtn} ${activeTab === 'hosted' ? styles.active : ''}`}
+                    onClick={() => setActiveTab('hosted')}
+                >
+                    <LayoutGrid size={18} />
+                    Sự kiện tôi tạo ({hostedEvents.length})
+                </button>
+                <button 
+                    className={`${styles.tabBtn} ${activeTab === 'judging' ? styles.active : ''}`}
+                    onClick={() => setActiveTab('judging')}
+                >
+                    <Award size={18} />
+                    Tôi chấm điểm ({judgingEvents.length})
+                </button>
+            </div>
+
+            {currentRawList.length > 0 ? (
                 <>
                     <EventToolbar
                         searchTerm={searchTerm}
@@ -72,16 +99,21 @@ const MyEventsPage = () => {
                             <div className={styles.eventGrid}>
                                 {paginatedEvents.map((event, index) => {
                                     const deadline = new Date(event.submissionDeadline);
+                                    
+                                    // Điều kiện hiện nút Review:
+                                    // 1. Nếu là Host: Event Active
+                                    // 2. Nếu là Expert: Event Active + Đã qua deadline nộp bài
+                                    const canReview = 
+                                        event.status?.toLowerCase() === "active" && 
+                                        (activeTab === 'hosted' || now >= deadline);
 
-                                    // Logic kiểm tra: Active VÀ đã đến hạn nộp bài
-                                    const canReview =
-                                        event.status?.toLowerCase() === "active" &&
-                                        now >= deadline;
                                     return (
                                         <div key={event.eventId} className={styles.eventCardWrapper}>
                                             <EventCard
                                                 event={event}
                                                 index={index}
+                                                // Prop này để Card hiển thị thù lao nếu là judging
+                                                isJudgingMode={activeTab === 'judging'} 
                                                 onClick={() =>
                                                     navigate(PATHS.EXPERT_EVENT_DETAIL.replace(':id', event.eventId))
                                                 }
@@ -93,11 +125,11 @@ const MyEventsPage = () => {
                                                         className={styles.btnReview}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            navigate(`/expert/events/${event.eventId}/submissions`);
+                                                            navigate(PATHS.EXPERT_SUBMISSION_REVIEW.replace(':eventId', event.eventId));
                                                         }}
                                                     >
                                                         <ClipboardCheck size={16} />
-                                                        <span>Submission Review</span>
+                                                        <span>{activeTab === 'hosted' ? 'Xem bài nộp' : 'Chấm điểm'}</span>
                                                     </button>
                                                 </div>
                                             )}
@@ -106,6 +138,7 @@ const MyEventsPage = () => {
                                 })}
                             </div>
 
+                            {/* Pagination */}
                             {totalPages > 1 && (
                                 <div className={styles.pagination}>
                                     <button
@@ -115,11 +148,9 @@ const MyEventsPage = () => {
                                     >
                                         <ChevronLeft size={18} />
                                     </button>
-
                                     <div className={styles.pageNumbers}>
-                                        Trang <strong>{currentPage}</strong> trên {totalPages}
+                                        Trang <strong>{currentPage}</strong> / {totalPages}
                                     </div>
-
                                     <button
                                         className={styles.pageBtn}
                                         disabled={currentPage === totalPages}
@@ -138,6 +169,7 @@ const MyEventsPage = () => {
                 </>
             ) : (
                 <EmptyEvents
+                    isJudging={activeTab === 'judging'}
                     onCreate={() => navigate(PATHS.EXPERT_CREATE_EVENTS)}
                 />
             )}

@@ -11,6 +11,39 @@ export const useEventDetail = (id) => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isFinalizing, setIsFinalizing] = useState(false);
+    const [isStarting, setIsStarting] = useState(false);
+
+    const handleManualStart = async () => {
+        const result = await MySwal.fire({
+            title: 'Bắt đầu sự kiện ngay?',
+            text: "Sự kiện sẽ chuyển sang trạng thái Active và người dùng có thể nộp bài ngay lập tức.",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Bắt đầu ngay',
+            cancelButtonText: 'Để sau'
+        });
+
+        if (result.isConfirmed) {
+            setIsStarting(true);
+            try {
+                await toast.promise(
+                    getEventApi.manualStartEvent(id),
+                    {
+                        pending: '⌛ Đang kích hoạt sự kiện...',
+                        success: 'Sự kiện đã bắt đầu! 🚀',
+                        error: {
+                            render({ data }) {
+                                return data?.response?.data?.message || "Không thể bắt đầu sự kiện";
+                            }
+                        }
+                    }
+                );
+                await fetchAllData();
+            } finally {
+                setIsStarting(false);
+            }
+        }
+    };
 
     const fetchAllData = async () => {
         try {
@@ -67,5 +100,5 @@ export const useEventDetail = (id) => {
         }
     };
 
-    return { event, posts, loading, isFinalizing, handleFinalize };
-};
+    return { event, posts, loading, isFinalizing, isStarting, handleFinalize, handleManualStart };
+};  

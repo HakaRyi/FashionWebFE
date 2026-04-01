@@ -32,4 +32,10 @@ export const getEventApi = {
     getEventPosts: (id) => axiosClient.get(`/events/${id}/posts`),
 
     finalizeEvent: (id) => axios.post(`/events/${id}/finalize`),
+
+    manualStartEvent: (id) => axiosClient.post(`/events/${id}/manual-start`),
+
+    cancelEvent: (id) => axiosClient.post(`/events/${id}/cancel`),
+
+    getHistory: () => axiosClient.get('/event-expert/my-assigned-events'),
 };
