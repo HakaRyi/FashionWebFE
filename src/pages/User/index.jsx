@@ -98,7 +98,7 @@ function UserManagement() {
                         onChange={(e) => setRoleFilter(e.target.value)}
                     >
                         <option value="">Tất cả vai trò</option>
-                        <option value="Admin">Admin</option>
+                        {/* <option value="Admin">Admin</option> */}
                         <option value="Expert">Expert</option>
                         <option value="User">User</option>
                     </select>
