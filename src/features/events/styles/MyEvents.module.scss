@@ -432,6 +432,57 @@ $colors: (
     }
 }
 
+.tabWrapper {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 2px;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:hover {
+    color: #3b82f6;
+    background: #f1f5f9;
+    border-radius: 8px 8px 0 0;
+  }
+
+  &.active {
+    color: #3b82f6;
+    
+    // Đường kẻ gạch chân khi active
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #3b82f6;
+    }
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:active svg {
+    transform: scale(0.9);
+  }
+}
+
 @keyframes pulse {
     0% {
         transform: scale(0.95);

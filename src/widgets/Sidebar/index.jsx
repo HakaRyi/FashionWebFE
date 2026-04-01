@@ -23,7 +23,7 @@ const menuItems = [
         label: 'Invitations',
         path: PATHS.EXPERT_INVITATIONS
     },
-    { icon: <ClipboardCheck size={20} />, label: 'Submissions Review', path: PATHS.EXPERT_SUBMISSION_REVIEW },
+    // { icon: <ClipboardCheck size={20} />, label: 'Submissions Review', path: PATHS.EXPERT_SUBMISSION_REVIEW },
     { icon: <BarChart3 size={20} />, label: 'Analytics', path: PATHS.EXPERT_DASHBOARD },
     { icon: <Wallet size={20} />, label: 'Wallet', path: PATHS.EXPERT_WALLET },
     // { icon: <UserCircle size={20} />, label: 'Public Profile', path: PATHS.EXPERT_PROFILE },

@@ -1,29 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getEventApi } from "../api/getEvent";
 
 export const useMyEvents = () => {
-    const [events, setEvents] = useState([]);
+    const [hostedEvents, setHostedEvents] = useState([]);
+    const [judgingEvents, setJudgingEvents] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchMyEvents = async () => {
+    const fetchAllData = useCallback(async () => {
         try {
             setLoading(true);
-            const res = await getEventApi.getMyCreatedEvents();
-            setEvents(res.data);
+            // Gọi song song 2 API để tối ưu tốc độ
+            const [hostedRes, judgingRes] = await Promise.all([
+                getEventApi.getMyCreatedEvents(),
+                getEventApi.getHistory()
+            ]);
+            
+            setHostedEvents(hostedRes.data || []);
+            setJudgingEvents(judgingRes.data || []);
         } catch (error) {
             console.error("Error fetching events:", error);
         } finally {
             setLoading(false);
         }
-    };
-
-    useEffect(() => {
-        fetchMyEvents();
     }, []);
 
+    useEffect(() => {
+        fetchAllData();
+    }, [fetchAllData]);
+
     return {
-        events,
+        hostedEvents,
+        judgingEvents,
         loading,
-        refetch: fetchMyEvents
+        refetch: fetchAllData
     };
 };

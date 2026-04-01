@@ -15,7 +15,7 @@ export const PATHS = {
     EXPERT_CREATE_EVENTS: '/expert/create-events',
     EXPERT_EVENTS: '/expert/events',
     EXPERT_WALLET: '/expert/wallet',
-    EXPERT_SUBMISSION_REVIEW: '/expert/submissions-review',
+    EXPERT_SUBMISSION_REVIEW: '/expert/events/:eventId/submissions',
     EXPERT_EVENT_DETAIL: "/expert/events/:id",
     EXPERT_INVITATIONS: "/expert/invitation",
 

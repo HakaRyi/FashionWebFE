@@ -1,0 +1,501 @@
+// --- Variables ---
+$primary: #6366f1;
+$primary-hover: #4f46e5;
+$primary-light: rgba(99, 102, 241, 0.08);
+$slate-900: #0f172a;
+$slate-800: #1e293b;
+$slate-700: #334155;
+$slate-600: #475569;
+$slate-500: #64748b;
+$slate-400: #94a3b8;
+$slate-200: #e2e8f0;
+$slate-100: #f1f5f9;
+$slate-50: #f8fafc;
+$white: #ffffff;
+$bg-workspace: #f8fafc;
+$red-500: #ef4444;
+$green-500: #22c55e;
+$border-color: #e2e8f0;
+$gold: #fbbf24;
+
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reviewContainer {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: $bg-workspace;
+    color: $slate-800;
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden; // Header và Content sẽ lo việc scroll riêng
+
+    // --- HEADER ---
+    .header {
+        background: $white;
+        padding: 1.25rem 2rem;
+        border-bottom: 1px solid $border-color;
+        flex-shrink: 0;
+        z-index: 20;
+
+        .topNav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+
+            .btnBack {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 0.875rem;
+                border-radius: 8px;
+                border: 1px solid $slate-200;
+                background: $white;
+                color: $slate-600;
+                font-size: 0.813rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: $transition;
+
+                &:hover {
+                    background: $slate-50;
+                    color: $primary;
+                    border-color: $primary;
+                }
+            }
+
+            .badge {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.35rem 0.75rem;
+                background: $primary-light;
+                color: $primary;
+                border-radius: 99px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.025em;
+            }
+        }
+
+        .titleSection {
+            h1 {
+                font-size: 1.75rem;
+                font-weight: 800;
+                color: $slate-900;
+                margin: 0 0 0.25rem 0;
+                letter-spacing: -0.025em;
+            }
+            p {
+                color: $slate-500;
+                font-size: 0.938rem;
+                span { font-weight: 600; color: $slate-700; }
+            }
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+
+            .tabNav {
+                display: flex;
+                gap: 2rem;
+                border-bottom: 1px solid $slate-100;
+
+                button {
+                    background: none;
+                    border: none;
+                    padding: 0.75rem 0.25rem;
+                    font-size: 0.938rem;
+                    font-weight: 600;
+                    color: $slate-400;
+                    cursor: pointer;
+                    position: relative;
+                    transition: $transition;
+
+                    &:hover { color: $slate-600; }
+
+                    &.active {
+                        color: $primary;
+                        &::after {
+                            content: '';
+                            position: absolute;
+                            bottom: -1px;
+                            left: 0;
+                            width: 100%;
+                            height: 2px;
+                            background: $primary;
+                        }
+                    }
+                }
+            }
+
+            .filters {
+                display: flex;
+                gap: 0.75rem;
+
+                .searchBar {
+                    display: flex;
+                    align-items: center;
+                    background: $slate-100;
+                    padding: 0.625rem 1rem;
+                    border-radius: 10px;
+                    width: 260px;
+                    border: 1px solid transparent;
+                    transition: $transition;
+
+                    &:focus-within {
+                        background: $white;
+                        border-color: $primary;
+                        box-shadow: 0 0 0 4px rgba($primary, 0.1);
+                        width: 320px;
+                    }
+
+                    svg { color: $slate-400; margin-right: 0.6rem; }
+                    input {
+                        background: transparent;
+                        border: none;
+                        outline: none;
+                        width: 100%;
+                        font-size: 0.875rem;
+                    }
+                }
+
+                .sortBox {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background: $white;
+                    padding: 0 0.75rem;
+                    border-radius: 10px;
+                    border: 1px solid $border-color;
+                    
+                    select {
+                        height: 40px;
+                        border: none;
+                        outline: none;
+                        font-weight: 600;
+                        font-size: 0.813rem;
+                        color: $slate-700;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+
+    // --- MAIN CONTENT ---
+    .content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+
+        .submissionGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: $white;
+            border-radius: 20px;
+            border: 1px solid $border-color;
+            overflow: hidden;
+            cursor: pointer;
+            transition: $transition;
+
+            &:hover {
+                transform: translateY(-6px);
+                box-shadow: $shadow-lg;
+                border-color: $primary;
+
+                .cardOverlay { opacity: 1; }
+            }
+
+            .imageArea {
+                position: relative;
+                height: 220px;
+                background: $slate-100;
+
+                img { width: 100%; height: 100%; object-fit: cover; }
+
+                .cardOverlay {
+                    position: absolute;
+                    inset: 0;
+                    background: rgba($slate-900, 0.6);
+                    @include flex-center;
+                    opacity: 0;
+                    transition: 0.3s;
+
+                    .btnOpen {
+                        background: $white;
+                        padding: 0.75rem 1.25rem;
+                        border-radius: 99px;
+                        font-weight: 700;
+                        font-size: 0.875rem;
+                        border: none;
+                        cursor: pointer;
+                    }
+                }
+
+                .scoredBadge {
+                    position: absolute;
+                    top: 12px;
+                    left: 12px;
+                    background: $green-500;
+                    color: $white;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    box-shadow: $shadow-sm;
+                }
+
+                .expertBadge {
+                    position: absolute;
+                    top: 12px;
+                    right: 12px;
+                    background: $gold;
+                    color: $slate-900;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    font-size: 0.7rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                }
+            }
+
+            .cardBody {
+                padding: 1.25rem;
+
+                .postTitle {
+                    font-size: 1.063rem;
+                    font-weight: 700;
+                    color: $slate-900;
+                    margin: 0 0 1rem 0;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .userInfo {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    margin-bottom: 1.25rem;
+
+                    img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+                    span { font-size: 0.875rem; font-weight: 600; color: $slate-600; }
+                }
+
+                .cardFooter {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding-top: 1rem;
+                    border-top: 1px solid $slate-50;
+
+                    .date { font-size: 0.75rem; color: $slate-400; }
+
+                    .scoreDisplay {
+                        background: $slate-50;
+                        padding: 0.4rem 0.75rem;
+                        border-radius: 8px;
+                        color: $slate-400;
+                        strong { font-size: 1.125rem; color: $primary; margin-right: 2px; }
+                        span { font-size: 0.75rem; font-weight: 600; }
+                    }
+                }
+            }
+        }
+    }
+
+    // --- REVIEW PANEL ---
+    .modalOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba($slate-900, 0.4);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+    }
+
+    .reviewPanel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 480px;
+        height: 100vh;
+        background: $white;
+        z-index: 1001;
+        box-shadow: -20px 0 50px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+
+        .panelHeader {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid $slate-100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h3 { font-size: 1.25rem; font-weight: 800; color: $slate-900; margin: 0; }
+            small { color: $slate-400; font-weight: 500; }
+
+            .btnClose {
+                background: $slate-50;
+                border: none;
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+                @include flex-center;
+                cursor: pointer;
+                transition: $transition;
+                &:hover { background: $red-500; color: $white; transform: rotate(90deg); }
+            }
+        }
+
+        .panelScroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+
+            .previewSection {
+                margin-bottom: 2.5rem;
+
+                .mainImg {
+                    width: 100%;
+                    border-radius: 16px;
+                    margin-bottom: 1.5rem;
+                    box-shadow: $shadow-md;
+                }
+
+                h4 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+                .contentDesc {
+                    font-size: 0.938rem;
+                    line-height: 1.6;
+                    color: $slate-600;
+                    white-space: pre-wrap;
+                }
+            }
+
+            .formSection {
+                background: $slate-50;
+                padding: 1.5rem;
+                border-radius: 20px;
+                border: 1px solid $slate-100;
+
+                .inputGroup {
+                    margin-bottom: 1.5rem;
+
+                    label {
+                        display: block;
+                        font-size: 0.813rem;
+                        font-weight: 700;
+                        color: $slate-500;
+                        text-transform: uppercase;
+                        margin-bottom: 0.75rem;
+                    }
+
+                    input, textarea {
+                        width: 100%;
+                        padding: 1rem;
+                        border-radius: 12px;
+                        border: 2px solid $slate-200;
+                        font-size: 1rem;
+                        transition: $transition;
+
+                        &:focus {
+                            outline: none;
+                            border-color: $primary;
+                            background: $white;
+                            box-shadow: 0 0 0 4px rgba($primary, 0.1);
+                        }
+                    }
+
+                    input[type="number"] {
+                        font-size: 1.5rem;
+                        font-weight: 800;
+                        color: $primary;
+                        text-align: center;
+                    }
+                }
+
+                .submitBtn {
+                    width: 100%;
+                    padding: 1.25rem;
+                    background: $primary;
+                    color: $white;
+                    border: none;
+                    border-radius: 16px;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    @include flex-center;
+                    gap: 0.75rem;
+                    cursor: pointer;
+                    transition: $transition;
+
+                    &:hover:not(:disabled) {
+                        background: $primary-hover;
+                        transform: translateY(-2px);
+                        box-shadow: 0 10px 20px rgba($primary, 0.2);
+                    }
+
+                    &:disabled {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                    }
+
+                    .spinner { animation: spin 1s linear infinite; }
+                }
+            }
+        }
+    }
+
+    // --- STATES ---
+    .loadingState, .emptyState {
+        height: 100%;
+        @include flex-center;
+        flex-direction: column;
+        color: $slate-400;
+        gap: 1rem;
+
+        .spinner { animation: spin 1s linear infinite; color: $primary; }
+    }
+}
+
+// --- ANIMATIONS ---
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+// --- RESPONSIVE ---
+@media (max-width: 768px) {
+    .reviewContainer {
+        .header {
+            padding: 1rem;
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+                .filters {
+                    flex-direction: column;
+                    .searchBar { width: 100%; &:focus-within { width: 100%; } }
+                }
+            }
+        }
+        .reviewPanel { width: 100%; }
+    }
+}

@@ -43,6 +43,14 @@ const Navbar = () => {
         }
     };
 
+    const handleLogoClick = () => {
+        if (isLoggedIn) {
+            navigate(PATHS.USER_FEED);
+        } else {
+            navigate(PATHS.HOME);
+        }
+    };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -63,7 +71,7 @@ const Navbar = () => {
         <nav className={`${styles.navbar} ${isScrolled ? styles.scrolled : ''} ${isLoggedIn ? styles.authMode : ''}`}>
             <div className={styles.navContainer}>
                 {/* LEFT: LOGO */}
-                <div className={styles.logoSection} onClick={() => navigate('/')}>
+                <div className={styles.logoSection} onClick={handleLogoClick}>
                     <div className={styles.logo}>
                         VOGUE<span></span>
                     </div>
@@ -88,10 +96,10 @@ const Navbar = () => {
                             <input type="text" placeholder="Search trends..." />
                         </div>
 
-                        <button className={styles.createButton}>
+                        {/* <button className={styles.createButton}>
                             <Plus size={18} strokeWidth={2.5} />
                             <span>Create</span>
-                        </button>
+                        </button> */}
                     </div>
                 )}
 
@@ -176,8 +184,10 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <div className={styles.guestButtons}>
-                            <button className={styles.btnText}>Login</button>
-                            <button className={styles.btnPrimary}>Join Vogue</button>
+                            <button className={styles.btnPrimary} onClick={() => {
+                                navigate(PATHS.LOGIN);
+                            }}>Login</button>
+                            {/* <button className={styles.btnPrimary}>Join Vogue</button> */}
                         </div>
                     )}
                 </div>
