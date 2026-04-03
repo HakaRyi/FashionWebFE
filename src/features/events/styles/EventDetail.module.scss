@@ -17,12 +17,12 @@ $shadow:
     height: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 24px 40px 40px 24px; 
+    padding: 24px 40px 40px 24px;
     box-sizing: border-box;
     background-color: $bg-light;
     overflow-y: scroll;
     display: block;
-    
+
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -419,7 +419,7 @@ $shadow:
     gap: 8px;
     font-weight: 600;
     transition: all 0.2s;
-    
+
     &:hover {
         background-color: #2563eb;
         transform: translateY(-1px);
@@ -433,5 +433,98 @@ $shadow:
 
 .rightActions {
     display: flex;
+    align-items: center;
     gap: 12px;
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        white-space: nowrap;
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+            transform: none !important;
+            box-shadow: none !important;
+        }
+    }
+
+    // NÚT HỦY (Ghost Button Style)
+    .cancelBtn {
+        background-color: #fff;
+        color: #ef4444;
+        border: 1.5px solid #fee2e2;
+
+        &:hover:not(:disabled) {
+            background-color: #ef4444;
+            color: #fff;
+            border-color: #ef4444;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    }
+
+    // NÚT BẮT ĐẦU (Primary Blue)
+    .startBtn {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.35);
+            filter: brightness(1.1);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    }
+
+    // NÚT CHỐT GIẢI (Success Green)
+    .finalizeBtn {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.35);
+            filter: brightness(1.1);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .rightActions {
+        flex-direction: column;
+        width: 100%;
+        
+        button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
 }

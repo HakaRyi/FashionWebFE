@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-    ChevronLeft, Calendar, ShieldCheck, Info, User, Star, Landmark, PlayCircle
+    ChevronLeft, Calendar, ShieldCheck, Info, User, Star, Landmark, PlayCircle, XCircle
 } from "lucide-react";
 import { useEventDetail, PrizeSection, renderExpertStatus, PostTable } from "@/features/events";
 import styles from "@/features/events/styles/EventDetail.module.scss";
@@ -9,7 +9,7 @@ import styles from "@/features/events/styles/EventDetail.module.scss";
 const EventDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { event, posts, loading, isFinalizing, handleFinalize, isStarting, handleManualStart } = useEventDetail(id);
+    const { event, posts, loading, isFinalizing, handleFinalize, isStarting, handleManualStart, isCancelling, handleCancel } = useEventDetail(id);
 
     if (loading) return <div className={styles.loadingContainer}>Đang tải thông tin sự kiện...</div>;
     if (!event) return <div className={styles.container}>Không tìm thấy sự kiện.</div>;
@@ -38,8 +38,9 @@ const EventDetailPage = () => {
                         <button
                             className={styles.cancelBtn}
                             onClick={handleCancel}
+                            disabled={isCancelling}
                         >
-                            Hủy sự kiện
+                            <XCircle size={18} />{isCancelling ? "Đang hủy..." : "Hủy sự kiện"}
                         </button>
                     )}
 

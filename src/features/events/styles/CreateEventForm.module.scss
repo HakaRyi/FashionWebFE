@@ -91,6 +91,62 @@
     }
 }
 
+.walletPill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+
+    .walletIcon {
+        width: 28px;
+        height: 28px;
+        background: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6366f1;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .walletInfo {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+
+        small {
+            font-size: 10px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        strong {
+            font-size: 13px;
+            color: #1e293b;
+            font-weight: 700;
+        }
+    }
+
+    // Trạng thái thiếu tiền
+    &.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+        
+        .walletIcon {
+            color: #ef4444;
+        }
+        
+        .walletInfo strong {
+            color: #ef4444;
+        }
+    }
+}
+
 /* --- CONTENT AREA --- */
 .contentScroll {
     flex: 1;

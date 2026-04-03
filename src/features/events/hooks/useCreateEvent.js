@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getMyWallet } from '../../wallet';
 import { createEventApi } from '../api/createEvent';
+import { getEventApi } from '../api/getEvent';
 
 // Hằng số cấu hình hệ thống
 const FEE_PERCENT = 0.05;
@@ -35,21 +36,39 @@ export const useCreateEvent = () => {
         [defaultStartDate],
     );
     const defaultEndDate = useMemo(
-        () => new Date(defaultStartDate.getTime() + 1 * 24 * 60 * 60 * 1000),
-        [defaultStartDate],
+        () => new Date(defaultSubmission.getTime() + 24 * 60 * 60 * 1000),
+        [defaultSubmission],
     );
     const [startDate, setStartDate] = useState(defaultStartDate);
     const [submissionDeadline, setSubmissionDeadline] = useState(defaultSubmission);
     const [endDate, setEndDate] = useState(defaultEndDate);
     const [invitedExpertIds, setInvitedExpertIds] = useState([]);
     const [expertBalance, setExpertBalance] = useState(0);
+    const [feeConfig, setFeeConfig] = useState({ feePercentage: 0, minFee: 0 });
 
     // 3. Computed Properties (Tính toán giá trị phụ thuộc)
     const totalBudget = useMemo(() => {
         return prizes.reduce((sum, p) => sum + Number(p.amount || 0), 0);
     }, [prizes]);
 
-    const platformFee = useMemo(() => totalBudget * FEE_PERCENT, [totalBudget]);
+    const fetchFeeConfig = useCallback(async () => {
+        try {
+            const res = await getEventApi.getEventFees();
+            const data = res.data;
+            setFeeConfig({
+                percentage: (data.feePercentage || 5) / 100,
+                minFee: data.minFee || 0,
+            });
+        } catch (err) {
+            console.error('Lỗi lấy cấu hình phí:', err);
+        }
+    }, []);
+
+    // 2. Tính toán lại platformFee dựa trên feeConfig
+    const platformFee = useMemo(() => {
+        const calculated = totalBudget * feeConfig.percentage;
+        return Math.max(calculated, feeConfig.minFee);
+    }, [totalBudget, feeConfig]);
 
     const totalRequired = useMemo(() => totalBudget + platformFee, [totalBudget, platformFee]);
 
@@ -151,7 +170,8 @@ export const useCreateEvent = () => {
 
     useEffect(() => {
         fetchBalance();
-    }, [fetchBalance]);
+        fetchFeeConfig();
+    }, [fetchBalance, fetchFeeConfig]);
 
     return {
         // States & Form Data
@@ -172,6 +192,7 @@ export const useCreateEvent = () => {
         // Tài chính
         expertBalance,
         totalBudget,
+        feePercentage: feeConfig.percentage * 100,
         platformFee,
         totalRequired,
         isOverBudget,

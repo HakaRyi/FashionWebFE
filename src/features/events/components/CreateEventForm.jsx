@@ -46,7 +46,7 @@ const CreateEventForm = () => {
         submissionDeadline, setSubmissionDeadline,
         expertBalance, totalBudget, totalRequired, isOverBudget,
         createEvent, invitedExpertIds, toggleExpert, loading, fetchBalance,
-        validateStep, platformFee,
+        validateStep, platformFee, feePercentage,
     } = useCreateEvent();
 
     const fileInputRef = useRef(null);
@@ -126,27 +126,20 @@ const CreateEventForm = () => {
                             </div>
                         ))}
                     </nav>
-                </header>
-
-                <div className={styles.contentScroll}>
-                    <div className={styles.topStatusBoard}>
-                        <div className={styles.statusCard}>
-                            <div className={styles.iconCircle}><Wallet size={16} /></div>
-                            <div className={styles.statusText}>
-                                <small>Số dư ví</small>
-                                <strong>{(expertBalance || 0).toLocaleString()} VND</strong>
+                    <div className={styles.navRight}>
+                        <div className={`${styles.walletPill} ${isOverBudget ? styles.danger : ''}`}>
+                            <div className={styles.walletIcon}>
+                                <Wallet size={14} />
                             </div>
-                        </div>
-
-                        <div className={`${styles.statusCard} ${isOverBudget ? styles.danger : ''}`}>
-                            <div className={styles.iconCircle}><Sparkles size={16} /></div>
-                            <div className={styles.statusText}>
-                                <small>Tổng chi phí (+5% phí)</small>
-                                <strong>{(totalRequired || 0).toLocaleString()} VND</strong>
+                            <div className={styles.walletInfo}>
+                                <small>Số dư ví</small>
+                                <strong>{(expertBalance || 0).toLocaleString()}đ</strong>
                             </div>
                         </div>
                     </div>
+                </header>
 
+                <div className={styles.contentScroll}>
                     <div className={styles.formContainer}>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -172,6 +165,7 @@ const CreateEventForm = () => {
                                     totalBudget={totalBudget}
                                     totalRequired={totalRequired}
                                     isOverBudget={isOverBudget}
+                                    feePercentage={feePercentage}
                                     platformFee={platformFee}
                                     expertBalance={expertBalance}
                                 />
