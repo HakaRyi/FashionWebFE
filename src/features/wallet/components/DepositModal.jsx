@@ -118,7 +118,7 @@ const DepositModal = ({
               <CheckCircle2 size={60} color="#2ecc71" />
             </motion.div>
             <h3>NẠP TIỀN THÀNH CÔNG</h3>
-            <p>Số dư đã được cập nhật. Đang chuẩn bị tạo sự kiện...</p>
+            <p>Số dư đã được cập nhật.</p>
           </div>
         )}
         <div className={styles.zigzag}></div>

@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Trophy, Coins, X, Plus } from "lucide-react";
-import styles from "../../styles/StepPrizes.module.scss"; 
+import styles from "../../styles/StepPrizes.module.scss";
 
 const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
 
@@ -15,19 +15,29 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
     }, [setPrizes]);
 
     const addPrize = useCallback(() => {
-        setPrizes(prev => [
-            ...prev,
-            {
-                id: crypto.randomUUID(),
-                label: "",
-                amount: 0
-            }
-        ]);
+        setPrizes(prev => {
+            const nextNumber = prev.length + 1;
+            return [
+                ...prev,
+                {
+                    id: crypto.randomUUID(),
+                    label: `Giải ${nextNumber}`,
+                    amount: 0
+                }
+            ];
+        });
     }, [setPrizes]);
 
     const removePrize = useCallback((index) => {
         if (prizes.length <= 1) return;
-        setPrizes(prev => prev.filter((_, i) => i !== index));
+
+        setPrizes(prev => {
+            const filtered = prev.filter((_, i) => i !== index);
+            return filtered.map((prize, i) => ({
+                ...prize,
+                label: `Giải ${i + 1}`
+            }));
+        });
     }, [prizes.length, setPrizes]);
 
     return (
@@ -39,7 +49,7 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
 
             {/* Sử dụng class cũ: configCard */}
             <div className={styles.configCard}>
-                
+
                 <div className={styles.cardHeader}>
                     <Trophy size={18} />
                     <h3>Cơ chế giải thưởng</h3>
@@ -54,16 +64,27 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
                 <div className={styles.prizeScroll}>
                     {prizes.map((prize, index) => (
                         <div key={prize.id || index} className={styles.prizeRow}>
-                            
-                            {/* Input tên giải */}
-                            <input
-                                type="text"
-                                value={prize.label}
-                                onChange={(e) => updatePrize(index, "label", e.target.value)}
-                                placeholder="Tên giải"
-                            />
 
-                            {/* Sử dụng class cũ: inputWrap cho phần số tiền */}
+                            {/* Input giải */}
+                            <div className={styles.prizeLabelContainer} style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '8px',
+                                minWidth: '100px',
+                                fontWeight: '600',
+                                color: '#1e293b'
+                            }}>
+                                <span style={{ 
+                                    background: '#eff6ff', 
+                                    color: '#3b82f6',
+                                    padding: '4px 8px',
+                                    borderRadius: '6px',
+                                    fontSize: '0.85rem'
+                                }}>
+                                </span>
+                                <span>Giải {index + 1}</span>
+                            </div>
+
                             <div className={styles.inputWrap}>
                                 <input
                                     type="number"

@@ -6,8 +6,25 @@ import GlobalStyle from "../../shared/styles/GlobalStyle/GlobalStyle";
 
 import PublicRoute from "./guards/PublicRoute";
 import ProtectedRoute from "./guards/ProtectedRoute";
+import { useAuth } from "../providers/AuthProvider";
 
 function AppRouter() {
+
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontFamily: 'sans-serif'
+      }}>
+        <p>Đang kiểm tra quyền truy cập...</p>
+      </div>
+    );
+  }
 
   const renderRoute = (route, index) => {
     const Page = route.component;

@@ -11,7 +11,7 @@ import {
   ResponsiveContainer
 } from "recharts";
 
-import useDashboardChart from "../hooks/useDashboardChart";
+import { useDashboardChart } from "../hooks/useDashboardChart";
 
 function ChartSection() {
 

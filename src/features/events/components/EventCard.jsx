@@ -18,7 +18,8 @@ const EventCard = ({ event, index, onClick }) => {
             <div className={styles.imageWrapper}>
                 <img
                     src={
-                        event.images?.[0]?.imageUrl ||
+                        event.thumbnailUrl ||
+                        event.images?.[0]?.thumbnailUrl ||
                         "https://vcdn1-giaitri.vnecdn.net/2014/11/18/16-1416303991.jpg?w=460&h=0&q=100&dpr=2&fit=crop&s=lPy8nhYwXlhdwyafxTFWIA"
                     }
                     alt={event.title}

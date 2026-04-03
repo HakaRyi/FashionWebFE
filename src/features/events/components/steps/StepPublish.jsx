@@ -6,19 +6,25 @@ const StepPublish = ({
     form,
     setForm,
     invitedExpertIds = [],
-    totalBudget,    // Tổng tiền giải thưởng
-    platformFee,    // Phí 5% tính từ Hook
-    totalRequired,// Tổng tiền cần thanh toán tính từ Hook
+    totalBudget,
+    platformFee,
+    feePercentage,
+    totalRequired,
     isOverBudget,
     expertBalance,
+    metadata
 }) => {
 
     const updateFormField = (field, value) => {
         setForm(prev => ({ ...prev, [field]: value }));
     };
 
+    const systemMinRequired = metadata?.expertRules?.minRequired || 2;
     const maxExperts = Math.max(0, invitedExpertIds.length);
-    const currentMinExperts = form.minExpertsRequired || 1;
+    const currentMinExperts = form.minExpertsRequired || systemMinRequired;
+    const isMinFeeApplied = platformFee > (totalBudget * (feePercentage / 100));
+    const minLimit = metadata?.expertRules?.minRequired || 2;
+    const maxLimit = invitedExpertIds.length;
 
     return (
         <section className={styles.section}>
@@ -40,6 +46,10 @@ const StepPublish = ({
                         <div className={styles.cardInfo}>
                             <h4>Kích hoạt thủ công</h4>
                             <p>Sự kiện sẽ ở trạng thái <b>Chờ duyệt</b>. Bạn sẽ tự tay bấm "Bắt đầu" sau khi hệ thống phê duyệt.</p>
+                            <div className={styles.manualNote}>
+                                <Check size={14} />
+                                <span>Lưu ý: Chỉ có thể bắt đầu khi có ít nhất <b>{systemMinRequired} chuyên gia</b> xác nhận tham gia.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,10 +89,12 @@ const StepPublish = ({
                                                 <button
                                                     type="button"
                                                     className={styles.countBtn}
-                                                    disabled={currentMinExperts <= 1}
+                                                    disabled={currentMinExperts <= minLimit}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        updateFormField('minExpertsRequired', Math.max(1, currentMinExperts - 1));
+                                                        if (currentMinExperts > minLimit) {
+                                                            updateFormField('minExpertsRequired', currentMinExperts - 1);
+                                                        }
                                                     }}
                                                 > - </button>
 
@@ -94,10 +106,12 @@ const StepPublish = ({
                                                 <button
                                                     type="button"
                                                     className={styles.countBtn}
-                                                    disabled={currentMinExperts >= maxExperts}
+                                                    disabled={currentMinExperts >= maxLimit}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        updateFormField('minExpertsRequired', Math.min(maxExperts, currentMinExperts + 1));
+                                                        if (currentMinExperts < maxLimit) {
+                                                            updateFormField('minExpertsRequired', currentMinExperts + 1);
+                                                        }
                                                     }}
                                                 > + </button>
                                             </div>
@@ -128,8 +142,20 @@ const StepPublish = ({
                     </div>
 
                     <div className={styles.billingRow}>
-                        <span>Phí nền tảng (5%)</span>
-                        <span>{(platformFee || 0).toLocaleString()} VND</span>
+                        <div className={styles.feeLabelGroup}>
+                            <span>Phí nền tảng</span>
+                            <span className={styles.feeBadge}>
+                                {isMinFeeApplied ? "Áp dụng mức phí tối thiểu" : `${feePercentage}%`}
+                            </span>
+                        </div>
+                        <div className={styles.feeValueGroup}>
+                            <span>{(platformFee || 0).toLocaleString()} VND</span>
+                            {isMinFeeApplied && (
+                                <small className={styles.feeNote}>
+                                    (Do tổng giải thưởng thấp hơn mức phí sàn)
+                                </small>
+                            )}
+                        </div>
                     </div>
 
                     <div className={styles.billingDivider}></div>
@@ -167,9 +193,9 @@ const StepPublish = ({
                 <div className={styles.infoContent}>
                     <strong>Quyền lợi của Organizer:</strong>
                     <ul>
-                        <li>Ngân sách sẽ được hệ thống <b>tạm giữ an toàn (Escrow)</b>.</li>
+                        <li>Ngân sách sẽ được hệ thống <b>tạm giữ an toàn</b>.</li>
                         <li><b>Hoàn tiền 100%:</b> Nếu sự kiện bị hủy hoặc không đủ Expert xác nhận.</li>
-                        <li>Phí dịch vụ 5% chỉ được tính khi sự kiện chính thức bắt đầu.</li>
+                        <li>Phí dịch vụ chỉ được tính khi sự kiện chính thức bắt đầu.</li>
                     </ul>
                 </div>
             </div>

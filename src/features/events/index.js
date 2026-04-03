@@ -16,8 +16,9 @@ export { eventApi } from './api/adminApi';
 export * from './utils/formatters';
 
 export { useEventDetail } from "@/features/events/hooks/useEventDetail";
-export { renderExpertStatus } from "@/features/events/utils/renderHelpers";
+export { getExpertStatusInfo } from "@/features/events/utils/expertStatus";
 export { default as PrizeSection} from "@/features/events/components/PrizeSection";
 export { default as PostTable} from "@/features/events/components/PostTable";
 
 export { getEventStatusInfo } from './utils/eventStatus';
+

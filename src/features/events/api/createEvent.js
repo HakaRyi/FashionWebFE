@@ -5,9 +5,9 @@ export const createEventApi = async (eventData) => {
 
     formData.append('Title', eventData.title);
     formData.append('Description', eventData.description || '');
-    formData.append('StartTime', eventData.startDate);
-    formData.append('SubmissionDeadline', eventData.submissionDeadline);
-    formData.append('EndTime', eventData.endDate);
+    formData.append('StartTime', new Date(eventData.startDate).toISOString());
+    formData.append('SubmissionDeadline', new Date(eventData.submissionDeadline).toISOString());
+    formData.append('EndTime', new Date(eventData.endDate).toISOString());
 
     const expertWeight = parseFloat(eventData.expertWeight) / 100;
     const userWeight = 1 - expertWeight;
@@ -16,14 +16,14 @@ export const createEventApi = async (eventData) => {
     formData.append('PointPerLike', parseFloat(eventData.pointPerLike || 1));
     formData.append('PointPerShare', parseFloat(eventData.pointPerShare || 3));
     formData.append('IsAutoStart', eventData.isAutoStart);
-    
+
     // Validation Range(2, 20)
     const minReq = parseInt(eventData.minExpertsRequired) || 2;
     formData.append('MinExpertsRequired', minReq);
 
     // 2. Xử lý File
-    if (eventData.imageFile) {
-        formData.append('ImageFile', eventData.imageFile);
+    if (eventData.banner) {
+        formData.append('ImageFile', eventData.banner);
     }
 
     // 3. Xử lý Prizes (Đây là phần hay gây lỗi 400 nhất)

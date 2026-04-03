@@ -1,17 +1,22 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getMyWallet } from '../../wallet';
 import { createEventApi } from '../api/createEvent';
-
-// Hằng số cấu hình hệ thống
-const FEE_PERCENT = 0.05;
+import { getEventApi } from '../api/getEvent';
 
 export const useCreateEvent = () => {
-    // 1. Trạng thái UI
+    // --- 1. TRẠNG THÁI HỆ THỐNG & METADATA ---
     const [initialLoading, setInitialLoading] = useState(true);
     const [fetchError, setFetchError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [expertBalance, setExpertBalance] = useState(0);
 
-    // 2. State chính của Form
+    // Cấu hình mặc định (Sẽ được cập nhật từ API)
+    const [metadata, setMetadata] = useState({
+        expertRules: { minRequired: 2, defaultExpertWeight: 70 },
+        financialRules: { feePercentage: 5, minFee: 10000, currency: 'VND' },
+    });
+
+    // --- 2. STATE CHÍNH CỦA FORM ---
     const [form, setForm] = useState({
         title: '',
         description: '',
@@ -28,120 +33,115 @@ export const useCreateEvent = () => {
         { label: 'Giải Nhì', amount: 150000 },
     ]);
 
-    // const [hashtags, setHashtags] = useState(['#StyleChallenge']);
-    const defaultStartDate = useMemo(() => new Date(Date.now() + 24 * 60 * 60 * 1000), []);
-    const defaultSubmission = useMemo(
-        () => new Date(defaultStartDate.getTime() + 24 * 60 * 60 * 1000),
-        [defaultStartDate],
-    );
-    const defaultEndDate = useMemo(
-        () => new Date(defaultStartDate.getTime() + 1 * 24 * 60 * 60 * 1000),
-        [defaultStartDate],
-    );
-    const [startDate, setStartDate] = useState(defaultStartDate);
-    const [submissionDeadline, setSubmissionDeadline] = useState(defaultSubmission);
-    const [endDate, setEndDate] = useState(defaultEndDate);
     const [invitedExpertIds, setInvitedExpertIds] = useState([]);
-    const [expertBalance, setExpertBalance] = useState(0);
 
-    // 3. Computed Properties (Tính toán giá trị phụ thuộc)
+    // Logic ngày tháng mặc định
+    const defaultDates = useMemo(() => {
+        const start = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        const sub = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+        const end = new Date(sub.getTime() + 24 * 60 * 60 * 1000);
+        return { start, sub, end };
+    }, []);
+
+    const [startDate, setStartDate] = useState(defaultDates.start);
+    const [submissionDeadline, setSubmissionDeadline] = useState(defaultDates.sub);
+    const [endDate, setEndDate] = useState(defaultDates.end);
+
+    // --- 3. COMPUTED PROPERTIES (TÍNH TOÁN) ---
+
     const totalBudget = useMemo(() => {
         return prizes.reduce((sum, p) => sum + Number(p.amount || 0), 0);
     }, [prizes]);
 
-    const platformFee = useMemo(() => totalBudget * FEE_PERCENT, [totalBudget]);
+    // Tính phí nền tảng dựa trên Metadata thực tế từ Server
+    const platformFee = useMemo(() => {
+        const { feePercentage, minFee } = metadata.financialRules;
+        const calculated = totalBudget * (feePercentage / 100);
+        // Công thức: Max giữa % ngân sách và phí tối thiểu hệ thống
+        return Math.max(calculated, minFee);
+    }, [totalBudget, metadata]);
 
     const totalRequired = useMemo(() => totalBudget + platformFee, [totalBudget, platformFee]);
+    const isOverBudget = useMemo(() => totalRequired > expertBalance, [totalRequired, expertBalance]);
 
-    const isOverBudget = useMemo(() => {
-        return totalRequired > expertBalance;
-    }, [totalRequired, expertBalance]);
+    // --- 4. ACTIONS & LOGIC ---
 
-    // 4. Logic Validation theo từng bước (Dùng cho UI disabled button Next)
+    const fetchAllInitialData = useCallback(async () => {
+        setInitialLoading(true);
+        try {
+            const [walletRes, metaRes] = await Promise.all([getMyWallet(), getEventApi.getCreationMetadata()]);
+
+            const meta = metaRes.data;
+            setMetadata(meta);
+            setExpertBalance(walletRes?.balance ?? 0);
+
+            // Đồng bộ form với cấu hình server ngay khi tải xong
+            setForm((prev) => ({
+                ...prev,
+                expertWeight: meta.expertRules.defaultExpertWeight || 70,
+                minExpertsRequired: meta.expertRules.minRequired || 2,
+            }));
+        } catch (err) {
+            console.error('Lỗi khởi tạo dữ liệu:', err);
+            setFetchError('Không thể tải cấu hình hệ thống hoặc số dư ví.');
+        } finally {
+            setInitialLoading(false);
+        }
+    }, []);
+
+    const toggleExpert = useCallback(
+        (id) => {
+            setInvitedExpertIds((prev) => {
+                const isRemoving = prev.includes(id);
+                const newList = isRemoving ? prev.filter((item) => item !== id) : [...prev, id];
+
+                setForm((current) => {
+                    const systemMin = metadata.expertRules.minRequired;
+                    return {
+                        ...current,
+                        minExpertsRequired: Math.min(newList.length, Math.max(systemMin, current.minExpertsRequired)),
+                    };
+                });
+                return newList;
+            });
+        },
+        [metadata.expertRules.minRequired],
+    );
+
     const validateStep = useCallback(
         (step) => {
             switch (step) {
                 case 1:
                     return !!(form.title && form.description && form.banner);
                 case 2:
-                    return invitedExpertIds.length >= 2;
+                    // Phải mời đủ số lượng chuyên gia tối thiểu theo metadata
+                    return invitedExpertIds.length >= metadata.expertRules.minRequired;
                 case 3:
                     return prizes.length > 0 && prizes.every((p) => p.amount > 0);
                 default:
                     return true;
             }
         },
-        [form, invitedExpertIds, prizes],
+        [form, invitedExpertIds, prizes, metadata],
     );
 
-    // 5. Actions
-    const fetchBalance = useCallback(async () => {
-        try {
-            const data = await getMyWallet();
-            setExpertBalance(data?.balance ?? 0);
-            setFetchError(null);
-        } catch (err) {
-            setFetchError('Không thể kết nối với hệ thống ví.');
-        } finally {
-            setInitialLoading(false);
-        }
-    }, []);
-
-    const toggleExpert = useCallback((id) => {
-        setInvitedExpertIds((prev) => {
-            const isRemoving = prev.includes(id);
-            const newList = isRemoving ? prev.filter((item) => item !== id) : [...prev, id];
-
-            setForm((current) => {
-                const selectedCount = newList.length;
-
-                return {
-                    ...current,
-                    // Nếu chọn 0-2 người thì ép về 2.
-                    // Nếu chọn > 2 người thì có thể để bằng số lượng đã chọn hoặc giữ nguyên tùy bạn.
-                    minExpertsRequired: newList.length >= 2 ? newList.length : 2,
-                    // Hoặc: Math.max(2, selectedCount) nếu bạn muốn
-                    // tối thiểu phải là toàn bộ số người đã mời.
-                };
-            });
-
-            return newList;
-        });
-    }, []);
-
     const handleCreateEvent = async () => {
-        if (isOverBudget) throw new Error('Số dư không đủ!');
+        if (isOverBudget) throw new Error('Số dư không đủ để thanh toán tổng chi phí sự kiện!');
 
         setLoading(true);
         try {
             const payload = {
-                title: form.title,
-                description: form.description,
-                imageFile: form.banner,
-                expertWeight: form.expertWeight,
-                userWeight: 100 - form.expertWeight,
-                startDate: startDate.toISOString(),
-                submissionDeadline: submissionDeadline.toISOString(),
-                endDate: endDate.toISOString(),
-                prizes: prizes,
-                invitedExpertIds: invitedExpertIds,
-                pointPerLike: form.pointPerLike,
-                pointPerShare: form.pointPerShare,
-                minExpertsRequired: Math.max(2, form.minExpertsRequired || 2),
-                isAutoStart: form.isAutoStart,
+                ...form,
+                startDate,
+                submissionDeadline,
+                endDate,
+                prizes,
+                invitedExpertIds,
             };
-
-            console.group('🚀 [Step 1] Hook Payload');
-            console.log('Dữ liệu chuẩn bị gửi đi:', payload);
-            console.groupEnd();
 
             const response = await createEventApi(payload);
             return response;
         } catch (error) {
-            console.group('❌ [Error] Create Event Failed');
-            console.error('Status:', error.response?.status);
-            console.error('Data từ Server:', error.response?.data);
-            console.groupEnd();
             const errorMsg = error.response?.data?.message || error.message || 'Lỗi khi tạo sự kiện.';
             throw new Error(errorMsg);
         } finally {
@@ -149,18 +149,17 @@ export const useCreateEvent = () => {
         }
     };
 
+    // --- 5. EFFECTS ---
     useEffect(() => {
-        fetchBalance();
-    }, [fetchBalance]);
+        fetchAllInitialData();
+    }, [fetchAllInitialData]);
 
     return {
-        // States & Form Data
+        // Form & Data
         form,
         setForm,
         prizes,
         setPrizes,
-        // hashtags,
-        // setHashtags,
         startDate,
         setStartDate,
         endDate,
@@ -169,14 +168,16 @@ export const useCreateEvent = () => {
         setSubmissionDeadline,
         invitedExpertIds,
 
-        // Tài chính
+        // Tài chính (Đã format/tính toán)
         expertBalance,
         totalBudget,
+        feePercentage: metadata.financialRules.feePercentage,
         platformFee,
         totalRequired,
         isOverBudget,
+        currency: metadata.financialRules.currency,
 
-        // Trạng thái hệ thống
+        // Trạng thái UI
         loading,
         initialLoading,
         fetchError,
@@ -185,6 +186,6 @@ export const useCreateEvent = () => {
         toggleExpert,
         validateStep,
         createEvent: handleCreateEvent,
-        fetchBalance,
+        refreshBalance: fetchAllInitialData,
     };
 };
