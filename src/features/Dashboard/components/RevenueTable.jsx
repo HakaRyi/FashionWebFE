@@ -13,17 +13,20 @@ function RevenueTable(){
     const fetchTransactions = async () => {
       setLoading(true);
       try {
-        // Tính toán ngày đầu tháng và cuối tháng từ revenueMonth (YYYY-MM)
-        const StartDate = `${revenueMonth}-01`;
-        const EndDate = `${revenueMonth}-31`; // Backend C# của bạn sẽ tự xử lý mốc cuối tháng
+      const [year, month] = revenueMonth.split("-").map(Number);
+      const StartDate = `${revenueMonth}-01`;
+      const lastDay = new Date(year, month, 0).getDate();
+      const EndDate = `${revenueMonth}-${lastDay}`;
 
-        const res = await expertApi.getTransactionList({ StartDate, EndDate });
-        setTransactions(res.data || []);
-      } catch (error) {
-        console.error("Lỗi lấy danh sách giao dịch:", error);
-      } finally {
-        setLoading(false);
-      }
+      console.log(`Fetching from ${StartDate} to ${EndDate}`); 
+
+      const res = await expertApi.getTransactionList({ StartDate, EndDate });
+      setTransactions(res.data || []);
+    } catch (error) {
+      console.error("Lỗi lấy danh sách giao dịch:", error);
+    } finally {
+      setLoading(false);
+    }
     };
 
     fetchTransactions();
