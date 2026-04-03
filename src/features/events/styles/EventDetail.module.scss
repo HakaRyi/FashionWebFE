@@ -350,24 +350,52 @@ $shadow:
 }
 
 // 8. Badges & Status
-.statusBadge {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
 
-    &.active {
-        background: #dcfce7;
-        color: #15803d;
+.statusBadge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: 12px;
+    border: 1px solid transparent;
+
+    // Định nghĩa các class variant ĐỒNG BỘ với EVENT_STATUS_CONFIG
+    &.warning {
+        background-color: #fffbeb;
+        color: #d97706;
+        border-color: #f59e0b4d;
     }
-    &.closed {
-        background: #f1f5f9;
-        color: #475569;
+
+    &.info {
+        background-color: #eff6ff;
+        color: #2563eb;
+        border-color: #3b82f64d;
     }
-    &.pending {
-        background: #fef9c3;
-        color: #a16207;
+
+    &.success {
+        background-color: #ecfdf5;
+        color: #059669;
+        border-color: #10b9814d;
+    }
+
+    &.error { // Lưu ý: config bạn dùng 'error', không phải 'danger'
+        background-color: #fef2f2;
+        color: #dc2626;
+        border-color: #ef44444d;
+    }
+
+    &.secondary {
+        background-color: #f5f3ff;
+        color: #7c3aed;
+        border-color: #8b5cf64d;
+    }
+
+    &.default {
+        background-color: #f9fafb;
+        color: #4b5563;
+        border-color: #9ca3af4d;
     }
 }
 
@@ -433,8 +461,22 @@ $shadow:
 
 .rightActions {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    align-items: flex-start; // Căn đỉnh để các nút luôn thẳng hàng khi có text bên dưới
+    gap: 16px;
+
+    .buttonGroup {
+        display: flex;
+        align-items: flex-start; // Giữ nút Cancel và Start ngang hàng ở phía trên
+        gap: 12px;
+    }
+
+    .actionItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px; // Khoảng cách giữa nút và hint text
+        min-width: fit-content;
+    }
 
     button {
         display: inline-flex;
@@ -449,40 +491,57 @@ $shadow:
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         border: none;
         white-space: nowrap;
+        height: 42px; // Cố định chiều cao nút để header không bị nhảy
 
         svg {
             flex-shrink: 0;
         }
 
         &:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
-            filter: grayscale(0.5);
+            filter: grayscale(0.8);
             transform: none !important;
             box-shadow: none !important;
         }
     }
 
-    // NÚT HỦY (Ghost Button Style)
+    .hintText {
+        font-size: 11px;
+        font-weight: 500;
+        color: #64748b;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        animation: fadeIn 0.3s ease;
+
+        svg {
+            color: #ef4444; // Icon báo lỗi màu đỏ nhạt
+        }
+
+        &.autoStart {
+            color: #3b82f6;
+            svg {
+                color: #3b82f6;
+            }
+        }
+    }
+
+    // NÚT HỦY
     .cancelBtn {
         background-color: #fff;
         color: #ef4444;
         border: 1.5px solid #fee2e2;
 
         &:hover:not(:disabled) {
-            background-color: #ef4444;
-            color: #fff;
+            background-color: #fef2f2;
             border-color: #ef4444;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
-        }
-
-        &:active:not(:disabled) {
-            transform: translateY(0);
         }
     }
 
-    // NÚT BẮT ĐẦU (Primary Blue)
+    // NÚT BẮT ĐẦU
     .startBtn {
         background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         color: white;
@@ -493,13 +552,9 @@ $shadow:
             box-shadow: 0 6px 15px rgba(59, 130, 246, 0.35);
             filter: brightness(1.1);
         }
-
-        &:active:not(:disabled) {
-            transform: translateY(0);
-        }
     }
 
-    // NÚT CHỐT GIẢI (Success Green)
+    // NÚT CHỐT GIẢI
     .finalizeBtn {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white;
@@ -508,12 +563,20 @@ $shadow:
         &:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(16, 185, 129, 0.35);
-            filter: brightness(1.1);
         }
+    }
+}
 
-        &:active:not(:disabled) {
-            transform: translateY(0);
-        }
+
+// Hiệu ứng hiện chữ nhẹ nhàng
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -521,7 +584,7 @@ $shadow:
     .rightActions {
         flex-direction: column;
         width: 100%;
-        
+
         button {
             width: 100%;
             justify-content: center;

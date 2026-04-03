@@ -45,8 +45,8 @@ const CreateEventForm = () => {
         startDate, setStartDate, endDate, setEndDate,
         submissionDeadline, setSubmissionDeadline,
         expertBalance, totalBudget, totalRequired, isOverBudget,
-        createEvent, invitedExpertIds, toggleExpert, loading, fetchBalance,
-        validateStep, platformFee, feePercentage,
+        createEvent, invitedExpertIds, toggleExpert, loading, refreshBalance,
+        validateStep, platformFee, feePercentage, metadata
     } = useCreateEvent();
 
     const fileInputRef = useRef(null);
@@ -66,6 +66,16 @@ const CreateEventForm = () => {
     };
 
     const handleNextStep = () => {
+        if (step === 3) {
+            // Kiểm tra nếu có bất kỳ giải thưởng nào có số tiền <= 0 hoặc trống
+            const hasInvalidPrize = prizes.some(p => !p.amount || p.amount <= 0);
+
+            if (hasInvalidPrize) {
+                toast.warn("Vui lòng nhập số tiền thưởng hợp lệ cho tất cả các giải.");
+                return;
+            }
+        }
+
         const isValid = validateStep(step);
         if (!isValid) {
             if (step === 2) {
@@ -86,7 +96,6 @@ const CreateEventForm = () => {
 
         if (isOverBudget) {
             const gap = totalRequired - expertBalance;
-            // Giả sử quy đổi nạp tiền
             setDepositAmount(Math.ceil(gap));
             setShowDepositModal(true);
             return;
@@ -168,6 +177,7 @@ const CreateEventForm = () => {
                                     feePercentage={feePercentage}
                                     platformFee={platformFee}
                                     expertBalance={expertBalance}
+                                    metadata={metadata}
                                 />
                             </motion.div>
                         </AnimatePresence>
@@ -211,7 +221,7 @@ const CreateEventForm = () => {
                             setShowDepositModal(false);
                             setIsDepositSuccess(false);
                         }}
-                        onRefreshBalance={fetchBalance}
+                        onRefreshBalance={refreshBalance}
                     />
                 )}
             </main>

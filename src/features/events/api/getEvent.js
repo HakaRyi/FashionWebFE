@@ -4,7 +4,7 @@ export const getEventApi = {
     // --- CẤU HÌNH & CHUNG ---
 
     // Lấy cấu hình phí hệ thống (Phần trăm & Phí tối thiểu)
-    getEventFees: () => axiosClient.get('/system-settings/public/event-fees'),
+    getCreationMetadata: () => axiosClient.get('/configurations/event-creation-metadata'),
 
     // Lấy tất cả sự kiện công khai
     getAllPublicEvents: () => axiosClient.get('/events/public/all'),

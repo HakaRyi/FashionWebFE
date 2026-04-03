@@ -7,6 +7,7 @@ import TransactionManagement from '../../pages/Transaction';
 import ReportManagement from '../../pages/Report';
 import QuartzManager from '../../pages/Jobs';
 import EventManagement from '../../pages/EventManagement';
+import SystemSettingsPage from '../../pages/System';
 
 import AuthPage from '../../pages/Authentication';
 import Unauthorized from '../../pages/Unauthorized';
@@ -167,6 +168,12 @@ export const routes = [
         path: PATHS.QUARTZ,
         component: QuartzManager,
         layout: DefaultLayout,
-        // roles: ['admin'],
+        roles: ['admin'],
+    },
+    {
+        path: PATHS.SYSTEM,
+        component: SystemSettingsPage,
+        layout: DefaultLayout,
+        roles: ['admin'],
     },
 ];

@@ -1,7 +1,7 @@
 //src/features/Dashboard/hooks/useDashboardChart.js
 import { useEffect,useState } from "react"
 import { expertApi } from "../api/dashboardApi";
-export default function useDashboardChart(activeTab,timeRange,startDate,endDate){
+export function useDashboardChart(startDate, endDate) {
 
  const [chartData,setChartData] = useState([])
  const [overview, setOverview] = useState(null);

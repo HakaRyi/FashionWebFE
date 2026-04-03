@@ -14,7 +14,7 @@ export const EVENT_STATUS_CONFIG = {
         description: "Sự kiện không được duyệt. Tiền ký quỹ đã được hoàn trả về ví của bạn."
     },
     Inviting: {
-        label: "Đang mời Expert",
+        label: "Đang mời chuyên gia",
         variant: "info",
         description: "Hệ thống đang đợi các chuyên gia xác nhận tham gia hội đồng chấm thi."
     },
@@ -37,6 +37,11 @@ export const EVENT_STATUS_CONFIG = {
         label: "Đã hủy (Thiếu Expert)",
         variant: "error",
         description: "Sự kiện tự động hủy do không đủ số lượng chuyên gia xác nhận. Tiền đã hoàn về ví."
+    },
+    Cancelled_By_Creator: {
+        label: "Đã hủy (Do người tạo sự kiện)",
+        variant: "error",
+        description: "Sự kiện đã bị hủy bởi người tạo sự kiện. Tiền đã hoàn về ví."
     }
 };
 

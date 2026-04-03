@@ -1,8 +1,8 @@
 import React from 'react';
-import { NavLink , useNavigate} from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
 
-import { FaChartPie, FaUsers, FaUserTie, FaNewspaper, FaMoneyBillTransfer , FaCoins, FaFlag, FaMoneyBill, FaRightFromBracket, FaClock } from 'react-icons/fa6';
+import { FaChartPie, FaUsers, FaUserTie, FaNewspaper, FaMoneyBillTransfer, FaCoins, FaFlag, FaMoneyBill, FaRightFromBracket, FaClock, FaGear } from 'react-icons/fa6';
 import { MdEventNote } from "react-icons/md";
 import { PATHS } from '@/app/routes/paths';
 import { useAuth } from '@/app/providers/AuthProvider';
@@ -61,8 +61,14 @@ function DefaultLayout({ children }) {
             items: [
                 { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
                 { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Lịch sử giao dịch' },
-                { path: PATHS.QUARTZ, icon: <FaClock />, label: 'Quartz Manager' },
                 { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
+            ]
+        },
+        {
+            title: 'Hệ thống & Cấu hình',
+            items: [
+                { path: PATHS.QUARTZ, icon: <FaClock />, label: 'Quartz Manager' },
+                { path: PATHS.SYSTEM, icon: <FaGear />, label: 'Cấu hình chung' },
             ]
         }
     ];
@@ -83,7 +89,7 @@ function DefaultLayout({ children }) {
                                 <NavLink
                                     key={item.path}
                                     to={item.path}
-                                    className={({ isActive }) => 
+                                    className={({ isActive }) =>
                                         `${styles.navItem} ${isActive ? styles.active : ''}`
                                     }
                                 >
@@ -113,7 +119,7 @@ function DefaultLayout({ children }) {
             <main className={styles.content}>
                 <header className={styles.topHeader}>
                     {/* Bạn có thể thêm thanh tìm kiếm hoặc thông báo ở đây */}
-                    <div className={styles.breadcrumb}>Hệ thống / Quản lý</div>
+                    {/* <div className={styles.breadcrumb}>Hệ thống / Quản lý</div> */}
                 </header>
                 <div className={styles.innerContent}>
                     {children}

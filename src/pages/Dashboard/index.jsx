@@ -1,13 +1,13 @@
 import React from "react";
 import styles from "@/features/Dashboard/styles/Dashboard.module.scss";
-import useDashboardChart from "@/features/Dashboard/hooks/useDashboardChart";
 import {
   DashboardHeader,
   StatsGrid,
   ChartSection,
   RevenueTable,
   RecentUsers,
-  ActivityList
+  ActivityList,
+  useDashboardChart
 } from "@/features/dashboard";
 
 function Dashboard() {

@@ -283,3 +283,23 @@
     font-style: italic;
     margin-top: 2px;
 }
+
+.manualNote {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1); // Hoặc màu phù hợp với theme
+    font-size: 0.85rem;
+    color: var(--text-secondary); // Màu chữ nhẹ hơn
+    
+    svg {
+        color: #10b981; // Màu xanh lá cây của Check icon
+        flex-shrink: 0;
+    }
+
+    b {
+        color: var(--primary-color); // Làm nổi bật con số
+    }
+}

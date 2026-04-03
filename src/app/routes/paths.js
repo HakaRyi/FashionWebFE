@@ -29,4 +29,5 @@ export const PATHS = {
     TRANSACTIONS: '/transactions',
     REPORTS: '/reports',
     QUARTZ: '/admin/quartz',
+    SYSTEM: '/system-settings',
 };
