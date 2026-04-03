@@ -72,7 +72,7 @@ const EventDetailPage = () => {
                     )}
 
                     {/* NÚT CHỐT GIẢI (Giữ nguyên logic cũ) */}
-                    {event.canFinalize && (
+                    {event.status != "Completed" && event.canFinalize && (
                         <button
                             className={styles.finalizeBtn}
                             onClick={handleFinalize}
