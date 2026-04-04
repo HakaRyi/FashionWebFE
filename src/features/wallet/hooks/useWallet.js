@@ -20,15 +20,20 @@ export const useWallet = (itemsPerPage = 5) => {
         try {
             setLoading(true);
             setError(null);
+            
+            // Gọi API Dashboard
             const data = await getWalletDashboard();
 
+            // 1. Map Icon cho Stats
             const mappedStats = (data.stats || []).map((s) => ({
                 ...s,
                 icon: ICON_MAP[s.icon] || Wallet,
             }));
 
+            // 2. Set thẳng dữ liệu vào state vì Backend đã format chuẩn xác
             setStats(mappedStats);
             setTransactions(data.transactions || []);
+            
         } catch (err) {
             console.error('Lỗi khi lấy dữ liệu ví:', err);
             setError(err);
@@ -41,30 +46,29 @@ export const useWallet = (itemsPerPage = 5) => {
         fetchWalletData();
     }, [fetchWalletData]);
 
-    // 1. Lọc dữ liệu tổng
+    // Lọc dữ liệu theo filter (all, deposit, expense)
     const allFilteredTransactions = useMemo(() => {
-        return filter === 'all' 
-            ? transactions 
-            : transactions.filter((t) => t.type?.toLowerCase() === filter.toLowerCase());
+        if (filter === 'all') return transactions;
+        return transactions.filter((t) => t.type?.toLowerCase() === filter.toLowerCase());
     }, [transactions, filter]);
 
-    // 2. Tính toán phân trang dựa trên dữ liệu đã lọc
     const totalPages = Math.ceil(allFilteredTransactions.length / itemsPerPage);
-    
+
+    // Tính toán dữ liệu hiển thị cho trang hiện tại
     const paginatedTransactions = useMemo(() => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         return allFilteredTransactions.slice(startIndex, startIndex + itemsPerPage);
     }, [allFilteredTransactions, currentPage, itemsPerPage]);
 
-    // Reset về trang 1 khi đổi filter
+    // Reset về trang 1 mỗi khi đổi bộ lọc
     useEffect(() => {
         setCurrentPage(1);
     }, [filter]);
 
     return {
         stats,
-        transactions: paginatedTransactions, // Chỉ trả về data của trang hiện tại để render table
-        allData: allFilteredTransactions,    // Trả về toàn bộ data đã lọc để dùng cho Export CSV
+        transactions: paginatedTransactions,
+        allData: allFilteredTransactions, // Dùng cho Export CSV
         filter,
         setFilter,
         currentPage,

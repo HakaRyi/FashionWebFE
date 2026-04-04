@@ -4,14 +4,21 @@ import WalletFilter from "./WalletFilter";
 import styles from "../styles/ExpertWallet.module.scss";
 import { exportToCsv } from "@/features/wallet/utils/exportCsv";
 
-const WalletTransactionTable = ({ 
-    transactions, 
-    allData, 
-    filter, 
-    setFilter,
-    currentPage,
-    totalPages,
-    setCurrentPage 
+// Dịch trạng thái sang tiếng Việt cho UI
+const STATUS_MAP = {
+  Success: 'Thành công',
+  Pending: 'Đang xử lý',
+  Failed: 'Thất bại'
+};
+
+const WalletTransactionTable = ({
+  transactions,
+  allData,
+  filter,
+  setFilter,
+  currentPage,
+  totalPages,
+  setCurrentPage
 }) => {
   return (
     <div className={styles.historySection}>
@@ -23,8 +30,8 @@ const WalletTransactionTable = ({
 
         <div className={styles.actions}>
           <WalletFilter filter={filter} setFilter={setFilter} />
-          <button 
-            className={styles.btnExport} 
+          <button
+            className={styles.btnExport}
             onClick={() => exportToCsv(allData, 'lich-su-giao-dich')}
           >
             <Download size={14} /> Xuất CSV
@@ -44,37 +51,48 @@ const WalletTransactionTable = ({
             </tr>
           </thead>
           <tbody>
-            {transactions.map((tx) => (
-              <tr key={tx.id}>
-                <td className={styles.idCol}>{tx.id}</td>
-                <td className={styles.detailCol}>{tx.detail}</td>
-                <td>{tx.date}</td>
-                <td className={tx.type === "deposit" ? styles.plus : styles.minus}>
-                  {tx.type === "deposit" ? "+" : "-"}
-                  {tx.amount.toLocaleString()}
-                </td>
-                <td>
-                  <span className={`${styles.statusBadge} ${styles[tx.status.toLowerCase()]}`}>
-                    {tx.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {transactions.map((tx) => {
+              const isCredit = tx.amount > 0;
+              const displayStatus = STATUS_MAP[tx.status] || tx.status; // Dịch Status
+              
+              return (
+                <tr key={tx.id}>
+                  <td className={styles.idCol}>{tx.id}</td>
+                  
+                  {/* Sử dụng trực tiếp detail từ Backend */}
+                  <td className={styles.detailCol}>{tx.detail}</td>
+                  
+                  <td>{tx.date}</td>
+                  
+                  {/* Xử lý số tiền âm/dương */}
+                  <td className={isCredit ? styles.plus : styles.minus}>
+                    {isCredit ? "+" : "-"}
+                    {Math.abs(tx.amount).toLocaleString('vi-VN')} đ
+                  </td>
+                  
+                  <td>
+                    <span className={`${styles.statusBadge} ${styles[tx.status.toLowerCase()] || styles.default}`}>
+                      {displayStatus}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Phân trang */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
-          <button 
+          <button
             className={styles.pageBtn}
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
           >
             <ChevronLeft size={16} />
           </button>
-          
+
           <div className={styles.pageNumbers}>
             {[...Array(totalPages)].map((_, i) => (
               <button
@@ -87,7 +105,7 @@ const WalletTransactionTable = ({
             ))}
           </div>
 
-          <button 
+          <button
             className={styles.pageBtn}
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}

@@ -26,7 +26,11 @@
                 margin: 0 0 0.4rem 0;
                 letter-spacing: -0.02em;
             }
-            p { color: #64748b; font-size: 0.95rem; margin: 0; }
+            p {
+                color: #64748b;
+                font-size: 0.95rem;
+                margin: 0;
+            }
         }
 
         .btnDeposit {
@@ -50,7 +54,9 @@
                 box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
             }
 
-            &:active { transform: translateY(0); }
+            &:active {
+                transform: translateY(0);
+            }
         }
     }
 
@@ -147,7 +153,12 @@
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                h3 { font-size: 1.15rem; font-weight: 700; color: #0f172a; margin: 0; }
+                h3 {
+                    font-size: 1.15rem;
+                    font-weight: 700;
+                    color: #0f172a;
+                    margin: 0;
+                }
             }
 
             .actions {
@@ -162,7 +173,7 @@
                     padding: 0.5rem 1rem;
                     border-radius: 10px;
                     border: 1px solid #e2e8f0;
-                    
+
                     select {
                         border: none;
                         background: transparent;
@@ -188,20 +199,24 @@
                     gap: 8px;
                     transition: all 0.2s;
 
-                    &:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; }
+                    &:hover {
+                        background: #f8fafc;
+                        color: #0f172a;
+                        border-color: #cbd5e1;
+                    }
                 }
             }
         }
 
         .tableWrapper {
             overflow-x: auto;
-            
+
             .transactionTable {
                 width: 100%;
                 border-collapse: collapse;
-                
+
                 th {
-                    padding: 1rem 2rem;
+                    padding: 1rem;
                     font-size: 0.75rem;
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
@@ -212,33 +227,82 @@
                 }
 
                 td {
-                    padding: 1.25rem 2rem;
+                    padding: 1.25rem 1rem;
                     border-bottom: 1px solid #f1f5f9;
                     font-size: 0.95rem;
                     color: #334155;
+                    vertical-align: top;
                 }
 
-                tr:last-child td { border-bottom: none; }
-                tr:hover td { background-color: #fbfcfd; }
+                th:nth-child(1),
+                td:nth-child(1) {
+                    width: 12%;
+                } // Mã GD
+                th:nth-child(2),
+                td:nth-child(2) {
+                    width: 35%;
+                } // Chi tiết
+                th:nth-child(3),
+                td:nth-child(3) {
+                    width: 18%;
+                } // Ngày
+                th:nth-child(4),
+                td:nth-child(4) {
+                    width: 13%;
+                } // Số lượng
+                th:nth-child(5),
+                td:nth-child(5) {
+                    width: 12%;
+                } // Trạng thái
 
-                .idCol { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #64748b; }
-                .detailCol { font-weight: 600; color: #1e293b; }
+                .detailCol {
+                    font-weight: 600;
+                    color: #1e293b;
 
-                /* Amount Styles */
-                .plus { color: #10b981; font-weight: 700; }
-                .minus { color: #ef4444; font-weight: 700; }
+                    /* Cấu hình tự động xuống dòng */
+                    white-space: normal;
+                    word-break: break-word;
+                    line-height: 1.5;
+                    min-width: 100px;
+                }
 
-                /* Status Badges */
+                /* Các phần còn lại giữ nguyên */
+                .idCol {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 0.85rem;
+                    color: #64748b;
+                }
+                .plus {
+                    color: #10b981;
+                    font-weight: 700;
+                }
+                .minus {
+                    color: #ef4444;
+                    font-weight: 700;
+                }
+
                 .statusBadge {
                     display: inline-flex;
                     padding: 0.35rem 0.85rem;
                     border-radius: 20px;
                     font-size: 0.75rem;
                     font-weight: 700;
-                    
-                    &.completed { background: #dcfce7; color: #15803d; }
-                    &.pending { background: #fef9c3; color: #a16207; }
-                    &.failed { background: #fee2e2; color: #991b1b; }
+                    &.success {
+                        background: #e6f4ea;
+                        color: #1e8e3e;
+                    }
+                    &.pending {
+                        background: #fef7e0;
+                        color: #f29900;
+                    }
+                    &.failed {
+                        background: #fee2e2;
+                        color: #991b1b;
+                    }
+                }
+
+                tr:hover td {
+                    background-color: #fbfcfd;
                 }
             }
         }
@@ -246,7 +310,9 @@
 }
 
 /* --- FEEDBACK STATES (Loading, Empty, Error) --- */
-.loadingContainer, .errorContainer, .emptyState {
+.loadingContainer,
+.errorContainer,
+.emptyState {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -256,7 +322,7 @@
     background: #fff;
     border-radius: 24px;
     border: 1px solid #f1f5f9;
-    
+
     .spinner {
         width: 48px;
         height: 48px;
@@ -266,11 +332,22 @@
         animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     }
 
-    h3 { margin: 1rem 0 0.5rem; color: #0f172a; }
-    p { color: #64748b; max-width: 300px; margin-bottom: 1.5rem; }
+    h3 {
+        margin: 1rem 0 0.5rem;
+        color: #0f172a;
+    }
+    p {
+        color: #64748b;
+        max-width: 300px;
+        margin-bottom: 1.5rem;
+    }
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 /* --- PAGINATION --- */
 .pagination {
@@ -281,7 +358,8 @@
     padding: 2rem 0;
 
     .pageBtn {
-        width: 40px; height: 40px;
+        width: 40px;
+        height: 40px;
         border-radius: 12px;
         border: 1px solid #e2e8f0;
         background: #fff;
@@ -289,17 +367,21 @@
         cursor: pointer;
         transition: all 0.2s;
 
-        &:hover:not(:disabled) { 
-            background: #f8fafc; 
-            border-color: #cbd5e1; 
+        &:hover:not(:disabled) {
+            background: #f8fafc;
+            border-color: #cbd5e1;
             color: #0f172a;
             transform: translateY(-1px);
         }
-        &:disabled { opacity: 0.5; cursor: not-allowed; }
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     }
 
     .pageNumbers .numberBtn {
-        min-width: 40px; height: 40px;
+        min-width: 40px;
+        height: 40px;
         padding: 0 8px;
         border-radius: 12px;
         border: 1px solid transparent;
@@ -314,21 +396,49 @@
             color: #fff;
             box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         }
-        &:hover:not(.active) { background: #f1f5f9; color: #0f172a; }
+        &:hover:not(.active) {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
     }
 }
+.statusBadge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
 
+    &.success {
+        background-color: #e6f4ea;
+        color: #1e8e3e;
+    }
+    &.pending {
+        background-color: #fef7e0;
+        color: #f29900;
+    }
+}
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
     .walletContainer {
         padding: 1rem;
         .header {
-            flex-direction: column; align-items: flex-start; gap: 1.5rem;
-            .btnDeposit { width: 100%; justify-content: center; }
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+            .btnDeposit {
+                width: 100%;
+                justify-content: center;
+            }
         }
         .historySection .historyHeader {
-            flex-direction: column; align-items: flex-start;
-            .actions { width: 100%; .filterGroup { flex: 1; } }
+            flex-direction: column;
+            align-items: flex-start;
+            .actions {
+                width: 100%;
+                .filterGroup {
+                    flex: 1;
+                }
+            }
         }
     }
 }
