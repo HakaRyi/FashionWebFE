@@ -1,26 +1,27 @@
-//src/features/Dashboard/hooks/useDashboardChart.js
-import { useEffect,useState } from "react"
+import { useEffect, useState } from "react";
 import { expertApi } from "../api/dashboardApi";
+
 export function useDashboardChart(startDate, endDate) {
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
- const [chartData,setChartData] = useState([])
- const [overview, setOverview] = useState(null);
- const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    
+    if (!startDate || !endDate || startDate.includes("revenue") || startDate.includes("users")) {
+      console.warn("Hook bị chặn do params chưa hợp lệ");
+      return;
+    }
 
- useEffect(() => {
     const fetchDashboardData = async () => {
       setLoading(true);
+      console.log("Đang gọi API với:", { StartDate: startDate, EndDate: endDate });
       try {
-        // Gửi params startDate, endDate lên Server
-        const res = await expertApi.getDashboardStatic({ 
-          StartDate: startDate, 
-          EndDate: endDate 
+        const res = await expertApi.getDashboardStatic({
+          StartDate: startDate,
+          EndDate: endDate,
         });
-        
-        if (res.data) {
-          setOverview(res.data.overview);
-          setChartData(res.data);
-        }
+        console.log("Kết quả API trả về:", res.data);
+        setChartData(res.data);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu dashboard:", error);
       } finally {
@@ -29,7 +30,7 @@ export function useDashboardChart(startDate, endDate) {
     };
 
     fetchDashboardData();
-  }, [startDate, endDate]); // Chỉ gọi lại khi thay đổi ngày
+  }, [startDate, endDate]);
 
-  return { chartData, overview, loading };
+  return { chartData, loading };
 }

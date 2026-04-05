@@ -32,7 +32,7 @@ function ChartSection() {
     };
   }, [timeRange, startDate, endDate]);
   
-  const {chartData: allCharts, loading} = useDashboardChart(activeTab,timeRange,finalStart,finalEnd)
+  const { chartData: allCharts, loading } = useDashboardChart(finalStart, finalEnd);
 
   const displayData = useMemo(() => {
     if (!allCharts) return [];

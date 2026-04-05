@@ -289,9 +289,10 @@
 
 .chartContainer {
     width: 100%;
-    height: 350px;
+    height: 350px;       // Đảm bảo có chiều cao cố định
     position: relative;
     min-height: 350px;
+    display: block;      // Đảm bảo là block element
 }
 .loadingOverlay {
     display: flex;
