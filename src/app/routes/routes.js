@@ -29,6 +29,8 @@ import DefaultLayout from '../../widgets/layouts/DefaultLayout';
 import HomeLayout from '../../widgets/layouts/HomeLayout';
 import ExpertLayout from '../../widgets/layouts/ExpertLayout';
 
+import RefundManagement from '@/pages/Refund';
+
 import { PATHS } from './paths';
 
 export const routes = [
@@ -90,7 +92,7 @@ export const routes = [
         layout: ExpertLayout,
         // roles: ['expert'],
     },
-     {
+    {
         path: PATHS.EXPERT_INVITATIONS,
         component: ExpertInvitations,
         layout: ExpertLayout,
@@ -155,6 +157,12 @@ export const routes = [
     {
         path: PATHS.TRANSACTIONS,
         component: TransactionManagement,
+        layout: DefaultLayout,
+        roles: ['admin'],
+    },
+    {
+        path: PATHS.REFUNDS,
+        component: RefundManagement,
         layout: DefaultLayout,
         roles: ['admin'],
     },

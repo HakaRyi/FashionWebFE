@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import {
     Search,
     Bell,
@@ -170,11 +170,13 @@ const Navbar = () => {
 
                                             <div className={styles.dropdownDivider} />
 
-                                            <button className={`${styles.dropdownItem} ${styles.logout}`}
+                                            <button
+                                                className={`${styles.dropdownItem} ${styles.logout}`}
                                                 onClick={() => {
                                                     logout();
                                                     navigate(PATHS.HOME);
-                                                }}>
+                                                }}
+                                            >
                                                 <LogOut size={18} /> <span>Sign Out</span>
                                             </button>
                                         </motion.div>
@@ -184,9 +186,14 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <div className={styles.guestButtons}>
-                            <button className={styles.btnPrimary} onClick={() => {
-                                navigate(PATHS.LOGIN);
-                            }}>Login</button>
+                            <button
+                                className={styles.btnPrimary}
+                                onClick={() => {
+                                    navigate(PATHS.LOGIN);
+                                }}
+                            >
+                                Login
+                            </button>
                             {/* <button className={styles.btnPrimary}>Join Vogue</button> */}
                         </div>
                     )}

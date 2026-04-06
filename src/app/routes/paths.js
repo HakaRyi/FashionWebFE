@@ -16,8 +16,8 @@ export const PATHS = {
     EXPERT_EVENTS: '/expert/events',
     EXPERT_WALLET: '/expert/wallet',
     EXPERT_SUBMISSION_REVIEW: '/expert/events/:eventId/submissions',
-    EXPERT_EVENT_DETAIL: "/expert/events/:id",
-    EXPERT_INVITATIONS: "/expert/invitation",
+    EXPERT_EVENT_DETAIL: '/expert/events/:id',
+    EXPERT_INVITATIONS: '/expert/invitation',
 
     //admin
     DASHBOARD: '/dashboard',
@@ -30,4 +30,5 @@ export const PATHS = {
     REPORTS: '/reports',
     QUARTZ: '/admin/quartz',
     SYSTEM: '/system-settings',
+    REFUNDS: '/refunds',
 };

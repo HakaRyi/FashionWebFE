@@ -1,9 +1,17 @@
 import React from 'react';
-import { NavLink,useNavigate} from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
-import { 
-    FaChartPie, FaUsers, FaUserTie, FaNewspaper, 
-    FaCoins, FaFlag, FaMoneyBillTransfer, FaGear, FaStarAndCrescent,FaRightFromBracket
+import {
+    FaChartPie,
+    FaUsers,
+    FaUserTie,
+    FaNewspaper,
+    FaCoins,
+    FaFlag,
+    FaMoneyBillTransfer,
+    FaGear,
+    FaStarAndCrescent,
+    FaRightFromBracket,
 } from 'react-icons/fa6';
 
 function DefaultLayout({ children }) {
@@ -11,42 +19,38 @@ function DefaultLayout({ children }) {
 
     const handleLogout = () => {
         localStorage.clear(); // Xóa token
-        navigate('/login');   // Chuyển hướng
+        navigate('/login'); // Chuyển hướng
     };
     const menuGroups = [
         {
             title: 'Tổng quan',
-            items: [
-                { path: '/dashboard', icon: <FaChartPie />, label: 'Bảng điều khiển' },
-            ]
+            items: [{ path: '/dashboard', icon: <FaChartPie />, label: 'Bảng điều khiển' }],
         },
         {
             title: 'Quản lý người dùng',
             items: [
                 { path: '/users', icon: <FaUsers />, label: 'Thành viên' },
                 { path: '/experts', icon: <FaUserTie />, label: 'Chuyên gia' },
-            ]
+            ],
         },
         {
             title: 'Nội dung & Cộng đồng',
             items: [
                 { path: '/posts', icon: <FaNewspaper />, label: 'Bài viết Blog' },
                 { path: '/reports', icon: <FaFlag />, label: 'Báo cáo vi phạm' },
-            ]
+            ],
         },
         {
             title: 'Sự kiện',
-            items: [
-                { path: '/admin-events', icon: <FaStarAndCrescent />, label: 'Quản lý sự kiện' },
-            ]
+            items: [{ path: '/admin-events', icon: <FaStarAndCrescent />, label: 'Quản lý sự kiện' }],
         },
         {
             title: 'Tài chính & Gói cước',
             items: [
                 { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
                 { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Lịch sử giao dịch' },
-            ]
-        }
+            ],
+        },
     ];
 
     return (
@@ -65,9 +69,7 @@ function DefaultLayout({ children }) {
                                 <NavLink
                                     key={item.path}
                                     to={item.path}
-                                    className={({ isActive }) => 
-                                        `${styles.navItem} ${isActive ? styles.active : ''}`
-                                    }
+                                    className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
                                 >
                                     <span className={styles.icon}>{item.icon}</span>
                                     <span className={styles.label}>{item.label}</span>
@@ -97,9 +99,7 @@ function DefaultLayout({ children }) {
                     {/* Bạn có thể thêm thanh tìm kiếm hoặc thông báo ở đây */}
                     <div className={styles.breadcrumb}>Hệ thống / Quản lý</div>
                 </header>
-                <div className={styles.innerContent}>
-                    {children}
-                </div>
+                <div className={styles.innerContent}>{children}</div>
             </main>
         </div>
     );

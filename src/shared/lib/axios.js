@@ -34,7 +34,6 @@ axiosClient.interceptors.response.use(
 
         // Check if 401 Unauthorized and not retried yet
         if (error.response?.status === 401 && !originalRequest._retry) {
-            
             if (isRefreshing) {
                 // Wait for existing refresh process
                 return new Promise((resolve, reject) => {
@@ -69,7 +68,7 @@ axiosClient.interceptors.response.use(
                     axiosClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
                     processQueue(null, accessToken);
-                    
+
                     // Reset refreshing state
                     isRefreshing = false;
 

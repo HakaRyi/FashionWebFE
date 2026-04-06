@@ -2,8 +2,21 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './DefaultLayout.module.scss';
 
-import { FaChartPie, FaUsers, FaUserTie, FaNewspaper, FaMoneyBillTransfer, FaCoins, FaFlag, FaMoneyBill, FaRightFromBracket, FaClock, FaGear } from 'react-icons/fa6';
-import { MdEventNote } from "react-icons/md";
+import {
+    FaChartPie,
+    FaUsers,
+    FaUserTie,
+    FaNewspaper,
+    FaMoneyBillTransfer,
+    FaCoins,
+    FaFlag,
+    FaMoneyBill,
+    FaRightFromBracket,
+    FaClock,
+    FaGear,
+    FaFileInvoiceDollar,
+} from 'react-icons/fa6';
+import { MdEventNote } from 'react-icons/md';
 import { PATHS } from '@/app/routes/paths';
 import { useAuth } from '@/app/providers/AuthProvider';
 import Swal from 'sweetalert2';
@@ -13,11 +26,10 @@ function DefaultLayout({ children }) {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
-
     const handleLogout = () => {
         Swal.fire({
             title: 'Đăng xuất?',
-            text: "Bạn có chắc chắn muốn rời khỏi hệ thống quản trị?",
+            text: 'Bạn có chắc chắn muốn rời khỏi hệ thống quản trị?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#6366f1',
@@ -26,11 +38,11 @@ function DefaultLayout({ children }) {
             cancelButtonText: 'Hủy',
             reverseButtons: true,
             background: '#ffffff',
-            borderRadius: '16px'
+            borderRadius: '16px',
         }).then((result) => {
             if (result.isConfirmed) {
                 logout();
-                toast.success("Đã đăng xuất thành công!");
+                toast.success('Đã đăng xuất thành công!');
                 navigate(PATHS.HOME);
             }
         });
@@ -38,23 +50,21 @@ function DefaultLayout({ children }) {
     const menuGroups = [
         {
             title: 'Tổng quan',
-            items: [
-                { path: '/dashboard', icon: <FaChartPie />, label: 'Bảng điều khiển' },
-            ]
+            items: [{ path: '/dashboard', icon: <FaChartPie />, label: 'Bảng điều khiển' }],
         },
         {
             title: 'Quản lý người dùng',
             items: [
                 { path: '/users', icon: <FaUsers />, label: 'Thành viên' },
                 { path: '/experts', icon: <FaUserTie />, label: 'Chuyên gia' },
-            ]
+            ],
         },
         {
             title: 'Nội dung & Cộng đồng',
             items: [
                 { path: '/posts', icon: <FaNewspaper />, label: 'Bài viết Blog' },
                 { path: '/reports', icon: <FaFlag />, label: 'Báo cáo vi phạm' },
-            ]
+            ],
         },
         {
             title: 'Tài chính & Gói cước',
@@ -62,15 +72,16 @@ function DefaultLayout({ children }) {
                 { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
                 { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Lịch sử giao dịch' },
                 { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
-            ]
+                { path: '/refunds', icon: <FaFileInvoiceDollar />, label: 'Yêu cầu hoàn tiền' },
+            ],
         },
         {
             title: 'Hệ thống & Cấu hình',
             items: [
                 { path: PATHS.QUARTZ, icon: <FaClock />, label: 'Quartz Manager' },
                 { path: PATHS.SYSTEM, icon: <FaGear />, label: 'Cấu hình chung' },
-            ]
-        }
+            ],
+        },
     ];
 
     return (
@@ -89,9 +100,7 @@ function DefaultLayout({ children }) {
                                 <NavLink
                                     key={item.path}
                                     to={item.path}
-                                    className={({ isActive }) =>
-                                        `${styles.navItem} ${isActive ? styles.active : ''}`
-                                    }
+                                    className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
                                 >
                                     <span className={styles.icon}>{item.icon}</span>
                                     <span className={styles.label}>{item.label}</span>
@@ -121,9 +130,7 @@ function DefaultLayout({ children }) {
                     {/* Bạn có thể thêm thanh tìm kiếm hoặc thông báo ở đây */}
                     {/* <div className={styles.breadcrumb}>Hệ thống / Quản lý</div> */}
                 </header>
-                <div className={styles.innerContent}>
-                    {children}
-                </div>
+                <div className={styles.innerContent}>{children}</div>
             </main>
         </div>
     );
