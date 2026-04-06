@@ -87,7 +87,6 @@
                 text-overflow: ellipsis;
                 color: #475569;
 
-                /* Hiển thị tooltip mượt nếu text quá dài */
                 &:hover {
                     color: #0f172a;
                 }
@@ -187,7 +186,6 @@
     }
 }
 
-/* --- Styles cho Modal hiển thị ảnh --- */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -240,29 +238,64 @@
             }
         }
 
-        .imageGrid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+        .imageSection {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 8px;
 
-            img {
-                width: 100%;
-                height: 350px;
-                object-fit: cover;
-                border-radius: 12px;
-                border: 1px solid #e2e8f0;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-                transition: transform 0.3s ease;
+            h4 {
+                margin: 16px 0 12px 0;
+                color: #475569;
+                font-size: 15px;
+                font-weight: 600;
+            }
 
-                &:hover {
-                    transform: scale(1.02);
+            .imageGridSingle {
+                img {
+                    width: 100%;
+                    height: 250px;
+                    object-fit: cover;
+                    border-radius: 12px;
+                    border: 1px solid #e2e8f0;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+                }
+
+                .noImage {
+                    width: 100%;
+                    height: 150px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #f1f5f9;
+                    color: #94a3b8;
+                    border-radius: 12px;
+                    border: 1px dashed #cbd5e1;
+                }
+            }
+
+            .imageGrid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+
+                img {
+                    width: 100%;
+                    height: 300px;
+                    object-fit: cover;
+                    border-radius: 12px;
+                    border: 1px solid #e2e8f0;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+                    transition: transform 0.3s ease;
+
+                    &:hover {
+                        transform: scale(1.02);
+                    }
                 }
             }
         }
     }
 }
 
-/* Hiệu ứng trượt lên mượt mà cho Modal */
 @keyframes modalFadeIn {
     from {
         opacity: 0;

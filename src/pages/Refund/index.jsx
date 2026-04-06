@@ -81,7 +81,7 @@ const RefundManagement = () => {
                                 <th>Mã YC</th>
                                 <th>Mã Đơn</th>
                                 <th>Lý do của khách</th>
-                                <th>Minh chứng</th>
+                                <th>Hình ảnh</th>
                                 <th>Ghi chú Admin</th>
                                 <th>Trạng thái</th>
                                 <th>Thao tác</th>
@@ -96,7 +96,13 @@ const RefundManagement = () => {
                                     <td>
                                         <button
                                             className={styles.viewBtn}
-                                            onClick={() => setSelectedImages([item.proofImage1, item.proofImage2])}
+                                            onClick={() =>
+                                                setSelectedImages({
+                                                    itemImage: item.itemImage,
+                                                    proof1: item.proofImage1,
+                                                    proof2: item.proofImage2,
+                                                })
+                                            }
                                         >
                                             <FaEye /> Xem ảnh
                                         </button>
@@ -143,10 +149,22 @@ const RefundManagement = () => {
                         <button className={styles.closeModal} onClick={() => setSelectedImages(null)}>
                             <FaTimes />
                         </button>
-                        <h3>Ảnh minh chứng</h3>
-                        <div className={styles.imageGrid}>
-                            <img src={selectedImages[0]} alt="Proof 1" />
-                            <img src={selectedImages[1]} alt="Proof 2" />
+                        <h3>Chi tiết hình ảnh</h3>
+                        <div className={styles.imageSection}>
+                            <h4>Ảnh mặt hàng</h4>
+                            <div className={styles.imageGridSingle}>
+                                {selectedImages.itemImage ? (
+                                    <img src={selectedImages.itemImage} alt="Item" />
+                                ) : (
+                                    <div className={styles.noImage}>Không có ảnh mặt hàng</div>
+                                )}
+                            </div>
+
+                            <h4>Ảnh minh chứng</h4>
+                            <div className={styles.imageGrid}>
+                                <img src={selectedImages.proof1} alt="Proof 1" />
+                                <img src={selectedImages.proof2} alt="Proof 2" />
+                            </div>
                         </div>
                     </div>
                 </div>
