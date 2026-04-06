@@ -1,3 +1,4 @@
+// src\shared\lib\axios.js
 import axios from 'axios';
 
 const axiosClient = axios.create({
