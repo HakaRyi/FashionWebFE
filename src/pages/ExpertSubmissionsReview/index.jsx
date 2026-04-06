@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Search, ArrowUpDown, AlertCircle, ChevronLeft, Loader2, Award } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { useExpertRating, expertRatingApi ,SubmissionCard, ReviewPanel} from '@/features/rating';
+import { useExpertRating, expertRatingApi, SubmissionCard, ReviewPanel } from '@/features/rating';
 
 import styles from '@/features/rating/styles/SubmissionsReview.module.scss';
 
@@ -13,16 +13,16 @@ const SubmissionsReview = () => {
     const navigate = useNavigate();
 
     // Custom Hook quản lý dữ liệu
-    const { submissions, isLoading, fetchMyReviews, updateLocalScore } = useExpertRating(eventId);
+    const { submissions, criteria, isLoading, fetchMyReviews, updateLocalScore } = useExpertRating(eventId);
 
     // --- State local cho UI ---
     const [eventInfo, setEventInfo] = useState({ name: "Đang tải...", id: eventId });
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState('newest');
     const [selectedSubmission, setSelectedSubmission] = useState(null);
-    
+
     // State cho form đánh giá
-    const [score, setScore] = useState("");
+    const [criterionScores, setCriterionScores] = useState({});
     const [comment, setComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,8 +41,16 @@ const SubmissionsReview = () => {
     // Đồng bộ form khi chọn bài thi
     useEffect(() => {
         if (selectedSubmission) {
-            setScore(selectedSubmission.score !== null ? selectedSubmission.score.toString() : "");
             setComment(selectedSubmission.reason || "");
+
+            // Map điểm cũ vào form nếu đã từng chấm
+            const initialScores = {};
+            if (selectedSubmission.criterionRatings) {
+                selectedSubmission.criterionRatings.forEach(c => {
+                    initialScores[c.eventCriterionId] = c.score;
+                });
+            }
+            setCriterionScores(initialScores);
         }
     }, [selectedSubmission]);
 
@@ -50,8 +58,8 @@ const SubmissionsReview = () => {
     const filteredData = useMemo(() => {
         return submissions
             .filter(sub => {
-                const matchesSearch = sub.userName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                                     sub.title?.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesSearch = sub.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    sub.title?.toLowerCase().includes(searchTerm.toLowerCase());
                 return matchesSearch;
             })
             .sort((a, b) => {
@@ -62,11 +70,28 @@ const SubmissionsReview = () => {
             });
     }, [submissions, searchTerm, sortBy]);
 
+    const handleScoreChange = (criterionId, value) => {
+        setCriterionScores(prev => ({
+            ...prev,
+            [criterionId]: value
+        }));
+    };
+
     // --- Xử lý chấm điểm ---
     const handleSubmitScore = async () => {
-        const numericScore = parseFloat(score);
-        if (isNaN(numericScore) || numericScore < 0 || numericScore > 10) {
-            return toast.warn("Điểm phải nằm trong khoảng từ 0 đến 10");
+        const ratingsPayload = [];
+        let calculatedTotalScore = 0;
+
+        for (const c of criteria) {
+            const val = parseFloat(criterionScores[c.eventCriterionId]);
+            if (isNaN(val) || val < 0 || val > 10) {
+                return toast.warn(`Vui lòng chấm điểm hợp lệ (0 - 10) cho tiêu chí: ${c.name}`);
+            }
+            ratingsPayload.push({
+                eventCriterionId: c.eventCriterionId,
+                score: val
+            });
+            calculatedTotalScore += (val * c.weightPercentage) / 100.0;
         }
 
         setIsSubmitting(true);
@@ -75,8 +100,8 @@ const SubmissionsReview = () => {
         try {
             await expertRatingApi.submitRating({
                 postId: selectedSubmission.postId,
-                score: numericScore,
-                reason: comment
+                reason: comment,
+                criterionRatings: ratingsPayload
             });
 
             toast.update(loadId, {
@@ -86,9 +111,8 @@ const SubmissionsReview = () => {
                 autoClose: 2000,
             });
 
-            // Cập nhật state local thông qua hook
-            updateLocalScore(selectedSubmission.postId, numericScore, comment);
-            
+            updateLocalScore(selectedSubmission.postId, calculatedTotalScore, comment, ratingsPayload);
+
             setTimeout(() => setSelectedSubmission(null), 300);
         } catch (error) {
             toast.update(loadId, {
@@ -159,10 +183,10 @@ const SubmissionsReview = () => {
                 ) : (
                     <div className={styles.submissionGrid}>
                         {filteredData.map((sub) => (
-                            <SubmissionCard 
-                                key={sub.postId} 
-                                sub={sub} 
-                                onSelect={setSelectedSubmission} 
+                            <SubmissionCard
+                                key={sub.postId}
+                                sub={sub}
+                                onSelect={setSelectedSubmission}
                             />
                         ))}
                     </div>
@@ -180,10 +204,11 @@ const SubmissionsReview = () => {
                             exit={{ opacity: 0 }}
                             onClick={() => !isSubmitting && setSelectedSubmission(null)}
                         />
-                        <ReviewPanel 
+                        <ReviewPanel
                             submission={selectedSubmission}
-                            score={score}
-                            setScore={setScore}
+                            criteria={criteria}
+                            criterionScores={criterionScores}
+                            onScoreChange={handleScoreChange}
                             comment={comment}
                             setComment={setComment}
                             isSubmitting={isSubmitting}

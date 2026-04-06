@@ -18,7 +18,7 @@ const LandingSection = ({ onStart }) => (
         className={styles.introWrapper}
     >
         <header className={styles.hero}>
-            <span className={styles.badge}>VOGUE PROFESSIONAL</span>
+            <span className={styles.badge}>WAPO PROFESSIONAL</span>
             <h1 className={styles.title}>Turn Your Passion <span>Into Influence</span></h1>
             <p className={styles.subtitle}>Gia nhập cộng đồng tinh hoa dành riêng cho chuyên gia thời trang hàng đầu.</p>
             <button className={styles.btnMain} onClick={onStart}>

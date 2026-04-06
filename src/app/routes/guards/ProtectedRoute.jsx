@@ -4,7 +4,7 @@ import { useAuth } from "../../providers/AuthProvider";
 const ProtectedRoute = ({ roles, children }) => {
   const { user } = useAuth();
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
 
   const userRole = user.role?.toLowerCase();
   const allowedRoles = roles?.map(r => r.toLowerCase());

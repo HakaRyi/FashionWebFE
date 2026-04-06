@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, History, Clock, Loader2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { invitationApi, InvitationCard, useInvitations, InvitationDetailModal } from '@/features/expert';
+import { invitationApi, InvitationCard, useInvitations, InvitationDetailModal, useInvitationStore } from '@/features/expert';
 import styles from '@/features/expert/styles/ExpertInvitations.module.scss';
 
 const MySwal = withReactContent(Swal);
@@ -11,12 +11,13 @@ const MySwal = withReactContent(Swal);
 const ExpertInvitations = () => {
     const [activeTab, setActiveTab] = useState('pending');
     const [selectedInvite, setSelectedInvite] = useState(null);
-    
+    const { decrementCount } = useInvitationStore();
+
     const { invites, loading, fetchInvites, toastError, MySwal } = useInvitations(activeTab);
 
     const handleResponse = async (eventId, accept) => {
         const actionText = accept ? "chấp nhận" : "từ chối";
-        
+
         const confirm = await MySwal.fire({
             title: `Xác nhận ${actionText}?`,
             text: accept ? "Bạn sẽ tham gia vào hội đồng chấm điểm của sự kiện này." : "Bạn sẽ từ chối lời mời này.",
@@ -30,7 +31,7 @@ const ExpertInvitations = () => {
         if (confirm.isConfirmed) {
             try {
                 await invitationApi.respondToInvitation(eventId, accept);
-                
+
                 MySwal.fire({
                     title: 'Thành công!',
                     text: `Đã ${actionText} lời mời.`,
@@ -39,8 +40,9 @@ const ExpertInvitations = () => {
                     showConfirmButton: false
                 });
 
+                decrementCount();
                 setSelectedInvite(null);
-                fetchInvites(); 
+                fetchInvites();
             } catch (error) {
                 toastError(error.response?.data?.message || "Thao tác thất bại");
             }
@@ -56,8 +58,8 @@ const ExpertInvitations = () => {
                 </div>
 
                 <div className={styles.tabSwitcher}>
-                    <button 
-                        className={activeTab === 'pending' ? styles.active : ''} 
+                    <button
+                        className={activeTab === 'pending' ? styles.active : ''}
                         onClick={() => setActiveTab('pending')}
                     >
                         <Clock size={16} /> Đang chờ
@@ -65,8 +67,8 @@ const ExpertInvitations = () => {
                             <span className={styles.badge}>{invites.length}</span>
                         )}
                     </button>
-                    <button 
-                        className={activeTab === 'history' ? styles.active : ''} 
+                    <button
+                        className={activeTab === 'history' ? styles.active : ''}
                         onClick={() => setActiveTab('history')}
                     >
                         <History size={16} /> Đang tham gia
@@ -82,7 +84,7 @@ const ExpertInvitations = () => {
                     </div>
                 ) : (
                     <AnimatePresence mode="wait">
-                        <motion.div 
+                        <motion.div
                             key={activeTab}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -91,9 +93,9 @@ const ExpertInvitations = () => {
                         >
                             {invites.length > 0 ? (
                                 invites.map(invite => (
-                                    <InvitationCard 
-                                        key={invite.eventId} 
-                                        invite={invite} 
+                                    <InvitationCard
+                                        key={invite.eventId}
+                                        invite={invite}
                                         isHistory={activeTab === 'history'}
                                         onViewDetail={() => setSelectedInvite(invite)}
                                         onAccept={(id) => handleResponse(id, true)}
@@ -113,9 +115,9 @@ const ExpertInvitations = () => {
 
             <AnimatePresence>
                 {selectedInvite && (
-                    <InvitationDetailModal 
-                        invite={selectedInvite} 
-                        onClose={() => setSelectedInvite(null)} 
+                    <InvitationDetailModal
+                        invite={selectedInvite}
+                        onClose={() => setSelectedInvite(null)}
                         onAccept={(id) => handleResponse(id, true)}
                         onDecline={(id) => handleResponse(id, false)}
                         isHistory={activeTab === 'history'}

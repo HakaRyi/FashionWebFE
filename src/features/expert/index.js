@@ -11,6 +11,7 @@ export { default as SuccessState } from "./components/SuccessState";
 // Hooks
 export { default as useExperts } from './hooks/useExperts';
 export { useExpertApplication } from "./hooks/useExpertApplication";
+export { useInvitationStore } from "./store/useInvitationStore";
 
 // Utils & API
 export { filterExperts } from './utils/expertUtils';

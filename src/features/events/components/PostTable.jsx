@@ -2,7 +2,7 @@ import React from "react";
 import { Image as ImageIcon } from "lucide-react";
 import styles from "../styles/EventDetail.module.scss";
 
-const PostTable = ({ posts }) => (
+const PostTable = ({ posts, onPostClick }) => (
     <div className={styles.card}>
         <h3><ImageIcon size={18} /> Bài dự thi ({posts.length})</h3>
         {posts.length > 0 ? (
@@ -19,16 +19,19 @@ const PostTable = ({ posts }) => (
                     </thead>
                     <tbody>
                         {posts.map((post) => (
-                            <tr key={post.postId}>
+                            <tr key={post.postId}
+                                onClick={() => onPostClick(post)}
+                                style={{ cursor: 'pointer' }}
+                                className={styles.clickableRow}>
                                 <td>
                                     <img src={post.imageUrls?.[0] || '/placeholder.png'} className={styles.postThumb} alt="" />
                                 </td>
                                 <td><strong>{post.title}</strong></td>
-                                <td>{post.authorName || "Ẩn danh"}</td>
+                                <td>{post.userName || "Ẩn danh"}</td>
                                 <td>❤️ {post.likeCount || 0}</td>
                                 <td>
                                     <span className={styles.scoreBadge}>
-                                        {post.averageScore?.toFixed(1) || "N/A"}
+                                        {post.score?.toFixed(1) || "N/A"}
                                     </span>
                                 </td>
                             </tr>

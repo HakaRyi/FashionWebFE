@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Sparkles, Wallet, FileText, Users, Award, Send,
-    ChevronRight, ChevronLeft, CheckCircle2
+    ChevronRight, ChevronLeft, CheckCircle2, ListChecks
 } from "lucide-react";
 
 import { useCreateEvent } from "../hooks/useCreateEvent";
@@ -13,6 +13,7 @@ import { validateEventForm } from "../utils/eventValidation";
 
 import StepBasicInfo from "./steps/StepBasicInfo";
 import StepExperts from "./steps/StepExperts";
+import StepCriteria from "./steps/StepCriteria";
 import StepPrizes from "./steps/StepPrizes";
 import StepPublish from "./steps/StepPublish";
 import { DepositModal } from "@/features/wallet";
@@ -22,15 +23,17 @@ import styles from "../styles/CreateEventForm.module.scss";
 const STEPS = [
     { id: 1, title: "Nội dung", icon: <FileText size={18} /> },
     { id: 2, title: "Expert", icon: <Users size={18} /> },
-    { id: 3, title: "Giải thưởng", icon: <Award size={18} /> },
-    { id: 4, title: "Xác nhận", icon: <Send size={18} /> },
+    { id: 3, title: "Tiêu chí", icon: <ListChecks size={18} /> },
+    { id: 4, title: "Giải thưởng", icon: <Award size={18} /> },
+    { id: 5, title: "Xác nhận", icon: <Send size={18} /> },
 ];
 
 const STEP_COMPONENTS = {
     1: StepBasicInfo,
     2: StepExperts,
-    3: StepPrizes,
-    4: StepPublish,
+    3: StepCriteria,
+    4: StepPrizes,
+    5: StepPublish,
 };
 
 const CreateEventForm = () => {
@@ -41,7 +44,8 @@ const CreateEventForm = () => {
     const [isDepositSuccess, setIsDepositSuccess] = useState(false);
 
     const {
-        form, setForm, prizes, setPrizes,
+        form, setForm,
+        criteria, setCriteria, prizes, setPrizes,
         startDate, setStartDate, endDate, setEndDate,
         submissionDeadline, setSubmissionDeadline,
         expertBalance, totalBudget, totalRequired, isOverBudget,
@@ -67,9 +71,21 @@ const CreateEventForm = () => {
 
     const handleNextStep = () => {
         if (step === 3) {
-            // Kiểm tra nếu có bất kỳ giải thưởng nào có số tiền <= 0 hoặc trống
-            const hasInvalidPrize = prizes.some(p => !p.amount || p.amount <= 0);
+            const hasEmptyName = criteria.some(c => !c.name || c.name.trim() === '');
+            if (hasEmptyName) {
+                toast.warn("Vui lòng nhập tên cho tất cả các tiêu chí.");
+                return;
+            }
 
+            const totalWeight = criteria.reduce((sum, c) => sum + Number(c.weightPercentage || 0), 0);
+            if (totalWeight !== 100) {
+                toast.warn(`Tổng trọng số đang là ${totalWeight}%. Vui lòng điều chỉnh để tổng bằng đúng 100%.`);
+                return;
+            }
+        }
+
+        if (step === 4) {
+            const hasInvalidPrize = prizes.some(p => !p.amount || p.amount <= 0);
             if (hasInvalidPrize) {
                 toast.warn("Vui lòng nhập số tiền thưởng hợp lệ cho tất cả các giải.");
                 return;
@@ -77,10 +93,15 @@ const CreateEventForm = () => {
         }
 
         const isValid = validateStep(step);
+
         if (!isValid) {
             if (step === 2) {
-                if (invitedExpertIds.length < 2) {
-                    toast.warn("Vui lòng chọn ít nhất 2 chuyên gia để tiếp tục.");
+                const minConfig = metadata?.expertRules?.minRequired;
+                
+                const minExpertsToInvite = minConfig - 1; 
+
+                if (invitedExpertIds.length < minExpertsToInvite) {
+                    toast.warn(`Vui lòng mời ít nhất ${minExpertsToInvite} chuyên gia để tiếp tục.`);
                 }
             } else if (step === 1) {
                 toast.warn("Vui lòng điền đầy đủ tiêu đề, mô tả và ảnh bìa.");
@@ -91,6 +112,8 @@ const CreateEventForm = () => {
     };
 
     const onPublishEvent = async () => {
+        if (loading) return;
+
         const validation = validateEventForm(form, prizes, startDate, endDate, Infinity);
         if (!validation.isValid) return toast.warning(validation.message);
 
@@ -160,6 +183,7 @@ const CreateEventForm = () => {
                             >
                                 <CurrentStep
                                     form={form} setForm={setForm}
+                                    criteria={criteria} setCriteria={setCriteria}
                                     prizes={prizes} setPrizes={setPrizes}
                                     startDate={startDate} setStartDate={setStartDate}
                                     submissionDeadline={submissionDeadline}
@@ -195,7 +219,7 @@ const CreateEventForm = () => {
                         </button>
 
                         <div className={styles.rightButtons}>
-                            {step < 4 ? (
+                            {step < 5 ? (
                                 <button className={styles.btnNext} onClick={handleNextStep} >
                                     Tiếp theo <ChevronRight size={18} />
                                 </button>

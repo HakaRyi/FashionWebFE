@@ -99,7 +99,7 @@ const FashionFeed = () => {
                                 <img src={`https://i.pravatar.cc/100?u=${post}`} alt="avatar" />
                                 <div className={styles.userMeta}>
                                     <span className={styles.userName}>@elena_digital</span>
-                                    <span className={styles.userRole}>Vogue AI Contributor</span>
+                                    <span className={styles.userRole}>Wapo AI Contributor</span>
                                 </div>
                             </div>
                             <button className={styles.moreBtn}>
@@ -139,7 +139,7 @@ const FashionFeed = () => {
                                     Khám phá sự giao thoa giữa chất liệu vải kỹ thuật số và ánh sáng Neon. Một dự án
                                     được thực hiện hoàn toàn bởi công nghệ GenAI mới nhất.
                                 </p>
-                                <div className={styles.tags}>#DigitalFashion #VogueAI #FutureSkin</div>
+                                <div className={styles.tags}>#DigitalFashion #WapoAI #FutureSkin</div>
                                 <time className={styles.timeAgo}>POSTED 4 HOURS AGO</time>
                             </div>
                         </div>

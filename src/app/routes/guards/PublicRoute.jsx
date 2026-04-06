@@ -6,7 +6,7 @@ const PublicRoute = () => {
     const { user } = useAuth();
     const location = useLocation();
 
-    if (user && location.pathname === PATHS.LOGIN) {
+    if (user && (location.pathname === PATHS.LOGIN || location.pathname === PATHS.HOME)) {
         const redirectPath = user.role === 'admin' ? PATHS.DASHBOARD : PATHS.USER_FEED;
         return <Navigate to={redirectPath} replace />;
     }
