@@ -31,7 +31,7 @@ const Unauthorized = () => {
                 </button>
             </div>
             <div className={styles.footer}>
-                © 2026 Vogue & Elegance Management System
+                © 2026 Wapo & Elegance Management System
             </div>
         </div>
     );

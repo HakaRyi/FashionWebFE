@@ -11,6 +11,10 @@ const expertRatingApi = {
 
     submitRating: (data) => {
         return axiosClient.post('expert-rating/submit-rating', data);
+    },
+
+    getEventCriteria: (eventId) => {
+        return axiosClient.get(`expert-rating/event-criteria/${eventId}`);
     }
 };
 

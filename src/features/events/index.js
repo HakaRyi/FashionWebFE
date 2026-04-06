@@ -19,6 +19,8 @@ export { useEventDetail } from "@/features/events/hooks/useEventDetail";
 export { getExpertStatusInfo } from "@/features/events/utils/expertStatus";
 export { default as PrizeSection} from "@/features/events/components/PrizeSection";
 export { default as PostTable} from "@/features/events/components/PostTable";
+export { default as PostDetailModal} from "@/features/events/components/PostDetailModal";
 
 export { getEventStatusInfo } from './utils/eventStatus';
+export { default as QuickUpdateModal} from "@/features/events/components/QuickUpdateModal";
 

@@ -48,7 +48,7 @@ const StepPublish = ({
                             <p>Sự kiện sẽ ở trạng thái <b>Chờ duyệt</b>. Bạn sẽ tự tay bấm "Bắt đầu" sau khi hệ thống phê duyệt.</p>
                             <div className={styles.manualNote}>
                                 <Check size={14} />
-                                <span>Lưu ý: Chỉ có thể bắt đầu khi có ít nhất <b>{systemMinRequired} chuyên gia</b> xác nhận tham gia.</span>
+                                <span>Lưu ý: Chỉ có thể bắt đầu khi có ít nhất <b>{systemMinRequired - 1} chuyên gia</b> xác nhận tham gia.</span>
                             </div>
                         </div>
                     </div>

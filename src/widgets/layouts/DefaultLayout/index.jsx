@@ -52,6 +52,7 @@ function DefaultLayout({ children }) {
         {
             title: 'Nội dung & Cộng đồng',
             items: [
+                { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
                 { path: '/posts', icon: <FaNewspaper />, label: 'Bài viết Blog' },
                 { path: '/reports', icon: <FaFlag />, label: 'Báo cáo vi phạm' },
             ]
@@ -61,7 +62,6 @@ function DefaultLayout({ children }) {
             items: [
                 { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
                 { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Lịch sử giao dịch' },
-                { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
             ]
         },
         {

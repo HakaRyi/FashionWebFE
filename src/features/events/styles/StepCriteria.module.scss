@@ -1,0 +1,213 @@
+// StepCriteria.module.scss
+$primary: #2563eb;
+$primary-light: #eff6ff;
+$danger: #ef4444;
+$success: #10b981;
+$warning: #f59e0b;
+$border: #e2e8f0;
+$text-dark: #0f172a;
+$text-muted: #64748b;
+
+.stepContainer {
+    max-width: 850px;
+    margin: 2rem auto;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.stepHeader {
+    margin-bottom: 2.5rem;
+    text-align: center;
+
+    h2 {
+        font-size: 1.85rem;
+        color: $text-dark;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+    }
+
+    p {
+        color: $text-muted;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+}
+
+.criteriaList {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem; // Khoảng cách giữa các Card tiêu chí
+    margin-bottom: 1.5rem;
+}
+
+.criteriaCard {
+    background: #ffffff;
+    border: 1px solid $border;
+    border-radius: 16px;
+    padding: 2rem; // Không gian bên trong rộng rãi hơn
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    // GIẢI PHÁP CHỐNG DÍNH: 
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem; // Tạo khoảng cách tự động giữa Header, TopFields và Textarea
+
+    &:hover {
+        border-color: $primary;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .criteriaHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        // Không cần margin-bottom vì đã có gap ở cha
+
+        h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: $primary;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .btnRemove {
+            background: #fff1f2;
+            border: none;
+            color: $danger;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            transition: all 0.2s;
+
+            &:hover:not(:disabled) {
+                background: $danger;
+                color: white;
+            }
+
+            &:disabled {
+                opacity: 0.3;
+                cursor: not-allowed;
+                background: #f8fafc;
+            }
+        }
+    }
+}
+
+.topFields {
+    display: grid;
+    grid-template-columns: 1fr 160px; // Tăng độ rộng cho ô trọng số
+    gap: 1.5rem;
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+
+    label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-dark;
+        margin-bottom: 0.65rem; // Khoảng cách từ nhãn đến ô input
+    }
+
+    input, textarea {
+        width: 100%; // Chuyển từ 95% sang 100% để đều đặn
+        padding: 0.85rem 1rem;
+        border: 1.5px solid $border;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        background: #fcfcfd;
+        box-sizing: border-box;
+
+        &:focus {
+            outline: none;
+            border-color: $primary;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba($primary, 0.1);
+        }
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+}
+
+.btnAddItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: white;
+    border: 2px dashed $border;
+    border-radius: 12px;
+    padding: 1.25rem;
+    color: $primary;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        border-color: $primary;
+        background: $primary-light;
+    }
+}
+
+.weightSummary {
+    margin-top: 2.5rem;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    &.valid {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        .currentWeight { color: $success; }
+    }
+
+    &.invalid {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        .currentWeight { color: $danger; }
+    }
+
+    .info {
+        .label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: $text-dark;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .warning {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #c2410c;
+        }
+    }
+
+    .currentWeight {
+        font-size: 2.25rem;
+        font-weight: 800;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

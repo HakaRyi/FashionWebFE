@@ -20,7 +20,7 @@ const SuccessState = () => {
             </div>
             <h2>Application Sent!</h2>
             <p>
-                Cảm ơn bạn! Hồ sơ của bạn đang được hội đồng chuyên môn Vogue xét duyệt trong vòng 24-48h tới.
+                Cảm ơn bạn! Hồ sơ của bạn đang được hội đồng chuyên môn WAPO xét duyệt trong vòng 24-48h tới.
             </p>
             <button 
                 className={styles.btnPrimary} 

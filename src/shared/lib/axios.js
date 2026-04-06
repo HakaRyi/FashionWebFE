@@ -82,7 +82,7 @@ axiosClient.interceptors.response.use(
 
                     // Handle total expiration
                     localStorage.clear();
-                    window.location.href = '/login';
+                    window.location.href = '/';
                     reject(refreshError);
                 }
             });
