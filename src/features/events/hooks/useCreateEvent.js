@@ -28,6 +28,11 @@ export const useCreateEvent = () => {
         pointPerShare: 3,
     });
 
+    const [criteria, setCriteria] = useState([
+        { id: Date.now(), name: 'Sáng tạo', description: 'Ý tưởng mới lạ, độc đáo', weightPercentage: 50 },
+        { id: Date.now() + 1, name: 'Thực tế', description: 'Khả năng áp dụng vào thực tế', weightPercentage: 50 },
+    ]);
+
     const [prizes, setPrizes] = useState([
         { label: 'Giải Nhất', amount: 300000 },
         { label: 'Giải Nhì', amount: 150000 },
@@ -114,9 +119,11 @@ export const useCreateEvent = () => {
                 case 1:
                     return !!(form.title && form.description && form.banner);
                 case 2:
-                    // Phải mời đủ số lượng chuyên gia tối thiểu theo metadata
-                    return invitedExpertIds.length >= metadata.expertRules.minRequired;
+                    return invitedExpertIds.length >= metadata.expertRules.minRequired - 1;
                 case 3:
+                    const totalWeight = criteria.reduce((sum, c) => sum + Number(c.weightPercentage || 0), 0);
+                    return criteria.length > 0 && criteria.every(c => c.name.trim() !== '') && totalWeight === 100;
+                case 4:
                     return prizes.length > 0 && prizes.every((p) => p.amount > 0);
                 default:
                     return true;
@@ -129,7 +136,15 @@ export const useCreateEvent = () => {
         if (isOverBudget) throw new Error('Số dư không đủ để thanh toán tổng chi phí sự kiện!');
 
         setLoading(true);
+
         try {
+
+            const formattedCriteria = criteria.map(c => ({
+                name: c.name,
+                description: c.description,
+                weightPercentage: Number(c.weightPercentage)
+            }));
+
             const payload = {
                 ...form,
                 startDate,
@@ -137,15 +152,15 @@ export const useCreateEvent = () => {
                 endDate,
                 prizes,
                 invitedExpertIds,
+                criteria: formattedCriteria
             };
 
             const response = await createEventApi(payload);
             return response;
         } catch (error) {
+            setLoading(false);
             const errorMsg = error.response?.data?.message || error.message || 'Lỗi khi tạo sự kiện.';
             throw new Error(errorMsg);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -158,6 +173,8 @@ export const useCreateEvent = () => {
         // Form & Data
         form,
         setForm,
+        criteria, 
+        setCriteria,
         prizes,
         setPrizes,
         startDate,
@@ -181,6 +198,7 @@ export const useCreateEvent = () => {
         loading,
         initialLoading,
         fetchError,
+        metadata,
 
         // Actions
         toggleExpert,

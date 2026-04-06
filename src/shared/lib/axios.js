@@ -1,3 +1,4 @@
+// src\shared\lib\axios.js
 import axios from 'axios';
 
 const axiosClient = axios.create({
@@ -81,7 +82,7 @@ axiosClient.interceptors.response.use(
 
                     // Handle total expiration
                     localStorage.clear();
-                    window.location.href = '/login';
+                    window.location.href = '/';
                     reject(refreshError);
                 }
             });

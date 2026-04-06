@@ -1,8 +1,8 @@
 import React from 'react';
-import { Eye, Users } from 'lucide-react';
+import { Eye, Users, Edit3 } from 'lucide-react';
 import styles from '../styles/EventManagement.module.scss';
 
-const EventRow = ({ event, onOpenDetail }) => {
+const EventRow = ({ event, onOpenDetail, onQuickEdit }) => {
     const totalEscrow = (event.totalPrizePool || 0) + (event.appliedFee || 0);
 
     return (
@@ -31,6 +31,9 @@ const EventRow = ({ event, onOpenDetail }) => {
             <td style={{ textAlign: 'right' }}>
                 <button className={styles.btnView} onClick={() => onOpenDetail(event)}>
                     <Eye size={16} /> Chi tiết
+                </button>
+                <button className={styles.btnEdit} onClick={() => onQuickEdit(event)} style={{ backgroundColor: '#f59e0b', color: 'white' }}>
+                    <Edit3 size={16} /> Sửa
                 </button>
             </td>
         </tr>

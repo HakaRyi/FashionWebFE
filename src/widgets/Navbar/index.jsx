@@ -73,7 +73,7 @@ const Navbar = () => {
                 {/* LEFT: LOGO */}
                 <div className={styles.logoSection} onClick={handleLogoClick}>
                     <div className={styles.logo}>
-                        VOGUE<span></span>
+                        WAPO<span></span>
                     </div>
                 </div>
 

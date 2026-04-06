@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import {
     useEventDetail, PrizeSection, PostTable, getEventStatusInfo,
-    getExpertStatusInfo
+    getExpertStatusInfo, PostDetailModal
 } from "@/features/events";
 import styles from "@/features/events/styles/EventDetail.module.scss";
 
@@ -13,6 +13,7 @@ const EventDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { event, posts, loading, isFinalizing, handleFinalize, isStarting, handleManualStart, isCancelling, handleCancel } = useEventDetail(id);
+    const [selectedPost, setSelectedPost] = React.useState(null);
 
     if (loading) return <div className={styles.loadingContainer}>Đang tải thông tin sự kiện...</div>;
     if (!event) return <div className={styles.container}>Không tìm thấy sự kiện.</div>;
@@ -31,7 +32,7 @@ const EventDetailPage = () => {
                         <div className={styles.buttonGroup}>
 
                             {/* NÚT BẮT ĐẦU*/}
-                            {event.status === "Inviting" && (
+                            {event.status === "Inviting" && event.isCreator === true && (
                                 <div className={styles.actionItem}>
                                     <button
                                         className={styles.startBtn}
@@ -49,7 +50,7 @@ const EventDetailPage = () => {
                                     ) : (
                                         !event.canManualStart && (
                                             <span className={styles.hintText}>
-                                                <Info size={12} /> Cần thêm chuyên gia ({event.acceptedExpertsCount}/{event.minExpertsToStart})
+                                                <Info size={10} /> {event.reasonManualStart}
                                             </span>
                                         )
                                     )}
@@ -118,7 +119,8 @@ const EventDetailPage = () => {
 
                     <PrizeSection prizes={event.prizes} />
 
-                    <PostTable posts={posts} />
+                    <PostTable posts={posts}
+                        onPostClick={(post) => setSelectedPost(post)} />
                 </div>
 
                 <div className={styles.sideSection}>
@@ -190,6 +192,12 @@ const EventDetailPage = () => {
                     </div>
                 </div>
             </div>
+            {selectedPost && (
+                <PostDetailModal
+                    post={selectedPost}
+                    onClose={() => setSelectedPost(null)}
+                />
+            )}
         </div>
     );
 };

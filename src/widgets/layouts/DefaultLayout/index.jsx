@@ -62,6 +62,7 @@ function DefaultLayout({ children }) {
         {
             title: 'Nội dung & Cộng đồng',
             items: [
+                { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
                 { path: '/posts', icon: <FaNewspaper />, label: 'Bài viết Blog' },
                 { path: '/reports', icon: <FaFlag />, label: 'Báo cáo vi phạm' },
             ],

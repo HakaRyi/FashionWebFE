@@ -5,8 +5,9 @@ import styles from '../styles/SubmissionsReview.module.scss';
 
 const ReviewPanel = ({ 
     submission, 
-    score, 
-    setScore, 
+    criteria,
+    criterionScores,
+    onScoreChange,
     comment, 
     setComment, 
     onClose, 
@@ -14,6 +15,16 @@ const ReviewPanel = ({
     isSubmitting 
 }) => {
     if (!submission) return null;
+
+    const calculatePreviewTotal = () => {
+        if (!criteria || criteria.length === 0) return 0;
+        let total = 0;
+        criteria.forEach(c => {
+            const score = parseFloat(criterionScores[c.eventCriterionId]) || 0;
+            total += (score * c.weightPercentage) / 100.0;
+        });
+        return total.toFixed(2);
+    };
 
     return (
         <motion.div
@@ -35,23 +46,43 @@ const ReviewPanel = ({
 
             <div className={styles.panelScroll}>
                 <div className={styles.previewSection}>
-                    <img src={submission.imageUrls?.[0]} alt="Preview" className={styles.mainImg} />
+                    {submission.imageUrls && submission.imageUrls.length > 0 && (
+                        <img src={submission.imageUrls[0]} alt="Preview" className={styles.mainImg} />
+                    )}
                     <h4>{submission.title}</h4>
                     <p className={styles.contentDesc}>{submission.content}</p>
                 </div>
 
                 <div className={styles.formSection}>
-                    <div className={styles.inputGroup}>
-                        <label>Điểm chuyên môn (0 - 10)</label>
-                        <input
-                            type="number"
-                            min="0" max="10" step="0.1"
-                            placeholder="8.5"
-                            value={score}
-                            onChange={(e) => setScore(e.target.value)}
-                            onWheel={(e) => e.target.blur()}
-                            autoFocus
-                        />
+                    <div className={styles.criteriaSection}>
+                        <h4 style={{ marginBottom: '12px' }}>Các tiêu chí đánh giá</h4>
+                        {criteria && criteria.length > 0 ? (
+                            criteria.map((c) => (
+                                <div className={styles.inputGroup} key={c.eventCriterionId}>
+                                    <label>
+                                        {c.name} ({c.weightPercentage}%)
+                                        {c.description && <span className={styles.descTooltip}> - {c.description}</span>}
+                                    </label>
+                                    <input
+                                        type="number"
+                                        min="0" max="10" step="0.1"
+                                        placeholder="0 - 10"
+                                        value={criterionScores[c.eventCriterionId] || ""}
+                                        onChange={(e) => onScoreChange(c.eventCriterionId, e.target.value)}
+                                        onWheel={(e) => e.target.blur()}
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <p>Sự kiện này chưa có tiêu chí đánh giá.</p>
+                        )}
+                        
+                        {criteria && criteria.length > 0 && (
+                            <div className={styles.totalScorePreview} style={{ marginTop: '10px', fontWeight: 'bold', color: '#4f46e5' }}>
+                                Điểm tổng dự kiến: {calculatePreviewTotal()}
+                            </div>
+                        )}
                     </div>
 
                     <div className={styles.inputGroup}>
@@ -61,13 +92,14 @@ const ReviewPanel = ({
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             rows={5}
+                            disabled={isSubmitting}
                         />
                     </div>
 
                     <button 
                         className={styles.submitBtn} 
                         onClick={onSubmit}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !criteria || criteria.length === 0}
                     >
                         {isSubmitting ? <Loader2 className={styles.spinner} size={18} /> : <CheckCircle size={18} />}
                         {isSubmitting ? "Đang lưu..." : "Xác nhận điểm số"}

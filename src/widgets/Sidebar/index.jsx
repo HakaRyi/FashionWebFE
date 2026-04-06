@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import styles from './ExpertSidebar.module.scss';
 import { PATHS } from '../../app/routes/paths';
+import { useInvitationStore } from '@/features/expert';
 
 const menuItems = [
     // { icon: <LayoutDashboard size={20} />, label: 'Overview', path: '/expert/dashboard' },
@@ -32,6 +33,11 @@ const menuItems = [
 
 const ExpertSidebar = () => {
     const navigate = useNavigate();
+    const { pendingCount, fetchPendingCount } = useInvitationStore();
+
+    useEffect(() => {
+        fetchPendingCount();
+    }, [fetchPendingCount]);
 
     return (
         <div className={styles.sidebarInner}>
@@ -53,6 +59,9 @@ const ExpertSidebar = () => {
                     >
                         <span className={styles.icon}>{item.icon}</span>
                         <span className={styles.label}>{item.label}</span>
+                        {item.label === 'Invitations' && pendingCount > 0 && (
+                            <span className={styles.sidebarBadge}>{pendingCount}</span>
+                        )}
                         <motion.div className={styles.indicator} layoutId="activeIndicator" />
                     </NavLink>
                 ))}

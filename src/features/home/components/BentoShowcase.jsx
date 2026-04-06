@@ -12,7 +12,7 @@ const BentoShowcase = () => (
             <div className={styles.bentoMain}>
                 <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800" alt="Main" />
                 <div className={styles.overlay}>
-                    <h3>CỘNG ĐỒNG VOGUE</h3>
+                    <h3>CỘNG ĐỒNG WAPO</h3>
                     <p>Hơn 1 triệu bộ outfit được chia sẻ</p>
                 </div>
             </div>

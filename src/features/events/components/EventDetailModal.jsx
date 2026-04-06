@@ -43,6 +43,7 @@ const EventDetailModal = ({ event, onClose, onApprove, onReject }) => {
                                 <div className={styles.infoCard}>
                                     <h4><Clock size={16} /> Lịch trình</h4>
                                     <p>Bắt đầu: <strong>{new Date(event.startTime).toLocaleString('vi-VN')}</strong></p>
+                                    <p>Ngày chấm điểm: <strong>{new Date(event.submissionDeadline).toLocaleString('vi-VN')}</strong></p>
                                     <p>Kết thúc: <strong>{new Date(event.endTime).toLocaleString('vi-VN')}</strong></p>
                                 </div>
 

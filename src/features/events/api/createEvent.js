@@ -17,7 +17,6 @@ export const createEventApi = async (eventData) => {
     formData.append('PointPerShare', parseFloat(eventData.pointPerShare || 3));
     formData.append('IsAutoStart', eventData.isAutoStart);
 
-    // Validation Range(2, 20)
     const minReq = parseInt(eventData.minExpertsRequired) || 2;
     formData.append('MinExpertsRequired', minReq);
 
@@ -26,7 +25,7 @@ export const createEventApi = async (eventData) => {
         formData.append('ImageFile', eventData.banner);
     }
 
-    // 3. Xử lý Prizes (Đây là phần hay gây lỗi 400 nhất)
+    // 3. Xử lý Prizes
     if (eventData.prizes && eventData.prizes.length > 0) {
         eventData.prizes.forEach((p, index) => {
             formData.append(`Prizes[${index}].Ranked`, parseInt(index + 1));
@@ -38,6 +37,15 @@ export const createEventApi = async (eventData) => {
     if (eventData.invitedExpertIds && eventData.invitedExpertIds.length > 0) {
         eventData.invitedExpertIds.forEach((id) => {
             formData.append('InvitedExpertIds', id);
+        });
+    }
+
+    // 5. XỬ LÝ CRITERIA
+    if (eventData.criteria && eventData.criteria.length > 0) {
+        eventData.criteria.forEach((c, index) => {
+            formData.append(`Criteria[${index}].Name`, c.name);
+            formData.append(`Criteria[${index}].Description`, c.description || '');
+            formData.append(`Criteria[${index}].WeightPercentage`, parseFloat(c.weightPercentage));
         });
     }
 
