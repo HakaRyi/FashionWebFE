@@ -20,31 +20,29 @@ const DepositModal = ({
   };
 
   const handlePayment = async () => {
-    // Kiểm tra số tiền hợp lệ (ví dụ tối thiểu 1.000đ cho hệ thống)
-    if (!amount || amount < 1000) {
-      alert("Số tiền không hợp lệ!");
+    // Backend yêu cầu tối thiểu 10.000đ
+    if (!amount || amount < 10000) {
+      alert("Số tiền nạp tối thiểu là 10.000 VNĐ!");
       return;
     }
 
     try {
       setIsProcessing(true);
-      await topUp(amount);
 
-      if (onRefreshBalance) {
-        await onRefreshBalance();
+      const response = await topUp(amount);
+
+      const paymentUrl = response.data?.paymentUrl;
+
+      if (paymentUrl) {
+        window.location.href = paymentUrl;
+      } else {
+        throw new Error("Không thể khởi tạo liên kết thanh toán.");
       }
-
-      setIsSuccess(true);
-
-      // Đóng modal sau 2 giây khi thành công
-      setTimeout(() => {
-        setIsSuccess(false);
-        onClose();
-      }, 2000);
 
     } catch (error) {
       console.error("Payment Error:", error);
-      alert(error.response?.data?.message || "Lỗi giao dịch, vui lòng thử lại!");
+      const errorMsg = error.response?.data?.message || "Lỗi kết nối hệ thống thanh toán!";
+      alert(errorMsg);
     } finally {
       setIsProcessing(false);
     }
@@ -96,16 +94,16 @@ const DepositModal = ({
             </div>
 
             <div className={styles.receiptFooter}>
-              <button 
-                className={styles.btnCancel} 
-                onClick={onClose} 
+              <button
+                className={styles.btnCancel}
+                onClick={onClose}
                 disabled={isProcessing}
               >
                 HỦY BỎ
               </button>
-              <button 
-                className={styles.btnPay} 
-                onClick={handlePayment} 
+              <button
+                className={styles.btnPay}
+                onClick={handlePayment}
                 disabled={isProcessing || amount <= 0}
               >
                 {isProcessing ? "ĐANG XỬ LÝ..." : "NẠP TIỀN & XÁC NHẬN"}

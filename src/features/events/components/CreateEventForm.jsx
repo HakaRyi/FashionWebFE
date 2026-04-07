@@ -17,6 +17,7 @@ import StepCriteria from "./steps/StepCriteria";
 import StepPrizes from "./steps/StepPrizes";
 import StepPublish from "./steps/StepPublish";
 import { DepositModal } from "@/features/wallet";
+import { set, get, del } from 'idb-keyval';
 
 import styles from "../styles/CreateEventForm.module.scss";
 
@@ -55,6 +56,46 @@ const CreateEventForm = () => {
 
     const fileInputRef = useRef(null);
     const [previewUrl, setPreviewUrl] = useState(null);
+
+    useEffect(() => {
+        const restoreDraft = async () => {
+            const savedDraft = localStorage.getItem("event_draft");
+            if (!savedDraft) return;
+
+            try {
+                const draft = JSON.parse(savedDraft);
+
+                setForm(draft.form);
+                setCriteria(draft.criteria);
+                setPrizes(draft.prizes);
+                setStartDate(draft.startDate ? new Date(draft.startDate) : null);
+                setEndDate(draft.endDate ? new Date(draft.endDate) : null);
+                setSubmissionDeadline(draft.submissionDeadline ? new Date(draft.submissionDeadline) : null);
+                setStep(draft.currentStep || 1);
+
+                const savedFile = await get("event_banner_file");
+                if (savedFile) {
+                    if (previewUrl) URL.revokeObjectURL(previewUrl);
+
+                    const url = URL.createObjectURL(savedFile);
+                    setPreviewUrl(url);
+
+                    setForm(prev => ({ ...prev, banner: savedFile }));
+
+                    await del("event_banner_file");
+                }
+
+                localStorage.removeItem("event_draft");
+                toast.info("Đã khôi phục dữ liệu bản nháp của bạn.");
+                refreshBalance();
+
+            } catch (e) {
+                console.error("Lỗi khôi phục bản nháp:", e);
+            }
+        };
+
+        restoreDraft();
+    }, [setForm, setCriteria, setPrizes, setStartDate, setEndDate, setSubmissionDeadline, refreshBalance]);
 
     useEffect(() => {
         return () => { if (previewUrl) URL.revokeObjectURL(previewUrl); };
@@ -97,8 +138,8 @@ const CreateEventForm = () => {
         if (!isValid) {
             if (step === 2) {
                 const minConfig = metadata?.expertRules?.minRequired;
-                
-                const minExpertsToInvite = minConfig - 1; 
+
+                const minExpertsToInvite = minConfig - 1;
 
                 if (invitedExpertIds.length < minExpertsToInvite) {
                     toast.warn(`Vui lòng mời ít nhất ${minExpertsToInvite} chuyên gia để tiếp tục.`);
@@ -111,6 +152,25 @@ const CreateEventForm = () => {
         setStep(p => p + 1);
     };
 
+    const saveDraft = async () => {
+        const draftData = {
+            form: { ...form, banner: null },
+            criteria,
+            prizes,
+            startDate,
+            endDate,
+            submissionDeadline,
+            invitedExpertIds,
+            currentStep: 5
+        };
+
+        localStorage.setItem("event_draft", JSON.stringify(draftData));
+
+        if (form.banner instanceof File) {
+            await set("event_banner_file", form.banner);
+        }
+    };
+
     const onPublishEvent = async () => {
         if (loading) return;
 
@@ -118,6 +178,8 @@ const CreateEventForm = () => {
         if (!validation.isValid) return toast.warning(validation.message);
 
         if (isOverBudget) {
+            toast.info("Đang điều hướng đến trang nạp tiền");
+            await saveDraft();
             const gap = totalRequired - expertBalance;
             setDepositAmount(Math.ceil(gap));
             setShowDepositModal(true);
