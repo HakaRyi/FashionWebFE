@@ -105,7 +105,7 @@ const MyEventsPage = () => {
                                     // 2. Nếu là Expert: Event Active + Đã qua deadline nộp bài
                                     const canReview = 
                                         event.status?.toLowerCase() === "active" && 
-                                        (activeTab === 'hosted' || now >= deadline);
+                                         now >= deadline;
 
                                     return (
                                         <div key={event.eventId} className={styles.eventCardWrapper}>

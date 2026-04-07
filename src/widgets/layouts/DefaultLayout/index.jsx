@@ -72,7 +72,6 @@ function DefaultLayout({ children }) {
             items: [
                 { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
                 { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Lịch sử giao dịch' },
-                { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
                 { path: '/refunds', icon: <FaFileInvoiceDollar />, label: 'Yêu cầu hoàn tiền' },
             ],
         },
