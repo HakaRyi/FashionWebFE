@@ -6,6 +6,7 @@ export const PATHS = {
 
     //user
     USER_FEED: '/home',
+    PAYMENT_RESULT: '/payment-result',
 
     //expert
     EXPERT_APPLICATION: '/expert/registration',

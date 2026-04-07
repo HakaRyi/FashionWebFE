@@ -28,6 +28,7 @@ import FashionFeed from '../../pages/Feed';
 import DefaultLayout from '../../widgets/layouts/DefaultLayout';
 import HomeLayout from '../../widgets/layouts/HomeLayout';
 import ExpertLayout from '../../widgets/layouts/ExpertLayout';
+import PaymentResult from '../../pages/PaymentResult';
 
 import { PATHS } from './paths';
 
@@ -55,6 +56,12 @@ export const routes = [
     {
         path: PATHS.USER_FEED,
         component: FashionFeed,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.PAYMENT_RESULT,
+        component: PaymentResult,
         layout: HomeLayout,
         roles: ['user', 'expert'],
     },
