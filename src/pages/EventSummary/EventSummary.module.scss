@@ -1,0 +1,197 @@
+@import '../../shared/styles/abstracts/variables';
+
+.event-summary {
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: $f-bg;
+    color: $f-black;
+    font-family: 'Lexend', sans-serif;
+    padding: 40px 20px;
+    box-sizing: border-box;
+
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    // --- Header Section (Đã chỉnh sửa hoàn thiện) ---
+    .header {
+        text-align: center;
+        margin-bottom: 50px;
+
+        .badges {
+            margin-bottom: 15px;
+            .statusBadge {
+                background: $f-black;
+                color: #fff;
+                padding: 6px 16px;
+                border-radius: 100px;
+                font-size: 0.7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin: 0 0 15px 0;
+            line-height: 1.1;
+
+            span {
+                background: linear-gradient(90deg, $f-pink, $f-purple);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+
+        .description {
+            color: $f-gray;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        // Meta Data (Phần mới bổ sung)
+        .eventMeta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #fff;
+            border: 2px solid $f-black;
+            border-radius: 16px;
+            box-shadow: 8px 8px 0px rgba($f-black, 0.05);
+
+            .metaItem {
+                text-align: left;
+                label {
+                    display: block;
+                    font-size: 0.7rem;
+                    color: $f-gray;
+                    text-transform: uppercase;
+                    font-weight: 700;
+                    margin-bottom: 4px;
+                }
+                strong {
+                    font-size: 1.1rem;
+                    font-weight: 800;
+                }
+
+                .expertAvatars {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 5px;
+                    margin-top: 5px;
+
+                    .expertNameTag {
+                        background: rgba($f-black, 0.05);
+                        color: $f-black;
+                        padding: 4px 12px;
+                        border-radius: 6px;
+                        font-size: 0.85rem;
+                        font-weight: 600;
+                        border: 1px solid $f-black;
+                        white-space: nowrap;
+                        transition: all 0.2s ease;
+
+                        &:hover {
+                            background: $f-black;
+                            color: #fff;
+                            transform: translateY(-2px);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Tabs
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            border-bottom: 2px solid $f-border;
+
+            button {
+                background: none;
+                border: none;
+                padding: 15px 10px;
+                font-weight: 700;
+                font-size: 0.95rem;
+                color: $f-gray;
+                cursor: pointer;
+                position: relative;
+                transition: color 0.3s;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -2px;
+                    left: 0;
+                    width: 0;
+                    height: 2px;
+                    background: $f-black;
+                    transition: width 0.3s ease;
+                }
+
+                &.active {
+                    color: $f-black;
+                    &::after {
+                        width: 100%;
+                    }
+                }
+                &:hover {
+                    color: $f-black;
+                }
+            }
+        }
+    }
+
+    // --- States ---
+    .loadingState,
+    .errorState {
+        @include flex-center;
+        height: 300px;
+        font-weight: 700;
+        color: $f-gray;
+        font-size: 1.1rem;
+    }
+
+    .errorState {
+        color: $f-pink;
+    }
+}
+
+// --- Responsive ---
+@media (max-width: 768px) {
+    .event-summary {
+        padding: 20px 15px;
+
+        .header {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .eventMeta {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+                .metaItem {
+                    text-align: center;
+                }
+                .expertAvatars {
+                    justify-content: center;
+                }
+            }
+            .tabs {
+                gap: 20px;
+            }
+        }
+    }
+}

@@ -48,7 +48,7 @@ const CreateEventForm = () => {
         form, setForm,
         criteria, setCriteria, prizes, setPrizes,
         startDate, setStartDate, endDate, setEndDate,
-        submissionDeadline, setSubmissionDeadline,
+        submissionDeadline, setSubmissionDeadline, setInvitedExpertIds,
         expertBalance, totalBudget, totalRequired, isOverBudget,
         createEvent, invitedExpertIds, toggleExpert, loading, refreshBalance,
         validateStep, platformFee, feePercentage, metadata
@@ -71,19 +71,26 @@ const CreateEventForm = () => {
                 setStartDate(draft.startDate ? new Date(draft.startDate) : null);
                 setEndDate(draft.endDate ? new Date(draft.endDate) : null);
                 setSubmissionDeadline(draft.submissionDeadline ? new Date(draft.submissionDeadline) : null);
+                if (draft.invitedExpertIds) {
+                    setInvitedExpertIds(draft.invitedExpertIds);
+                }
                 setStep(draft.currentStep || 1);
 
                 const savedFile = await get("event_banner_file");
+                let bannerFile = null;
                 if (savedFile) {
                     if (previewUrl) URL.revokeObjectURL(previewUrl);
-
-                    const url = URL.createObjectURL(savedFile);
-                    setPreviewUrl(url);
-
-                    setForm(prev => ({ ...prev, banner: savedFile }));
-
+                    setPreviewUrl(URL.createObjectURL(savedFile));
+                    bannerFile = savedFile;
                     await del("event_banner_file");
                 }
+
+                setForm(prev => ({
+                    ...prev,
+                    ...draft.form,
+                    banner: bannerFile || draft.form.banner || prev.banner,
+                    expertWeight: draft.form.expertWeight ?? prev.expertWeight
+                }));
 
                 localStorage.removeItem("event_draft");
                 toast.info("Đã khôi phục dữ liệu bản nháp của bạn.");
@@ -161,7 +168,7 @@ const CreateEventForm = () => {
             endDate,
             submissionDeadline,
             invitedExpertIds,
-            currentStep: 5
+            currentStep: step
         };
 
         localStorage.setItem("event_draft", JSON.stringify(draftData));
@@ -178,7 +185,6 @@ const CreateEventForm = () => {
         if (!validation.isValid) return toast.warning(validation.message);
 
         if (isOverBudget) {
-            toast.info("Đang điều hướng đến trang nạp tiền");
             await saveDraft();
             const gap = totalRequired - expertBalance;
             setDepositAmount(Math.ceil(gap));

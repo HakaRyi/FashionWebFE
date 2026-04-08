@@ -24,3 +24,9 @@ export { default as PostDetailModal} from "@/features/events/components/PostDeta
 export { getEventStatusInfo } from './utils/eventStatus';
 export { default as QuickUpdateModal} from "@/features/events/components/QuickUpdateModal";
 
+export { default as LeaderboardTab } from '@/features/events/components/LeaderboardTab';
+export { default as PostsTab } from '@/features/events/components/PostsTab';
+export { default as RatingModal } from '@/features/events/components/RatingModal';
+
+export { useEventSummary } from '@/features/events/hooks/useEventSummary';
+export { formatVND, formatDate } from '@/features/events/utils/formatValue';

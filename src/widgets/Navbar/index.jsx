@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     Search,
     Bell,
-    Plus,
     Home,
     Settings,
     LogOut,
@@ -19,14 +18,22 @@ import { useAuth } from '../../app/providers/AuthProvider';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
-    const isLoggedIn = !!user;
     const [isScrolled, setIsScrolled] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
+
+    // 1. Logic xử lý dữ liệu User
+    const isLoggedIn = !!user;
     const isExpert = user?.role === 'expert';
 
+    const displayUserName = user?.username || user?.userName || 'User';
+    const avatarUrl = user?.avatars?.[0]?.url ||
+        user?.avatar ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(displayUserName)}&background=random&color=fff`;
+
+    // 2. Điều hướng & Event
     const handleNavigation = (path) => {
         navigate(path);
         setShowProfileMenu(false);
@@ -35,22 +42,25 @@ const Navbar = () => {
     const handleHomeClick = (e) => {
         if (location.pathname === PATHS.USER_FEED) {
             e.preventDefault();
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            const event = new CustomEvent('reloadFeed');
-            window.dispatchEvent(event);
+            window.dispatchEvent(new CustomEvent('reloadFeed'));
         }
     };
 
     const handleLogoClick = () => {
         if (isLoggedIn) {
-            navigate(PATHS.USER_FEED);
+            if (location.pathname === PATHS.USER_FEED) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.dispatchEvent(new CustomEvent('reloadFeed'));
+            } else {
+                navigate(PATHS.USER_FEED);
+            }
         } else {
             navigate(PATHS.HOME);
         }
     };
 
+    // 3. Effects (Click outside & Scroll)
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -70,14 +80,14 @@ const Navbar = () => {
     return (
         <nav className={`${styles.navbar} ${isScrolled ? styles.scrolled : ''} ${isLoggedIn ? styles.authMode : ''}`}>
             <div className={styles.navContainer}>
-                {/* LEFT: LOGO */}
+                {/* Logo */}
                 <div className={styles.logoSection} onClick={handleLogoClick}>
                     <div className={styles.logo}>
                         WAPO<span></span>
                     </div>
                 </div>
 
-                {/* MIDDLE: MAIN ACTIONS (The "Island" Layout) */}
+                {/* Central Island (Chỉ hiện khi login) */}
                 {isLoggedIn && (
                     <div className={styles.centralIsland}>
                         <NavLink
@@ -95,15 +105,10 @@ const Navbar = () => {
                             <Search className={styles.searchIcon} size={16} />
                             <input type="text" placeholder="Search trends..." />
                         </div>
-
-                        {/* <button className={styles.createButton}>
-                            <Plus size={18} strokeWidth={2.5} />
-                            <span>Create</span>
-                        </button> */}
                     </div>
                 )}
 
-                {/* RIGHT: UTILS & PROFILE */}
+                {/* Right Section */}
                 <div className={styles.rightSection}>
                     {isLoggedIn ? (
                         <div className={styles.userControls}>
@@ -114,6 +119,7 @@ const Navbar = () => {
                                 <span className={styles.pulseDot}></span>
                             </div>
 
+                            {/* Profile Menu Area */}
                             <div className={styles.profileArea} ref={menuRef}>
                                 <button
                                     className={`${styles.profileTrigger} ${showProfileMenu ? styles.activeTrigger : ''}`}
@@ -121,8 +127,12 @@ const Navbar = () => {
                                 >
                                     <div className={styles.avatarFrame}>
                                         <img
-                                            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop"
-                                            alt="User"
+                                            src={avatarUrl}
+                                            alt={displayUserName}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = `https://ui-avatars.com/api/?name=${displayUserName}&background=333&color=fff`;
+                                            }}
                                         />
                                     </div>
                                     <ChevronDown size={14} className={styles.chevron} />
@@ -137,33 +147,31 @@ const Navbar = () => {
                                             className={styles.dropdown}
                                         >
                                             <div className={styles.dropdownHeader}>
-                                                <p className={styles.userName}>{user?.userName}</p>
-                                                <p className={styles.userHandle}>@alexvogue</p>
+                                                <p className={styles.userName}>{displayUserName}</p>
+                                                <p className={styles.userHandle}>{user?.email}</p>
                                             </div>
 
                                             <div className={styles.dropdownDivider} />
 
                                             <button
                                                 className={styles.dropdownItem}
-                                                onClick={() => handleNavigation(PATHS.EXPERT_PROFILE)}
+                                                onClick={() => handleNavigation(PATHS.EXPERT_PROFILE.replace(':id', user?.id))}
                                             >
                                                 <CircleUserRound size={18} /> <span>Profile</span>
                                             </button>
-                                            <button className={styles.dropdownItem}>
+
+                                            {/* <button className={styles.dropdownItem}>
                                                 <Settings size={18} /> <span>Settings</span>
-                                            </button>
+                                            </button> */}
+
                                             <button
                                                 className={styles.dropdownItem}
-                                                onClick={() => {
-                                                    if (isExpert) {
-                                                        handleNavigation(PATHS.EXPERT_EVENTS);
-                                                    } else {
-                                                        handleNavigation(PATHS.EXPERT_APPLICATION);
-                                                    }
-                                                }}
+                                                onClick={() => handleNavigation(isExpert ? PATHS.EXPERT_EVENTS : PATHS.EXPERT_APPLICATION)}
                                             >
-                                                <ShieldCheck size={18} /> <span>Expert Mode</span>
+                                                <ShieldCheck size={18} />
+                                                <span>{isExpert ? 'Expert Panel' : 'Become an Expert'}</span>
                                             </button>
+
                                             <button className={styles.dropdownItem}>
                                                 <HelpCircle size={18} /> <span>Support</span>
                                             </button>
@@ -188,13 +196,10 @@ const Navbar = () => {
                         <div className={styles.guestButtons}>
                             <button
                                 className={styles.btnPrimary}
-                                onClick={() => {
-                                    navigate(PATHS.LOGIN);
-                                }}
+                                onClick={() => navigate(PATHS.LOGIN)}
                             >
                                 Login
                             </button>
-                            {/* <button className={styles.btnPrimary}>Join Vogue</button> */}
                         </div>
                     )}
                 </div>

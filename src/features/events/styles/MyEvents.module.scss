@@ -352,6 +352,16 @@
     transform: scale(1.05);
 }
 
+.btnSummaryFloating {
+    color: #7534cb; // Màu tím
+    border-color: rgba(112, 0, 255, 0.2);
+
+    &:hover {
+        background: #d8b9ff;
+        color: #302f2f;
+    }
+}
+
 // status style
 $colors: (
     warning: (

@@ -1,0 +1,104 @@
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px; // Khoảng cách rộng rãi chuẩn fashion
+  margin-top: 30px;
+  padding-bottom: 50px;
+
+  @media (max-width: 900px) {
+    gap: 15px;
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr); // Vẫn giữ 2 cột trên mobile để show được nhiều ảnh
+    gap: 8px;
+  }
+}
+
+.galleryItem {
+  position: relative;
+  cursor: pointer;
+
+  .imageContainer {
+    position: relative;
+    aspect-ratio: 1 / 1; // Luôn vuông
+    overflow: hidden;
+    background: #f8f8f8;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+  }
+
+  .itemOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); // Overlay tối vừa phải
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 20px;
+
+    .overlayContent {
+      text-align: center;
+      color: white;
+      transform: translateY(10px);
+      transition: transform 0.3s ease;
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-bottom: 10px;
+
+        .statItem {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-weight: 600;
+          font-size: 16px;
+        }
+      }
+
+      .postTitle {
+        font-size: 13px;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+  }
+
+  &:hover {
+    .imageContainer img {
+      transform: scale(1.08); // Phóng to nhẹ ảnh khi hover
+    }
+
+    .itemOverlay {
+      opacity: 1;
+      .overlayContent {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+.emptyGallery {
+  width: 100%;
+  padding: 100px 0;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  font-size: 15px;
+  border: 1px dashed #eee;
+  margin-top: 30px;
+}

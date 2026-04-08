@@ -11,7 +11,7 @@ export const PATHS = {
     //expert
     EXPERT_APPLICATION: '/expert/registration',
     EXPERT_DASHBOARD: '/expert/dashboard',
-    EXPERT_PROFILE: '/expert/profile',
+    EXPERT_PROFILE: '/expert/profile/:id',
     EXPERT_PAYMENT: '/expert/posts',
     EXPERT_CREATE_EVENTS: '/expert/create-events',
     EXPERT_EVENTS: '/expert/events',
@@ -19,6 +19,7 @@ export const PATHS = {
     EXPERT_SUBMISSION_REVIEW: '/expert/events/:eventId/submissions',
     EXPERT_EVENT_DETAIL: '/expert/events/:id',
     EXPERT_INVITATIONS: '/expert/invitation',
+    EXPERT_SUMMARY_EVENT: '/expert/summary-event/:id',
 
     //admin
     DASHBOARD: '/dashboard',

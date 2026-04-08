@@ -112,6 +112,16 @@ const EventDetailPage = () => {
                         </div>
                     </div>
 
+                    {event.status === "Rejected" && event.isCreator && (
+                        <div className={styles.rejectReasonBox}>
+                            <div className={styles.rejectHeader}>
+                                <XCircle size={18} color="#ef4444" />
+                                <strong>Lý do từ chối sự kiện:</strong>
+                            </div>
+                            <p>{event.reasonRejectEvent || "Không có lý do cụ thể được cung cấp."}</p>
+                        </div>
+                    )}
+
                     <div className={styles.card}>
                         <h3><Info size={18} /> Mô tả sự kiện</h3>
                         <p className={styles.description}>{event.description}</p>

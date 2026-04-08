@@ -15,7 +15,6 @@ export const getEventApi = {
     // Lấy danh sách bài viết trong sự kiện
     getEventPosts: (id) => axiosClient.get(`/events/${id}/posts`),
 
-
     // --- CHO NGƯỜI TẠO (ORGANIZER/EXPERT) ---
 
     // Lấy sự kiện do chính mình tạo
@@ -30,7 +29,6 @@ export const getEventApi = {
     // Chốt giải thưởng và giải ngân sau khi kết thúc
     finalizeEvent: (id) => axiosClient.post(`/events/${id}/finalize`),
 
-
     // --- CHO HỘI ĐỒNG CHUYÊN GIA (JUDGES) ---
 
     // Lấy các sự kiện được mời chấm điểm (Lời mời đang chờ)
@@ -40,9 +38,16 @@ export const getEventApi = {
     getHistory: () => axiosClient.get('/event-expert/my-assigned-events'),
 
     // Gửi điểm chấm cho một bài viết
-    submitRating: (payload) => axiosClient.post('/events/submit-rating', {
-        postId: payload.postId,
-        score: payload.score,
-        reason: payload.reason
-    }),
+    submitRating: (payload) =>
+        axiosClient.post('/events/submit-rating', {
+            postId: payload.postId,
+            score: payload.score,
+            reason: payload.reason,
+        }),
+
+    // ---Event Summary---
+
+    getLeaderboard: (id) => axiosClient.get(`/events/${id}/leaderboard`),
+
+    getPostRatingDetails: (postId) => axiosClient.get(`/expert-rating/post/${postId}/details`),
 };

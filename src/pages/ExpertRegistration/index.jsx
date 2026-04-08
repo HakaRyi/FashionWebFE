@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, AlertCircle, Calendar, RefreshCcw, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "@/app/routes/paths";
 import styles from "@/features/expert/styles/ExpertApplication.module.scss";
@@ -10,13 +10,15 @@ import {
     StepExpertise,
     StepVerification,
     SuccessState,
-    useExpertApplication
+    useExpertApplication,
+    ReviewModal
 } from "@/features/expert";
 
 const ExpertApplicationPage = () => {
 
     const navigate = useNavigate();
     const [showForm, setShowForm] = useState(false);
+    const [showReview, setShowReview] = useState(false);
 
     const {
         step,
@@ -45,13 +47,13 @@ const ExpertApplicationPage = () => {
         );
     }
 
-    if (applicationStatus === "Pending" && step !== 3) { // step 3 là SuccessState vừa mới nộp xong
+    if (applicationStatus.status === "Pending" && step !== 3) {
         return (
             <div className={styles.container}>
                 <div className={styles.infoState}>
                     <div className={styles.pendingIcon}>⏳</div>
                     <h2>Đơn đăng ký đang được xét duyệt</h2>
-                    <p>Chúng tôi đã nhận được hồ sơ của bạn. Vui lòng đợi trong khi hội đồng chuyên môn kiểm tra (thường mất 24-48h).</p>
+                    <p>Hệ thống đang kiểm tra hồ sơ của bạn. Vui lòng đợi trong 24-48h.</p>
                     <button className={styles.btnSecondary} onClick={() => navigate(PATHS.USER_FEED)}>
                         Quay lại trang chủ
                     </button>
@@ -60,100 +62,147 @@ const ExpertApplicationPage = () => {
         );
     }
 
-    return (
-        <div className={styles.container}>
+    if (applicationStatus.status === "Rejected" && !showForm) {
+        return (
+            <div className={styles.expertStatusWrapper}>
+                <div className={`${styles.statusMainCard} ${styles.rejectedSection}`}>
+                    <div className={styles.iconCircle}>
+                        <AlertCircle size={48} color="#ff4d4f" />
+                    </div>
+                    <h2>Hồ sơ chưa được phê duyệt</h2>
 
-            <AnimatePresence mode="wait">
+                    <div className={styles.reasonBox}>
+                        <span className={styles.label}>Lý do từ chối:</span>
+                        <span className={styles.text}>"{applicationStatus.reason}"</span>
 
-                {!showForm ? (
+                        <div className={styles.dateInfo}>
+                            <Calendar size={14} />
+                            <span>Xử lý ngày: {new Date(applicationStatus.processedAt).toLocaleDateString('vi-VN')}</span>
+                        </div>
+                    </div>
 
-                    <LandingSection onStart={() => setShowForm(true)} />
-
-                ) : (
-
-                    <motion.div
-                        key="form"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        className={styles.pageWrapper}
-                    >
-
-                        <button
-                            className={styles.btnBackIntro}
-                            onClick={() => setShowForm(false)}
-                        >
-                            <ArrowLeft size={16} />
-                            Back to intro
+                    <div className={styles.buttonGrid}>
+                        <button className={`${styles.actionBtn} ${styles.outline}`} onClick={() => setShowReview(true)}>
+                            <Eye size={18} /> Xem lại hồ sơ
                         </button>
 
-                        <div className={styles.mainCard}>
+                        <button className={`${styles.actionBtn} ${styles.primary}`} onClick={() => setShowForm(true)}>
+                            <RefreshCcw size={18} /> Cập nhật nộp lại
+                        </button>
+                    </div>
 
-                            <div className={styles.sidebar}>
+                    <button className={`${styles.actionBtn} ${styles.ghost}`} onClick={() => navigate(PATHS.USER_FEED)}>
+                        Để sau
+                    </button>
+                </div>
 
-                                <div className={styles.stepInfo}>
+                <AnimatePresence>
+                    {showReview && (
+                        <ReviewModal
+                            data={applicationStatus.submittedData}
+                            onClose={() => setShowReview(false)}
+                        />
+                    )}
+                </AnimatePresence>
+            </div>
+        );
+    }
 
-                                    <div className={styles.activeStep}>
-                                        0{step}
-                                    </div>
 
-                                    <div className={styles.stepTotal}>
-                                        <p>Current Phase</p>
+return (
+    <div className={styles.container}>
 
-                                        <span>
-                                            {step === 1 && "Expertise"}
-                                            {step === 2 && "Verification"}
-                                            {step === 3 && "Complete"}
-                                        </span>
+        <AnimatePresence mode="wait">
 
-                                    </div>
+            {!showForm ? (
+
+                <LandingSection onStart={() => setShowForm(true)} />
+
+            ) : (
+
+                <motion.div
+                    key="form"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className={styles.pageWrapper}
+                >
+
+                    <button
+                        className={styles.btnBackIntro}
+                        onClick={() => setShowForm(false)}
+                    >
+                        <ArrowLeft size={16} />
+                        Back to intro
+                    </button>
+
+                    <div className={styles.mainCard}>
+
+                        <div className={styles.sidebar}>
+
+                            <div className={styles.stepInfo}>
+
+                                <div className={styles.activeStep}>
+                                    0{step}
+                                </div>
+
+                                <div className={styles.stepTotal}>
+                                    <p>Current Phase</p>
+
+                                    <span>
+                                        {step === 1 && "Expertise"}
+                                        {step === 2 && "Verification"}
+                                        {step === 3 && "Complete"}
+                                    </span>
 
                                 </div>
 
                             </div>
 
-                            <div className={styles.contentArea}>
+                        </div>
 
-                                <AnimatePresence mode="wait">
+                        <div className={styles.contentArea}>
 
-                                    {step === 1 && (
+                            <AnimatePresence mode="wait">
 
-                                        <StepExpertise
-                                            formData={formData}
-                                            updateData={updateFormData}
-                                            onNext={() => setStep(2)}
-                                        />
+                                {step === 1 && (
 
-                                    )}
+                                    <StepExpertise
+                                        formData={formData}
+                                        updateData={updateFormData}
+                                        onNext={() => setStep(2)}
+                                    />
 
-                                    {step === 2 && (
+                                )}
 
-                                        <StepVerification
-                                            formData={formData}
-                                            updateData={updateFormData}
-                                            onBack={() => setStep(1)}
-                                            onSubmit={submitApplication}
-                                            loading={loading}
-                                        />
+                                {step === 2 && (
 
-                                    )}
+                                    <StepVerification
+                                        formData={formData}
+                                        updateData={updateFormData}
+                                        onBack={() => setStep(1)}
+                                        onSubmit={submitApplication}
+                                        loading={loading}
+                                    />
 
-                                    {step === 3 && <SuccessState />}
+                                )}
 
-                                </AnimatePresence>
+                                {step === 3 && <SuccessState />}
 
-                            </div>
+                            </AnimatePresence>
 
                         </div>
 
-                    </motion.div>
+                    </div>
 
-                )}
+                </motion.div>
 
-            </AnimatePresence>
+            )}
 
-        </div>
-    );
+        </AnimatePresence>
+
+    </div>
+);
 };
 
 export default ExpertApplicationPage;

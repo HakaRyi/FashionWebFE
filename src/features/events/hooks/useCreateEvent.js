@@ -21,7 +21,7 @@ export const useCreateEvent = () => {
         title: '',
         description: '',
         banner: null,
-        expertWeight: 70,
+        expertWeight: null,
         isAutoStart: false,
         minExpertsRequired: 2,
         pointPerLike: 1,
@@ -81,11 +81,15 @@ export const useCreateEvent = () => {
             setExpertBalance(walletRes?.balance ?? 0);
 
             // Đồng bộ form với cấu hình server ngay khi tải xong
-            setForm((prev) => ({
-                ...prev,
-                expertWeight: meta.expertRules.defaultExpertWeight || 70,
-                minExpertsRequired: meta.expertRules.minRequired || 2,
-            }));
+            setForm((prev) => {
+                const hasDraftWeight = prev.expertWeight !== null && prev.expertWeight !== undefined;
+
+                return {
+                    ...prev,
+                    expertWeight: prev.expertWeight ?? meta.expertRules.defaultExpertWeight ?? 70,
+                    minExpertsRequired: prev.minExpertsRequired || meta.expertRules.minRequired || 2,
+                };
+            });
         } catch (err) {
             console.error('Lỗi khởi tạo dữ liệu:', err);
             setFetchError('Không thể tải cấu hình hệ thống hoặc số dư ví.');
@@ -122,7 +126,7 @@ export const useCreateEvent = () => {
                     return invitedExpertIds.length >= metadata.expertRules.minRequired - 1;
                 case 3:
                     const totalWeight = criteria.reduce((sum, c) => sum + Number(c.weightPercentage || 0), 0);
-                    return criteria.length > 0 && criteria.every(c => c.name.trim() !== '') && totalWeight === 100;
+                    return criteria.length > 0 && criteria.every((c) => c.name.trim() !== '') && totalWeight === 100;
                 case 4:
                     return prizes.length > 0 && prizes.every((p) => p.amount > 0);
                 default:
@@ -138,11 +142,10 @@ export const useCreateEvent = () => {
         setLoading(true);
 
         try {
-
-            const formattedCriteria = criteria.map(c => ({
+            const formattedCriteria = criteria.map((c) => ({
                 name: c.name,
                 description: c.description,
-                weightPercentage: Number(c.weightPercentage)
+                weightPercentage: Number(c.weightPercentage),
             }));
 
             const payload = {
@@ -152,7 +155,7 @@ export const useCreateEvent = () => {
                 endDate,
                 prizes,
                 invitedExpertIds,
-                criteria: formattedCriteria
+                criteria: formattedCriteria,
             };
 
             const response = await createEventApi(payload);
@@ -173,7 +176,7 @@ export const useCreateEvent = () => {
         // Form & Data
         form,
         setForm,
-        criteria, 
+        criteria,
         setCriteria,
         prizes,
         setPrizes,
@@ -184,6 +187,7 @@ export const useCreateEvent = () => {
         submissionDeadline,
         setSubmissionDeadline,
         invitedExpertIds,
+        setInvitedExpertIds,
 
         // Tài chính (Đã format/tính toán)
         expertBalance,

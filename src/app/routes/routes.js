@@ -21,6 +21,7 @@ import ExpertInvitations from '../../pages/ExpertInvitations';
 import Analytics from '../../pages/ExpertAnalytics';
 import ExpertWallet from '../../pages/ExpertWallet';
 import SubmissionsReview from '../../pages/ExpertSubmissionsReview';
+import EventSummary from '../../pages/EventSummary';
 
 import Home from '../../pages/Home';
 import FashionFeed from '../../pages/Feed';
@@ -79,49 +80,55 @@ export const routes = [
         path: PATHS.EXPERT_PROFILE,
         component: ProfilePage,
         layout: HomeLayout,
-        roles: ['expert'],
+        roles: ['user', 'expert'],
     },
     {
         path: PATHS.EXPERT_CREATE_EVENTS,
         component: CreateEvent,
         layout: ExpertLayout,
-        // roles: ['expert'],
+        roles: ['expert'],
     },
     {
         path: PATHS.EXPERT_EVENTS,
         component: MyEvents,
         layout: ExpertLayout,
-        // roles: ['expert'],
+        roles: ['expert'],
     },
     {
         path: PATHS.EXPERT_EVENT_DETAIL,
         component: EventDetailPage,
         layout: ExpertLayout,
-        // roles: ['expert'],
+        roles: ['expert'],
     },
     {
         path: PATHS.EXPERT_INVITATIONS,
         component: ExpertInvitations,
         layout: ExpertLayout,
-        // roles: ['expert'],
+        roles: ['expert'],
     },
     {
         path: PATHS.EXPERT_DASHBOARD,
         component: Analytics,
         layout: ExpertLayout,
-        // roles: ['expert'],
+        roles: ['expert'],
     },
     {
         path: PATHS.EXPERT_WALLET,
         component: ExpertWallet,
         layout: ExpertLayout,
-        // roles: ['expert'],
+        roles: ['expert'],
     },
     {
         path: PATHS.EXPERT_SUBMISSION_REVIEW,
         component: SubmissionsReview,
         layout: ExpertLayout,
-        // roles: ['expert'],
+        roles: ['expert'],
+    },
+    {
+        path: PATHS.EXPERT_SUMMARY_EVENT,
+        component: EventSummary,
+        layout: ExpertLayout,
+        roles: ['expert'],
     },
 
     // ===== ADMIN =====

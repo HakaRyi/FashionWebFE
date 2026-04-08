@@ -7,6 +7,7 @@ export { default as LandingSection } from "./components/LandingSection";
 export { default as StepExpertise } from "./components/StepExpertise";
 export { default as StepVerification } from "./components/StepVerification";
 export { default as SuccessState } from "./components/SuccessState";
+export { default as ReviewModal } from "./components/ReviewModal";
 
 // Hooks
 export { default as useExperts } from './hooks/useExperts';

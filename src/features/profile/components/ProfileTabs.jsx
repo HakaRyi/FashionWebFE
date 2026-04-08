@@ -1,35 +1,49 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Grid, Bookmark, Briefcase, Award } from 'lucide-react';
-import styles from '../styles/Profile.module.scss';
+import { motion } from 'framer-motion';
+import styles from '../styles/ProfileTabs.module.scss';
 
-const ProfileTabs = ({ isExpert }) => {
-    const [activeTab, setActiveTab] = useState('lookbook');
-
+const ProfileTabs = ({ isExpert, activeTab, onChange }) => {
+    
     const tabs = [
-        { id: 'lookbook', label: 'LOOKBOOK', icon: <Grid size={18} /> },
-        { id: 'saved', label: 'SAVED', icon: <Bookmark size={18} /> },
+        { id: 'lookbook', label: 'LOOKBOOK', icon: <Grid size={16} /> },
+        { id: 'saved', label: 'SAVED', icon: <Bookmark size={16} /> },
     ];
 
-    // Nếu là Expert thì thêm các tab đặc thù
     if (isExpert) {
         tabs.push(
-            { id: 'portfolio', label: 'PORTFOLIO', icon: <Briefcase size={18} /> },
-            { id: 'certificates', label: 'AWARDS', icon: <Award size={18} /> }
+            { id: 'portfolio', label: 'PORTFOLIO', icon: <Briefcase size={16} /> },
+            { id: 'awards', label: 'AWARDS', icon: <Award size={16} /> }
         );
     }
 
     return (
-        <div className={styles.tabs}>
-            {tabs.map((tab) => (
-                <div
-                    key={tab.id}
-                    className={`${styles.tab} ${activeTab === tab.id ? styles.active : ''}`}
-                    onClick={() => setActiveTab(tab.id)}
-                >
-                    {tab.icon} {tab.label}
-                </div>
-            ))}
-        </div>
+        <nav className={styles.tabsContainer}>
+            <div className={styles.tabsList}>
+                {tabs.map((tab) => {
+                    const isActive = activeTab === tab.id;
+                    return (
+                        <button
+                            key={tab.id}
+                            className={`${styles.tabItem} ${isActive ? styles.active : ''}`}
+                            onClick={() => onChange(tab.id)}
+                        >
+                            <span className={styles.icon}>{tab.icon}</span>
+                            <span className={styles.label}>{tab.label}</span>
+                            
+                            {/* Thanh gạch chân di chuyển mượt mà bằng Framer Motion */}
+                            {isActive && (
+                                <motion.div 
+                                    layoutId="activeTabUnderline"
+                                    className={styles.activeLine}
+                                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                                />
+                            )}
+                        </button>
+                    );
+                })}
+            </div>
+        </nav>
     );
 };
 

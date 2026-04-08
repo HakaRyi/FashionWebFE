@@ -1,0 +1,69 @@
+.tabsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #efefef; // Đường kẻ mảnh ngăn cách với Header
+  background: #fff;
+}
+
+.tabsList {
+  display: flex;
+  gap: 60px; // Dãn cách rộng rãi
+  position: relative;
+
+  @media (max-width: 768px) {
+    gap: 0;
+    width: 100%;
+    justify-content: space-around;
+  }
+}
+
+.tabItem {
+  background: none;
+  border: none;
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #8e8e8e; // Màu xám khi chưa active
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #000;
+  }
+
+  &.active {
+    color: #000; // Màu đen tuyền khi active
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 0;
+    
+    .label {
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+.activeLine {
+  position: absolute;
+  top: -1px; // Nằm đè lên border-top của container
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: #000; // Thanh gạch chân đen chuẩn High-fashion
+}

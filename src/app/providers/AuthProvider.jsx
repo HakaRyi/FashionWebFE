@@ -1,37 +1,24 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "../routes/paths";
+import axiosClient from "@/shared/lib/axios";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            const decodedUser = decodeToken(token);
-            if (decodedUser) {
-                setUser(decodedUser);
-            } else {
-                localStorage.clear();
-            }
-        }
-        setIsLoading(false);
-    }, []);
-
+    // 1. Hàm giải mã token (giữ nguyên logic cũ của bạn)
     const decodeToken = (token) => {
         try {
             const decoded = jwtDecode(token);
-
+            console.log("JWT Decoded:", decoded);
             const role =
                 decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
                 decoded.role;
-
-            console.log("Dữ liệu Role sau khi decode:", role);
 
             return {
                 id: decoded.sub,
@@ -40,15 +27,48 @@ export const AuthProvider = ({ children }) => {
                 role: role?.toLowerCase(),
             };
         } catch (error) {
-            console.error("Invalid token");
+            console.error("Invalid token:", error);
             return null;
         }
     };
 
-    const login = (accessToken, refreshToken) => {
+    const fetchFullProfile = useCallback(async (userId) => {
+        try {
+            const response = await axiosClient.get(`/profile/${userId}`);
+            return response.data; 
+        } catch (error) {
+            console.error("Lỗi lấy profile chi tiết:", error);
+            return null;
+        }
+    }, []);
+
+    // 3. Khởi tạo Auth khi load trang
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                const decoded = decodeToken(token);
+                if (decoded) {
+                    const fullUser = await fetchFullProfile(decoded.id);
+                    setUser(fullUser ? { ...fullUser, role: fullUser.role?.toLowerCase() } : decoded);
+                } else {
+                    localStorage.clear();
+                }
+            }
+            setIsLoading(false);
+        };
+        initAuth();
+    }, [fetchFullProfile]);
+
+    const login = async (accessToken, refreshToken) => {
         localStorage.setItem("token", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-        setUser(decodeToken(accessToken));
+        
+        const decoded = decodeToken(accessToken);
+        if (decoded) {
+            const fullUser = await fetchFullProfile(decoded.id);
+            setUser(fullUser ? { ...fullUser, role: fullUser.role?.toLowerCase() } : decoded);
+        }
     };
 
     const logout = () => {
@@ -58,10 +78,16 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+        <AuthContext.Provider value={{ user, login, logout, isLoading, setUser }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuth must be used within an AuthProvider");
+    }
+    return context;
+};

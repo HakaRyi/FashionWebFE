@@ -12,12 +12,11 @@ const MyEventsPage = () => {
     const navigate = useNavigate();
     const { hostedEvents, judgingEvents, loading } = useMyEvents();
 
-    const [activeTab, setActiveTab] = useState("hosted"); // "hosted" hoặc "judging"
+    const [activeTab, setActiveTab] = useState("hosted");
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const now = new Date();
 
-    // Reset phân trang khi đổi tab hoặc tìm kiếm
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, activeTab]);
@@ -71,14 +70,14 @@ const MyEventsPage = () => {
 
             {/* Hệ thống Tab Role */}
             <div className={styles.tabWrapper}>
-                <button 
+                <button
                     className={`${styles.tabBtn} ${activeTab === 'hosted' ? styles.active : ''}`}
                     onClick={() => setActiveTab('hosted')}
                 >
                     <LayoutGrid size={18} />
                     Sự kiện tôi tạo ({hostedEvents.length})
                 </button>
-                <button 
+                <button
                     className={`${styles.tabBtn} ${activeTab === 'judging' ? styles.active : ''}`}
                     onClick={() => setActiveTab('judging')}
                 >
@@ -99,13 +98,14 @@ const MyEventsPage = () => {
                             <div className={styles.eventGrid}>
                                 {paginatedEvents.map((event, index) => {
                                     const deadline = new Date(event.submissionDeadline);
-                                    
+
                                     // Điều kiện hiện nút Review:
                                     // 1. Nếu là Host: Event Active
                                     // 2. Nếu là Expert: Event Active + Đã qua deadline nộp bài
-                                    const canReview = 
-                                        event.status?.toLowerCase() === "active" && 
-                                         now >= deadline;
+                                    const canReview =
+                                        event.status?.toLowerCase() === "active" &&
+                                        now >= deadline;
+                                    const isCompleted = event.status?.toLowerCase() === "completed";
 
                                     return (
                                         <div key={event.eventId} className={styles.eventCardWrapper}>
@@ -113,24 +113,41 @@ const MyEventsPage = () => {
                                                 event={event}
                                                 index={index}
                                                 // Prop này để Card hiển thị thù lao nếu là judging
-                                                isJudgingMode={activeTab === 'judging'} 
+                                                isJudgingMode={activeTab === 'judging'}
                                                 onClick={() =>
                                                     navigate(PATHS.EXPERT_EVENT_DETAIL.replace(':id', event.eventId))
                                                 }
                                             />
 
-                                            {canReview && (
+                                            {(canReview || isCompleted) && (
                                                 <div className={styles.cardActions}>
-                                                    <button
-                                                        className={styles.btnReview}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            navigate(PATHS.EXPERT_SUBMISSION_REVIEW.replace(':eventId', event.eventId));
-                                                        }}
-                                                    >
-                                                        <ClipboardCheck size={16} />
-                                                        <span>{activeTab === 'hosted' ? 'Xem bài nộp' : 'Chấm điểm'}</span>
-                                                    </button>
+                                                    {/* Nút Review (Chấm điểm/Xem bài nộp) */}
+                                                    {canReview && (
+                                                        <button
+                                                            className={styles.btnReview}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                navigate(PATHS.EXPERT_SUBMISSION_REVIEW.replace(':eventId', event.eventId));
+                                                            }}
+                                                        >
+                                                            <ClipboardCheck size={16} />
+                                                            <span>{activeTab === 'hosted' ? 'Xem bài nộp' : 'Chấm điểm'}</span>
+                                                        </button>
+                                                    )}
+
+                                                    {/* Nút Xem kết quả */}
+                                                    {isCompleted && (
+                                                        <button
+                                                            className={`${styles.btnReview} ${styles.btnSummaryFloating}`}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                navigate(PATHS.EXPERT_SUMMARY_EVENT.replace(':id', event.eventId));
+                                                            }}
+                                                        >
+                                                            <Award size={16} />
+                                                            <span>Xem kết quả</span>
+                                                        </button>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>

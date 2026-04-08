@@ -1,8 +1,11 @@
 import axiosClient from '@/shared/lib/axios';
 
 export const profileApi = {
-    // Lấy thông tin account chung
-    getAccount: (id) => axiosClient.get(`/accounts/${id}`),
-    // Lấy thông tin expert nếu có
-    getExpertDetail: (accountId) => axiosClient.get(`/expert/profile/${accountId}`),
+    getProfile: (id) => axiosClient.get(`/profile/${id}`),
+    
+    getMyPosts: (page = 1, pageSize = 10) => 
+        axiosClient.get('/post/me', { params: { page, pageSize } }),
+
+    getUserPosts: (accountId, page = 1, pageSize = 10) => 
+        axiosClient.get(`/post/user/${accountId}`, { params: { page, pageSize } }),
 };

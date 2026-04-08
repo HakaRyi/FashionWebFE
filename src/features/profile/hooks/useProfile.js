@@ -1,35 +1,40 @@
 import { useState, useEffect } from 'react';
 import { profileApi } from '../api/profileApi';
 
-export const useProfile = (accountId) => {
+export const useProfile = (accountId, currentUserId) => {
     const [data, setData] = useState({
-        account: null,
-        expert: null,
-        loading: true
+        profile: null,
+        posts: [],
+        loading: true,
+        error: null
     });
 
     useEffect(() => {
-        const fetchProfile = async () => {
+        const fetchFullProfile = async () => {
             try {
-                const accRes = await profileApi.getAccount(accountId);
-                
-                let expertRes = null;
-                try {
-                    expertRes = await profileApi.getExpertDetail(accountId);
-                } catch (e) { /* Trống */ }
+                const isMe = String(accountId) === String(currentUserId);
+
+                const [profRes, postRes] = await Promise.all([
+                    profileApi.getProfile(accountId),
+                    isMe 
+                        ? profileApi.getMyPosts(1, 12) 
+                        : profileApi.getUserPosts(accountId, 1, 12)
+                ]);
 
                 setData({
-                    account: accRes.data,
-                    expert: expertRes?.data || null,
-                    loading: false
+                    profile: profRes.data,
+                    posts: postRes.data.items || [],
+                    loading: false,
+                    error: null
                 });
             } catch (error) {
                 console.error("Profile Fetch Error", error);
-                setData(prev => ({ ...prev, loading: false }));
+                setData(prev => ({ ...prev, loading: false, error }));
             }
         };
-        fetchProfile();
-    }, [accountId]);
+
+        if (accountId) fetchFullProfile();
+    }, [accountId, currentUserId]);
 
     return data;
 };
