@@ -1,4 +1,4 @@
-import { Search, Loader2, AlertCircle, Percent, Share2, ThumbsUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Loader2, AlertCircle, Percent, Share2, ThumbsUp, ChevronLeft, ChevronRight, Award } from "lucide-react";
 import styles from "../../styles/StepExperts.module.scss";
 import { useExperts } from "@/features/expert";
 import { useEffect, useState, useMemo } from "react";
@@ -145,6 +145,10 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                                         <h4>{ex.userName}</h4>
                                         <span>{ex.expertiseField}</span>
                                         <small>{ex.yearsOfExperience} năm kinh nghiệm</small>
+                                        <div className={styles.reputation}>
+                                            <Award size={12} className={styles.reputationIcon} />
+                                            <span>Uy tín: <strong>{ex.reputationScore || 0}</strong></span>
+                                        </div>
                                     </div>
                                     <button type="button"
                                         className={isSelected ? styles.btnInvited : styles.btnInvite}
