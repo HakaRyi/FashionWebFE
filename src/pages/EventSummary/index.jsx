@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {PostsTab,RatingModal, LeaderboardTab, formatVND, useEventSummary} from '@/features/events';
 import styles from './EventSummary.module.scss';
 
-const EventSummary = ({ eventId = 1 }) => {
+const EventSummary = () => {
+  const { id } = useParams();
   const [activeTab, setActiveTab] = useState('leaderboard');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
 
-  const { eventInfo, leaderboardData, postsData, isLoading, error } = useEventSummary(eventId);
+  const { eventInfo, leaderboardData, postsData, isLoading, error } = useEventSummary(id);
 
   const handleOpenModal = (postId) => {
     setSelectedPostId(postId);
