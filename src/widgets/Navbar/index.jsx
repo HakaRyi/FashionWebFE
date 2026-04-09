@@ -172,8 +172,8 @@ const Navbar = () => {
                                                 <span>{isExpert ? 'Expert Panel' : 'Become an Expert'}</span>
                                             </button>
 
-                                            <button className={styles.dropdownItem}>
-                                                <HelpCircle size={18} /> <span>Support</span>
+                                            <button className={styles.dropdownItem} onClick={() => handleNavigation(PATHS.USER_POLICY)}>
+                                                <HelpCircle size={18} /> <span>Policy</span>
                                             </button>
 
                                             <div className={styles.dropdownDivider} />

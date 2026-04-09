@@ -81,7 +81,7 @@ const FashionFeed = () => {
                                 <h2 className={styles.postTitle}>{post.title}</h2>
                                 <p className={styles.description}>{post.content}</p>
                                 <div className={styles.tags}>
-                                    {post.eventName ? `#${post.eventName.replace(/\s+/g, '')}` : '#Fashion'} #Wapo
+                                    {post.eventName ? `#${post.eventName.replace(/\s+/g, '')}` : '#Fashion'}
                                 </div>
                                 <time className={styles.timeAgo}>{formatTime(post.createdAt)}</time>
                             </div>

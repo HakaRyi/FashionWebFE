@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }) => {
         if (decoded) {
             const fullUser = await fetchFullProfile(decoded.id);
             setUser(fullUser ? { ...fullUser, role: fullUser.role?.toLowerCase() } : decoded);
+            return true;
         }
     };
 

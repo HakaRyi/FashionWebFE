@@ -33,6 +33,10 @@ axiosClient.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        if (originalRequest.url.includes('/login')) {
+            return Promise.reject(error);
+        }
+
         // Check if 401 Unauthorized and not retried yet
         if (error.response?.status === 401 && !originalRequest._retry) {
             if (isRefreshing) {
