@@ -439,3 +439,62 @@ $shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         width: 95%;
     }
 }
+
+.actionGroup {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+// Style chung cho các nút hành động trong bảng
+.btnView, .btnEdit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px; // Bo góc mềm mại hơn
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+}
+
+.btnView {
+    border: 1px solid $border-color;
+    background: white;
+    color: $text-main;
+
+    &:hover {
+        background: $bg-light;
+        border-color: $primary-color;
+        color: $primary-color;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+}
+
+.btnEdit {
+    background: rgba($warning-color, 0.1); // Màu nền cam nhạt trong suốt
+    color: darken($warning-color, 15%); // Chữ cam đậm
+    border: 1px solid rgba($warning-color, 0.2);
+
+    &:hover {
+        background: $warning-color; // Khi hover thì hiện màu cam đặc
+        color: white;
+        border-color: $warning-color;
+        box-shadow: 0 4px 10px rgba($warning-color, 0.3);
+        transform: translateY(-1px); // Hiệu ứng nổi lên nhẹ
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    svg {
+        transition: transform 0.2s;
+    }
+
+    &:hover svg {
+        transform: rotate(-15deg); // Hiệu ứng xoay nhẹ icon bút chì khi hover
+    }
+}

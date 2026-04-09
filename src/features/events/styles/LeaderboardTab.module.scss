@@ -1,4 +1,4 @@
-@import '../../../shared/styles/abstracts/variables';
+@use '../../../shared/styles/abstracts/variables';
 
 .leaderboard-grid {
     font-family: 'Be Vietnam Pro', sans-serif;
@@ -9,12 +9,12 @@
 
     .rank-card {
         background: #fff;
-        border: 2px solid $f-black;
+        border: 2px solid variables.$f-black;
         border-radius: 16px;
         padding: 40px 20px;
         text-align: center;
         position: relative;
-        @include neon-shadow($f-cyan);
+        @include variables.neon-shadow(variables.$f-cyan);
 
         .rank-badge {
             font-size: 2rem;
@@ -26,7 +26,7 @@
                 font-size: 1.3rem; 
                 margin-bottom: 15px; 
                 font-weight: 800; 
-                color: $f-black;
+                color: variables.$f-black;
             }
 
             .scoreDisplay {
@@ -40,7 +40,7 @@
                 label {
                     font-size: 0.75rem;
                     font-weight: 700;
-                    color: $f-gray;
+                    color: variables.$f-gray;
                     text-transform: uppercase;
                     letter-spacing: 1px;
                 }
@@ -53,25 +53,25 @@
             padding: 10px 20px;
             margin: 20px 0;
             border-radius: 12px;
-            border: 2px solid $f-black;
+            border: 2px solid variables.$f-black;
             width: 80%;
 
             .prizeLabel {
                 font-size: 0.7rem;
                 font-weight: 800;
                 text-transform: uppercase;
-                color: rgba($f-black, 0.6);
+                color: rgba(variables.$f-black, 0.6);
             }
             .prizeValue {
                 font-size: 1.1rem;
                 font-weight: 900;
-                color: $f-black;
+                color: variables.$f-black;
             }
         }
 
         .viewResultBtn {
             margin-top: 15px;
-            background: $f-black;
+            background: variables.$f-black;
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -81,7 +81,7 @@
             transition: all 0.3s ease;
 
             &:hover {
-                background: $f-purple;
+                background: variables.$f-purple;
                 transform: scale(1.05);
             }
         }
@@ -90,26 +90,26 @@
         &.rank-1 {
             background: white;
             border-width: 3px;
-            @include neon-shadow($f-pink);
+            @include variables.neon-shadow(variables.$f-pink);
             
             &::before {
                 content: '🏆 TOP FASHION';
                 position: absolute;
                 top: -12px; left: 50%;
                 transform: translateX(-50%);
-                background: $f-pink;
+                background: variables.$f-pink;
                 color: #fff;
                 padding: 4px 12px;
                 font-size: 0.7rem;
                 font-weight: 900;
                 border-radius: 4px;
-                border: 2px solid $f-black;
+                border: 2px solid variables.$f-black;
                 z-index: 1;
             }
         }
 
-        &.rank-2 { @include neon-shadow($f-purple); }
-        &.rank-3 { @include neon-shadow($f-cyan); }
+        &.rank-2 { @include variables.neon-shadow(variables.$f-purple); }
+        &.rank-3 { @include variables.neon-shadow(variables.$f-cyan); }
     }
 }
 

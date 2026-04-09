@@ -32,8 +32,8 @@ const EventRow = ({ event, onOpenDetail, onQuickEdit }) => {
                 <button className={styles.btnView} onClick={() => onOpenDetail(event)}>
                     <Eye size={16} /> Chi tiết
                 </button>
-                <button className={styles.btnEdit} onClick={() => onQuickEdit(event)} style={{ backgroundColor: '#f59e0b', color: 'white' }}>
-                    <Edit3 size={16} /> Sửa
+                <button className={styles.btnEdit} onClick={() => onQuickEdit(event)}>
+                    <Edit3 size={16} /> <span>Sửa</span>
                 </button>
             </td>
         </tr>

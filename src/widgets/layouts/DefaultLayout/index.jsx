@@ -70,7 +70,7 @@ function DefaultLayout({ children }) {
         {
             title: 'Tài chính & Gói cước',
             items: [
-                { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
+                // { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
                 { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Lịch sử giao dịch' },
                 { path: '/refunds', icon: <FaFileInvoiceDollar />, label: 'Yêu cầu hoàn tiền' },
             ],

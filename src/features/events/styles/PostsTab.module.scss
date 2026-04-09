@@ -1,4 +1,4 @@
-@import '../../../shared/styles/abstracts/variables';
+@use '../../../shared/styles/abstracts/variables';
 
 .posts-grid {
     display: grid;
@@ -9,13 +9,13 @@
     .post-card {
         background: #fff;
         border-radius: 12px;
-        border: 2px solid $f-black;
+        border: 2px solid variables.$f-black;
         overflow: hidden;
         transition: all 0.3s ease;
         cursor: pointer;
 
         &:hover {
-            border-color: $f-purple;
+            border-color: variables.$f-purple;
             transform: translateY(-5px);
             .imageWrapper img { transform: scale(1.05); }
         }
@@ -38,7 +38,7 @@
                 top: 12px; 
                 left: 12px;
                 background: #fff;
-                border: 2px solid $f-black;
+                border: 2px solid variables.$f-black;
                 padding: 4px 10px;
                 font-weight: 800;
                 font-size: 0.8rem;
@@ -56,7 +56,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                color: $f-black;
+                color: variables.$f-black;
             }
 
             .postMeta {
@@ -67,18 +67,18 @@
                 span {
                     font-size: 0.75rem;
                     font-weight: 700;
-                    color: $f-purple;
+                    color: variables.$f-purple;
                     text-transform: uppercase;
                 }
 
                 .postStats {
                     display: flex;
                     gap: 12px;
-                    border-top: 1px solid rgba($f-black, 0.05);
+                    border-top: 1px solid rgba(variables.$f-black, 0.05);
                     padding-top: 8px;
                     font-size: 0.8rem;
                     font-weight: 600;
-                    color: $f-gray;
+                    color: variables.$f-gray;
                 }
             }
         }

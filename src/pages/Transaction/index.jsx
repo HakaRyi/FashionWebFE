@@ -1,105 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from './Transaction.module.scss';
+import axiosClient from '../../shared/lib/axios';
+import * as XLSX from 'xlsx'; // Import thư viện xuất Excel
 import { 
-    FaMagnifyingGlass, FaDownload, FaFilter, FaCircleCheck, 
-    FaCircleXmark, FaClock, FaMoneyBillTransfer, FaCreditCard 
+    FaMagnifyingGlass, FaDownload, FaCircleCheck, 
+    FaCircleXmark, FaClock, FaArrowUp, FaArrowDown,
+    FaChevronLeft, FaChevronRight
 } from 'react-icons/fa6';
 
-const initialTransactions = [
-    { 
-        id: 'TRX78901', 
-        user: 'Nguyễn Văn A', 
-        package: 'Gói VIP', 
-        amount: 500000, 
-        method: 'Momo', 
-        date: '2026-02-03 10:15', 
-        status: 'Success' 
-    },
-    { 
-        id: 'TRX78902', 
-        user: 'Trần Thị B', 
-        package: 'Gói Cơ Bản', 
-        amount: 50000, 
-        method: 'Banking', 
-        date: '2026-02-03 09:30', 
-        status: 'Pending' 
-    },
-    { 
-        id: 'TRX78903', 
-        user: 'Lê Hoàng C', 
-        package: 'Gói Kim Cương', 
-        amount: 1000000, 
-        method: 'VNPAY', 
-        date: '2026-02-02 15:45', 
-        status: 'Failed' 
-    },
-    { 
-        id: 'TRX78904', 
-        user: 'Phạm Minh D', 
-        package: 'Gói Nâng Cao', 
-        amount: 200000, 
-        method: 'Momo', 
-        date: '2026-02-02 08:20', 
-        status: 'Success' 
-    },
-];
-
 function TransactionManagement() {
-    const [transactions] = useState(initialTransactions);
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    
+    // States cho Search và Phân trang
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = 10;
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                setLoading(true);
+                const response = await axiosClient.get('/transaction');
+                setTransactions(response.data);
+            } catch (error) {
+                console.error("Lỗi lấy dữ liệu:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTransactions();
+    }, []);
+
+    // 1. Tính năng Search (Lọc theo tên hoặc mã)
+    const filteredTransactions = useMemo(() => {
+        return transactions.filter(trx => 
+            trx.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            trx.transactionId.toString().includes(searchTerm) ||
+            trx.description?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [searchTerm, transactions]);
+
+    // 2. Tính năng Phân trang
+    const totalPages = Math.ceil(filteredTransactions.length / recordsPerPage);
+    const indexOfLastRecord = currentPage * recordsPerPage;
+    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    const currentRecords = filteredTransactions.slice(indexOfFirstRecord, indexOfLastRecord);
+
+    // Reset về trang 1 khi search
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
+
+    // 3. Tính năng Xuất Excel
+    const exportToExcel = () => {
+        const dataToExport = filteredTransactions.map(trx => ({
+            "Mã GD": trx.transactionId,
+            "Người dùng": trx.userName,
+            "Loại": trx.type,
+            "Số tiền": trx.amount,
+            "Mô tả": trx.description,
+            "Thời gian": new Date(trx.createdAt).toLocaleString('vi-VN'),
+            "Trạng thái": trx.status
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+        XLSX.writeFile(workbook, `Bao_Cao_Giao_Dich_${new Date().getTime()}.xlsx`);
+    };
 
     const formatCurrency = (value) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
     };
 
-    const getStatusIcon = (status) => {
-        switch (status) {
-            case 'Success': return <FaCircleCheck className={styles.iconSuccess} />;
-            case 'Pending': return <FaClock className={styles.iconPending} />;
-            case 'Failed': return <FaCircleXmark className={styles.iconFailed} />;
-            default: return null;
-        }
+    const formatDateTime = (dateString) => {
+        return new Date(dateString).toLocaleString('vi-VN', {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit'
+        });
     };
+
+    if (loading) return <div className={styles.loading}>Đang tải...</div>;
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.header}>
                 <div>
                     <h2>Quản Lý Giao Dịch</h2>
-                    <p>Theo dõi và đối soát dòng tiền nạp Coin của hệ thống</p>
+                    <p>Đang hiển thị {filteredTransactions.length} kết quả</p>
                 </div>
-                <button className={styles.btnExport}>
-                    <FaDownload /> Xuất báo cáo Excel
+                <button className={styles.btnExport} onClick={exportToExcel}>
+                    <FaDownload /> Xuất Excel
                 </button>
-            </div>
-
-            <div className={styles.summaryGrid}>
-                <div className={styles.summaryCard}>
-                    <span>Doanh thu hôm nay</span>
-                    <h3>{formatCurrency(550000)}</h3>
-                </div>
-                <div className={styles.summaryCard}>
-                    <span>Giao dịch thành công</span>
-                    <h3>128</h3>
-                </div>
-                <div className={styles.summaryCard}>
-                    <span>Tỷ lệ thanh toán</span>
-                    <h3>94.2%</h3>
-                </div>
             </div>
 
             <div className={styles.filterBar}>
                 <div className={styles.searchBox}>
                     <FaMagnifyingGlass />
-                    <input type="text" placeholder="Tìm theo mã giao dịch, tên người dùng..." />
-                </div>
-                <div className={styles.filterActions}>
-                    <button className={styles.btnFilter}><FaFilter /> Bộ lọc</button>
-                    <select className={styles.selectStatus}>
-                        <option value="">Tất cả trạng thái</option>
-                        <option value="Success">Thành công</option>
-                        <option value="Pending">Đang chờ</option>
-                        <option value="Failed">Thất bại</option>
-                    </select>
+                    <input 
+                        type="text" 
+                        placeholder="Tìm tên người dùng, mã giao dịch..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
             </div>
 
@@ -107,39 +111,58 @@ function TransactionManagement() {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>Mã Giao Dịch</th>
-                            <th>Khách Hàng</th>
-                            <th>Gói Coin</th>
-                            <th>Số Tiền</th>
-                            <th>Phương Thức</th>
-                            <th>Thời Gian</th>
-                            <th>Trạng Thái</th>
+                            <th>Mã GD</th>
+                            <th>Người dùng</th>
+                            <th>Loại</th>
+                            <th>Số tiền</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {transactions.map((trx) => (
-                            <tr key={trx.id}>
-                                <td className={styles.trxId}>{trx.id}</td>
-                                <td className={styles.userName}>{trx.user}</td>
-                                <td><span className={styles.packageTag}>{trx.package}</span></td>
-                                <td className={styles.amount}>{formatCurrency(trx.amount)}</td>
+                        {currentRecords.map((trx) => (
+                            <tr key={trx.transactionId}>
+                                <td className={styles.trxId}>#{trx.transactionId}</td>
+                                <td className={styles.userName}>{trx.userName}</td>
                                 <td>
-                                    <div className={styles.method}>
-                                        {trx.method === 'Momo' ? <FaMoneyBillTransfer /> : <FaCreditCard />}
-                                        {trx.method}
-                                    </div>
+                                    <span className={`${styles.typeTag} ${trx.amount > 0 ? styles.plus : styles.minus}`}>
+                                        {trx.type.replace(/_/g, ' ')}
+                                    </span>
                                 </td>
-                                <td className={styles.date}>{trx.date}</td>
+                                <td className={`${styles.amount} ${trx.amount > 0 ? styles.positive : styles.negative}`}>
+                                    {formatCurrency(trx.amount)}
+                                </td>
+                                <td className={styles.date}>{formatDateTime(trx.createdAt)}</td>
                                 <td>
                                     <div className={`${styles.statusBadge} ${styles[trx.status.toLowerCase()]}`}>
-                                        {getStatusIcon(trx.status)}
-                                        {trx.status === 'Success' ? 'Thành công' : trx.status === 'Pending' ? 'Đang chờ' : 'Thất bại'}
+                                        {trx.status === 'Success' ? 'Thành công' : 'Đang xử lý'}
                                     </div>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Pagination UI */}
+            <div className={styles.pagination}>
+                <span className={styles.pageInfo}>
+                    Trang {currentPage} / {totalPages || 1}
+                </span>
+                <div className={styles.pageBtns}>
+                    <button 
+                        disabled={currentPage === 1} 
+                        onClick={() => setCurrentPage(p => p - 1)}
+                    >
+                        <FaChevronLeft />
+                    </button>
+                    <button 
+                        disabled={currentPage === totalPages || totalPages === 0} 
+                        onClick={() => setCurrentPage(p => p + 1)}
+                    >
+                        <FaChevronRight />
+                    </button>
+                </div>
             </div>
         </div>
     );

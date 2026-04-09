@@ -146,3 +146,73 @@
 .iconFailed { color: #ef4444; }
 
 .date { color: #94a3b8; font-size: 0.85rem; }
+.positive { color: #2ecc71; font-weight: bold; }
+.negative { color: #e74c3c; font-weight: bold; }
+
+.typeTag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #f0f2f5;
+    text-transform: uppercase;
+    
+    &.plus { color: #2ecc71; background: rgba(46, 204, 113, 0.1); }
+    &.minus { color: #e74c3c; background: rgba(231, 76, 60, 0.1); }
+}
+
+.description {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    color: #666;
+}
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    padding: 10px;
+
+    .pageInfo {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .pageBtns {
+        display: flex;
+        gap: 8px;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover:not(:disabled) {
+                background: #f0f2f5;
+                border-color: #0a0a0a;
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+.searchBox {
+    input {
+        width: 300px; // Cho thanh search dài ra tí cho dễ gõ
+        // ... giữ các style cũ
+    }
+}
