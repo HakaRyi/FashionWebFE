@@ -22,6 +22,7 @@ import Analytics from '../../pages/ExpertAnalytics';
 import ExpertWallet from '../../pages/ExpertWallet';
 import SubmissionsReview from '../../pages/ExpertSubmissionsReview';
 import EventSummary from '../../pages/EventSummary';
+import Policy from '../../pages/Policy';
 
 import Home from '../../pages/Home';
 import FashionFeed from '../../pages/Feed';
@@ -54,6 +55,13 @@ export const routes = [
         component: Unauthorized,
         layout: null,
     },
+    {
+        path: PATHS.USER_POLICY,
+        component: Policy,
+        layout: HomeLayout,
+        // roles: ['user', 'expert'],
+    },
+
 
     // ===== USER =====
     {

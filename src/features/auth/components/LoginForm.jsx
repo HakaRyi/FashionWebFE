@@ -12,6 +12,7 @@ export default function LoginForm({ onSwitchMode }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
     const validationErrors = validateAuthForm(formData, true);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -22,6 +23,10 @@ export default function LoginForm({ onSwitchMode }) {
     setIsLoading(true);
     try {
       await handleLogin(formData.email, formData.password);
+    } catch (error) {
+      setErrors({
+        server: error.response?.data?.message || "Email hoặc mật khẩu không chính xác!"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -61,6 +66,21 @@ export default function LoginForm({ onSwitchMode }) {
           </button>
           {errors.password && <span className={styles["error-msg"]}>{errors.password}</span>}
         </div>
+
+        {errors.server && (
+          <div style={{
+            color: '#ff4d4f',
+            backgroundColor: '#fff2f0',
+            border: '1px solid #ffccc7',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            marginBottom: '15px',
+            fontSize: '13px',
+            textAlign: 'center'
+          }}>
+            {errors.server}
+          </div>
+        )}
 
         <button type="submit" className={styles["btn-submit"]} disabled={isLoading}>
           {isLoading ? <div className={styles.spinner}></div> : "LOGIN TO ACCOUNT"}

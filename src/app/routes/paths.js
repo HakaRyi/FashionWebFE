@@ -7,6 +7,7 @@ export const PATHS = {
     //user
     USER_FEED: '/home',
     PAYMENT_RESULT: '/payment-result',
+    USER_POLICY: '/policy',
 
     //expert
     EXPERT_APPLICATION: '/expert/registration',
