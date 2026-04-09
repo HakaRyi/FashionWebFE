@@ -1,3 +1,4 @@
+@use "sass:color";
 // Variables
 $primary-color: #2563eb;
 $success-color: #10b981;
@@ -475,7 +476,7 @@ $shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 
 .btnEdit {
     background: rgba($warning-color, 0.1); // Màu nền cam nhạt trong suốt
-    color: darken($warning-color, 15%); // Chữ cam đậm
+    color: color.scale($warning-color, $lightness: -29.8828125%); // Chữ cam đậm
     border: 1px solid rgba($warning-color, 0.2);
 
     &:hover {
