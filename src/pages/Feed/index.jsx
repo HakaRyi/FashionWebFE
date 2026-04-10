@@ -3,6 +3,10 @@ import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Share2, Sparkles, Plus, MoreHorizontal } from 'lucide-react';
 import { useFeed } from '@/features/feed';
 import styles from './Feed.module.scss';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const FashionFeed = () => {
     const { posts, isLoading, hasMore, lastPostRef } = useFeed();
@@ -28,9 +32,9 @@ const FashionFeed = () => {
                         {/* Header */}
                         <div className={styles.cardHeader}>
                             <div className={styles.userInfo}>
-                                <img 
-                                    src={post.avatarUrl || `https://ui-avatars.com/api/?name=${post.userName}&background=random`} 
-                                    alt="avatar" 
+                                <img
+                                    src={post.avatarUrl || `https://ui-avatars.com/api/?name=${post.userName}&background=random`}
+                                    alt="avatar"
                                 />
                                 <div className={styles.userMeta}>
                                     <span className={styles.userName}>@{post.userName}</span>
@@ -44,7 +48,30 @@ const FashionFeed = () => {
 
                         {/* Image Body */}
                         <div className={styles.imageContainer}>
-                            <img src={post.images?.[0] || 'https://via.placeholder.com/1000'} alt={post.title} />
+                            {post.images?.length > 1 ? (
+                                <Swiper
+                                    modules={[Pagination]}
+                                    pagination={{ clickable: true, dynamicBullets: true }}
+                                    className={styles.imageSwiper}
+                                    grabCursor={true}
+                                >
+                                    {post.images.map((imgUrl, imgIndex) => (
+                                        <SwiperSlide key={imgIndex}>
+                                            <img
+                                                src={imgUrl}
+                                                alt={`${post.title}-${imgIndex}`}
+                                                className={styles.feedImage}
+                                            />
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                            ) : (
+                                <img
+                                    src={post.images?.[0] || 'https://clu.1cdn.vn/2022/06/15/media.congluan.vn-files-content-2022-06-14-_baymax-su-quay-lai-cua-big-hero-6-chinh-thuc-an-dinh-ngay-phat-hanh-173803236.jpg'}
+                                    alt={post.title}
+                                    className={styles.feedImage}
+                                />
+                            )}
                             {post.isEvent && (
                                 <div className={styles.aiTag}>
                                     <Sparkles size={12} />

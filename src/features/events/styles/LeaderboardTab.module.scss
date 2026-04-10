@@ -1,121 +1,240 @@
-@use '../../../shared/styles/abstracts/variables';
+@use '../../../shared/styles/abstracts/variables' as vars;
+@use 'sass:color';
 
-.leaderboard-grid {
+.leaderboardContainer {
     font-family: 'Be Vietnam Pro', sans-serif;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 80px;
+    padding-bottom: 50px;
 
-    .rank-card {
-        background: #fff;
-        border: 2px solid variables.$f-black;
-        border-radius: 16px;
-        padding: 40px 20px;
-        text-align: center;
-        position: relative;
-        @include variables.neon-shadow(variables.$f-cyan);
+    // --- PHẦN 1: TOP WINNERS (GRID) ---
+    .top-winners-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+        padding-top: 20px;
 
-        .rank-badge {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .userInfo {
-            h3 { 
-                font-size: 1.3rem; 
-                margin-bottom: 15px; 
-                font-weight: 800; 
-                color: variables.$f-black;
-            }
-
-            .scoreDisplay {
-                .mainScore {
-                    display: block;
-                    font-size: 2.8rem;
-                    font-weight: 900;
-                    margin: 5px 0;
-                    font-family: 'Space Mono', monospace;
-                }
-                label {
-                    font-size: 0.75rem;
-                    font-weight: 700;
-                    color: variables.$f-gray;
-                    text-transform: uppercase;
-                    letter-spacing: 1px;
-                }
-            }
-        }
-
-        .prizeBox {
-            display: inline-block;
-            background: #dadca6;
-            padding: 10px 20px;
-            margin: 20px 0;
-            border-radius: 12px;
-            border: 2px solid variables.$f-black;
-            width: 80%;
-
-            .prizeLabel {
-                font-size: 0.7rem;
-                font-weight: 800;
-                text-transform: uppercase;
-                color: rgba(variables.$f-black, 0.6);
-            }
-            .prizeValue {
-                font-size: 1.1rem;
-                font-weight: 900;
-                color: variables.$f-black;
-            }
-        }
-
-        .viewResultBtn {
-            margin-top: 15px;
-            background: variables.$f-black;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
+        .rank-card {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 2px solid vars.$f-black;
+            border-radius: 24px;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
             transition: all 0.3s ease;
 
-            &:hover {
-                background: variables.$f-purple;
-                transform: scale(1.05);
+            .rank-badge {
+                font-size: 3rem;
+                margin-bottom: 10px;
+                display: block;
             }
-        }
 
-        // Trạng thái cho TOP 1
-        &.rank-1 {
-            background: white;
-            border-width: 3px;
-            @include variables.neon-shadow(variables.$f-pink);
-            
-            &::before {
-                content: '🏆 TOP FASHION';
-                position: absolute;
-                top: -12px; left: 50%;
-                transform: translateX(-50%);
-                background: variables.$f-pink;
+            .userInfo {
+                h3 {
+                    font-size: 1.4rem;
+                    margin-bottom: 10px;
+                    font-weight: 800;
+                    color: vars.$f-black;
+                }
+
+                .scoreDisplay {
+                    .mainScore {
+                        display: block;
+                        font-size: 3rem;
+                        font-weight: 900;
+                        font-family: 'Space Mono', monospace;
+                        line-height: 1;
+                    }
+                    label {
+                        font-size: 0.7rem;
+                        font-weight: 700;
+                        color: vars.$f-gray;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                    }
+                }
+            }
+
+            .prizeBox {
+                display: inline-block;
+                background: #f9f9f9;
+                padding: 15px;
+                margin: auto auto 25px;
+                border-radius: 16px;
+                border: 2px dashed vars.$f-black;
+                width: 90%;
+
+                .prizeLabel {
+                    font-size: 0.65rem;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    color: vars.$f-gray;
+                    margin-bottom: 4px;
+                }
+                .prizeValue {
+                    font-size: 1.2rem;
+                    font-weight: 900;
+                    color: vars.$f-black;
+                }
+            }
+
+            .viewResultBtn {
+                margin-top: auto;
+                background: vars.$f-black;
                 color: #fff;
-                padding: 4px 12px;
-                font-size: 0.7rem;
-                font-weight: 900;
-                border-radius: 4px;
-                border: 2px solid variables.$f-black;
-                z-index: 1;
+                border: none;
+                padding: 12px 28px;
+                border-radius: 12px;
+                font-weight: 800;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+                &:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+                }
+            }
+
+            // Variants cho Top 1, 2, 3
+            &.rank-1 {
+                border-width: 3px;
+                @include vars.neon-shadow(vars.$f-pink);
+                &::before {
+                    content: '🏆 QUÁN QUÂN';
+                    position: absolute;
+                    top: -15px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: vars.$f-pink;
+                    color: #fff;
+                    padding: 6px 15px;
+                    font-size: 0.8rem;
+                    font-weight: 900;
+                    border-radius: 8px;
+                    border: 2px solid vars.$f-black;
+                }
+                .mainScore {
+                    color: vars.$f-pink;
+                }
+                .prizeBox {
+                    background: color.adjust(vars.$f-yellow, $lightness: 15%);
+                }
+            }
+
+            &.rank-2 {
+                @include vars.neon-shadow(vars.$f-purple);
+                .mainScore {
+                    color: vars.$f-purple;
+                }
+            }
+
+            &.rank-3 {
+                @include vars.neon-shadow(vars.$f-cyan);
+                .mainScore {
+                    color: vars.$f-cyan;
+                }
             }
         }
+    }
 
-        &.rank-2 { @include variables.neon-shadow(variables.$f-purple); }
-        &.rank-3 { @include variables.neon-shadow(variables.$f-cyan); }
+    // --- PHẦN 2: OTHERS LIST (TABLE STYLE) ---
+    .othersList {
+        background: #fff;
+        border: 2px solid vars.$f-black;
+        border-radius: 20px;
+        overflow: hidden;
+
+        .listTitle {
+            padding: 20px;
+            background: #f8f8f8;
+            border-bottom: 2px solid vars.$f-black;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .tableHeader,
+        .rankRow {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 150px;
+            align-items: center;
+            padding: 15px 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tableHeader {
+            background: #fafafa;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: vars.$f-gray;
+            border-bottom: 2px solid #eee;
+        }
+
+        .rankRow {
+            transition: background 0.2s ease;
+            &:last-child {
+                border-bottom: none;
+            }
+            &:hover {
+                background: #fff9fa;
+            }
+
+            .rankNum {
+                font-weight: 900;
+                color: vars.$f-gray;
+            }
+            .name {
+                font-weight: 700;
+                color: vars.$f-black;
+            }
+            .score {
+                font-family: 'Space Mono', monospace;
+                font-weight: 700;
+            }
+
+            button {
+                background: transparent;
+                border: 1.5px solid vars.$f-black;
+                padding: 6px 15px;
+                border-radius: 8px;
+                font-weight: 700;
+                font-size: 0.75rem;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                &:hover {
+                    background: vars.$f-black;
+                    color: #fff;
+                }
+            }
+        }
     }
 }
 
-// Mobile Responsive
+// --- RESPONSIVE ---
 @media (max-width: 768px) {
-    .leaderboard-grid {
-        grid-template-columns: 1fr;
+    .leaderboardContainer {
+        .top-winners-grid {
+            grid-template-columns: 1fr;
+            gap: 45px;
+        }
+
+        .othersList {
+            .tableHeader {
+                display: none;
+            } // Ẩn header table trên mobile
+            .rankRow {
+                grid-template-columns: 50px 1fr 80px;
+                padding: 15px;
+
+                button {
+                    display: none;
+                } // Ẩn nút trên row mobile để gọn, nhấn cả row hoặc icon sau
+            }
+        }
     }
 }

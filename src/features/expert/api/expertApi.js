@@ -44,4 +44,6 @@ export const expertApi = {
   getDetails: (profileId) => axiosClient.get(`/expert/details/${profileId}`),
 
   getMyStatus: () => axiosClient.get('/expert/my-status'),
+
+  getMyReputation: () => axiosClient.get('/expert-reputation/my-reputation')
 };

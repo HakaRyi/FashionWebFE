@@ -1,86 +1,159 @@
-@use '../../../shared/styles/abstracts/variables';
+@use "sass:color";
+@use '../../../shared/styles/abstracts/variables' as vars;
 
 .posts-grid {
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-    padding-bottom: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    padding: 20px 0 60px;
 
     .post-card {
         background: #fff;
-        border-radius: 12px;
-        border: 2px solid variables.$f-black;
+        border-radius: 16px; // Bo góc mềm mại hơn
+        border: 2px solid vars.$f-black;
         overflow: hidden;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         cursor: pointer;
+        position: relative;
 
         &:hover {
-            border-color: variables.$f-purple;
-            transform: translateY(-5px);
-            .imageWrapper img { transform: scale(1.05); }
+            border-color: vars.$f-purple;
+            transform: translateY(-8px);
+            @include vars.neon-shadow(vars.$f-purple); // Thêm shadow cho đồng bộ
+
+            .imageWrapper {
+                .feedImage {
+                    transform: scale(1.08);
+                }
+                
+                // Hiện nút điều hướng Swiper khi hover
+                :global(.swiper-button-next),
+                :global(.swiper-button-prev) {
+                    opacity: 1;
+                }
+            }
         }
 
         .imageWrapper {
-            aspect-ratio: 3/4;
+            width: 100%;
+            aspect-ratio: 3 / 4;
             overflow: hidden;
-            background: #eee;
+            background: #f0f0f0;
             position: relative;
-            
-            img { 
-                width: 100%; 
-                height: 100%; 
-                object-fit: cover; 
-                transition: 0.6s ease; 
+
+            .mySwiper {
+                width: 100%;
+                height: 100%;
             }
-            
+
+            .feedImage {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                transition: transform 0.8s ease;
+            }
+
             .overlayScore {
                 position: absolute;
-                top: 12px; 
-                left: 12px;
+                top: 15px;
+                left: 15px;
+                z-index: 10;
                 background: #fff;
-                border: 2px solid variables.$f-black;
-                padding: 4px 10px;
-                font-weight: 800;
-                font-size: 0.8rem;
-                border-radius: 4px;
+                border: 2px solid vars.$f-black;
+                padding: 5px 12px;
+                font-weight: 900;
+                font-size: 0.85rem;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                box-shadow: 4px 4px 0 vars.$f-black; // Đổ bóng cứng cá tính
+            }
+        }
+
+        // Tùy chỉnh Pagination và Navigation của Swiper
+        :global {
+            .swiper-button-next,
+            .swiper-button-prev {
+                color: #fff;
+                transform: scale(0.4);
+                background: color.adjust(vars.$f-black, $alpha: -0.4);
+                padding: 30px;
+                border-radius: 50%;
+                opacity: 0; // Mặc định ẩn
+                transition: all 0.3s ease;
+                
+                &::after {
+                    font-weight: 900;
+                }
+            }
+            
+            .swiper-pagination-bullet {
+                background: #fff;
+                opacity: 0.7;
+                &-active {
+                    background: vars.$f-purple;
+                    opacity: 1;
+                    width: 15px;
+                    border-radius: 4px;
+                }
             }
         }
 
         .post-content {
-            padding: 15px;
-            
+            padding: 20px;
+
             h3 {
-                font-size: 0.95rem;
-                font-weight: 700;
-                margin: 0 0 10px 0;
+                font-size: 1.1rem;
+                font-weight: 800;
+                margin: 0 0 12px 0;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                color: variables.$f-black;
+                color: vars.$f-black;
+                letter-spacing: -0.5px;
             }
 
             .postMeta {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: 12px;
 
                 span {
-                    font-size: 0.75rem;
-                    font-weight: 700;
-                    color: variables.$f-purple;
-                    text-transform: uppercase;
+                    font-size: 0.8rem;
+                    font-weight: 800;
+                    color: vars.$f-purple;
+                    text-transform: lowercase; // Style username kiểu @instagram
                 }
 
                 .postStats {
                     display: flex;
-                    gap: 12px;
-                    border-top: 1px solid rgba(variables.$f-black, 0.05);
-                    padding-top: 8px;
-                    font-size: 0.8rem;
-                    font-weight: 600;
-                    color: variables.$f-gray;
+                    justify-content: space-between; // Đẩy 2 cụm Like/Comment ra 2 bên
+                    align-items: center;
+                    border-top: 2px solid color.adjust(vars.$f-black, $alpha: -0.95);
+                    padding-top: 12px;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: vars.$f-gray;
+
+                    div {
+                        display: flex;
+                        gap: 15px;
+                    }
                 }
             }
         }
+    }
+}
+
+// Mobile Responsive
+@media (max-width: 500px) {
+    .posts-grid {
+        grid-template-columns: 1fr; // 1 cột cho điện thoại nhỏ
+        padding: 10px;
     }
 }

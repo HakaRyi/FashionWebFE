@@ -21,6 +21,7 @@ export const PATHS = {
     EXPERT_EVENT_DETAIL: '/expert/events/:id',
     EXPERT_INVITATIONS: '/expert/invitation',
     EXPERT_SUMMARY_EVENT: '/expert/summary-event/:id',
+    EXPERT_REPUTATION: '/expert/reputation',
 
     //admin
     DASHBOARD: '/dashboard',

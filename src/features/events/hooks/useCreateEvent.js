@@ -34,8 +34,8 @@ export const useCreateEvent = () => {
     ]);
 
     const [prizes, setPrizes] = useState([
-        { label: 'Giải Nhất', amount: 300000 },
-        { label: 'Giải Nhì', amount: 150000 },
+        { id: crypto.randomUUID(), label: 'Giải 1', amount: 300000, error: '' },
+        { id: crypto.randomUUID(), label: 'Giải 2', amount: 150000, error: '' },
     ]);
 
     const [invitedExpertIds, setInvitedExpertIds] = useState([]);

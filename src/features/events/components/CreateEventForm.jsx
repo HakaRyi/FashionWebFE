@@ -133,9 +133,11 @@ const CreateEventForm = () => {
         }
 
         if (step === 4) {
-            const hasInvalidPrize = prizes.some(p => !p.amount || p.amount <= 0);
-            if (hasInvalidPrize) {
-                toast.warn("Vui lòng nhập số tiền thưởng hợp lệ cho tất cả các giải.");
+            const hasError = prizes.some(p => p.error !== "");
+            const hasEmpty = prizes.some(p => !p.amount || p.amount <= 0);
+
+            if (hasError || hasEmpty) {
+                toast.error("Vui lòng sửa các lỗi trong cơ cấu giải thưởng trước khi tiếp tục.");
                 return;
             }
         }
