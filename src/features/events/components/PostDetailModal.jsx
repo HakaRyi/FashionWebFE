@@ -1,6 +1,11 @@
 import React from 'react';
 import { X, Heart, MessageCircle, Share2, Award, Calendar } from 'lucide-react';
 import styles from '../styles/PostDetailModal.module.scss';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 const PostDetailModal = ({ post, onClose }) => {
     if (!post) return null;
@@ -9,10 +14,34 @@ const PostDetailModal = ({ post, onClose }) => {
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
                 <button className={styles.closeBtn} onClick={onClose}><X size={24} /></button>
-                
+
                 <div className={styles.modalBody}>
                     <div className={styles.imageSection}>
-                        <img src={post.imageUrls?.[0] || '/placeholder.png'} alt={post.title} />
+                        {post.imageUrls?.length > 1 ? (
+                            <Swiper
+                                modules={[Pagination, Navigation]}
+                                pagination={{ clickable: true, dynamicBullets: true }}
+                                navigation={true}
+                                className={styles.detailSwiper}
+                                grabCursor={true}
+                            >
+                                {post.imageUrls.map((url, index) => (
+                                    <SwiperSlide key={index}>
+                                        <img
+                                            src={url}
+                                            alt={`${post.title}-${index}`}
+                                            className={styles.feedImage}
+                                        />
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        ) : (
+                            <img
+                                src={post.imageUrls?.[0] || '/placeholder.png'}
+                                alt={post.title}
+                                className={styles.feedImage}
+                            />
+                        )}
                     </div>
 
                     <div className={styles.infoSection}>

@@ -1,12 +1,16 @@
-// src/features/events/components/RatingModal.jsx
 import React, { useState, useEffect } from 'react';
 import { getEventApi } from '../api/getEvent';
-import { formatDate } from '../utils/formatValue'; // Đảm bảo đúng path
+import { formatDate } from '../utils/formatValue';
 import styles from '../styles/RatingModal.module.scss';
 
-const RatingModal = ({ postId, onClose }) => {
+const RatingModal = ({ postId, onClose, eventWeights }) => {
   const [postDetails, setPostDetails] = useState(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
+
+  const formatScore = (val, digits = 2) => {
+    if (val === null || val === undefined) return "0";
+    return Number(val).toFixed(digits).replace(/\.?0+$/, '');
+  };
 
   useEffect(() => {
     if (!postId) return;
@@ -15,8 +19,7 @@ const RatingModal = ({ postId, onClose }) => {
       setIsModalLoading(true);
       try {
         const res = await getEventApi.getPostRatingDetails(postId);
-        // QUAN TRỌNG: Nếu dùng axios, hãy kiểm tra res.data
-        setPostDetails(res.data || res); 
+        setPostDetails(res.data || res);
       } catch (err) {
         console.error("Lỗi tải chi tiết điểm:", err);
       } finally {
@@ -33,7 +36,7 @@ const RatingModal = ({ postId, onClose }) => {
     <div className={styles['modal-overlay']} onClick={onClose}>
       <div className={styles['modal-content']} onClick={e => e.stopPropagation()}>
         <button className={styles['btn-close']} onClick={onClose}>✕</button>
-        
+
         {isModalLoading ? (
           <div className="p-10 text-center">Đang truy xuất bảng điểm...</div>
         ) : (
@@ -41,19 +44,19 @@ const RatingModal = ({ postId, onClose }) => {
             <div className={styles['modal-header']}>
               <h2>Báo Cáo Thẩm Định</h2>
               <p>{postDetails?.title}</p>
-              
+
               <div className={styles['score-breakdown']}>
                 <div className={styles['score-item']}>
-                  <label>Cộng đồng (30%)</label>
-                  <strong>{postDetails?.communityScore?.toFixed(2) || 0}</strong>
+                  <label>Cộng đồng ({eventWeights?.userWeight * 100}%)</label>
+                  <strong>{formatScore(postDetails?.communityScore)}</strong>
                 </div>
                 <div className={styles['score-item']}>
-                  <label>Hội đồng (70%)</label>
-                  <strong>{postDetails?.expertTotalScore?.toFixed(2) || 0}</strong>
+                  <label>Hội đồng ({eventWeights?.expertWeight * 100}%)</label>
+                  <strong>{formatScore(postDetails?.expertTotalScore)}</strong>
                 </div>
                 <div className={`${styles['score-item']} ${styles.final}`}>
                   <label>Tổng điểm</label>
-                  <strong>{postDetails?.finalScore?.toFixed(3) || 0}</strong>
+                  <strong>{formatScore(postDetails?.finalScore, 3)}</strong>
                 </div>
               </div>
             </div>

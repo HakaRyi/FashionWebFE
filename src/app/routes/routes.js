@@ -23,6 +23,7 @@ import ExpertWallet from '../../pages/ExpertWallet';
 import SubmissionsReview from '../../pages/ExpertSubmissionsReview';
 import EventSummary from '../../pages/EventSummary';
 import Policy from '../../pages/Policy';
+import ExpertReputation from '../../pages/ExpertReputation';
 
 import Home from '../../pages/Home';
 import FashionFeed from '../../pages/Feed';
@@ -61,7 +62,6 @@ export const routes = [
         layout: HomeLayout,
         // roles: ['user', 'expert'],
     },
-
 
     // ===== USER =====
     {
@@ -135,6 +135,12 @@ export const routes = [
     {
         path: PATHS.EXPERT_SUMMARY_EVENT,
         component: EventSummary,
+        layout: ExpertLayout,
+        roles: ['expert'],
+    },
+    {
+        path: PATHS.EXPERT_REPUTATION,
+        component: ExpertReputation,
         layout: ExpertLayout,
         roles: ['expert'],
     },

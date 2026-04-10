@@ -1,9 +1,9 @@
-@import '../../../shared/styles/abstracts/variables';
+@use '../../../shared/styles/abstracts/variables' as vars;
 
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba($f-black, 0.4);
+    background: rgba(vars.$f-black, 0.4); // Đã thêm vars.
     backdrop-filter: blur(8px);
     z-index: 10000;
     display: flex;
@@ -17,35 +17,63 @@
     width: 100%;
     max-width: 800px;
     max-height: 90vh;
-    border: 3px solid $f-black;
+    border: 3px solid vars.$f-black; // Đã thêm vars.
     border-radius: 24px;
-    box-shadow: 15px 15px 0px rgba($f-black, 0.1);
+    box-shadow: 15px 15px 0px rgba(vars.$f-black, 0.1); // Đã thêm vars.
     overflow-y: auto;
     padding: 40px;
     position: relative;
     
+    // Tùy chỉnh thanh cuộn cho mượt mà (Luxury Scrollbar)
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: vars.$f-gray;
+        border-radius: 10px;
+    }
+
     .btn-close {
         position: absolute;
-        top: 20px; right: 20px;
+        top: 20px; 
+        right: 20px;
         background: none;
-        border: 2px solid $f-black;
-        width: 36px; height: 36px;
+        border: 2px solid vars.$f-black; // Đã thêm vars.
+        width: 36px; 
+        height: 36px;
         border-radius: 50%;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-weight: 900;
-        transition: 0.3s;
-        &:hover { background: $f-black; color: #fff; }
+        transition: all 0.3s ease;
+
+        &:hover { 
+            background: vars.$f-black; // Đã thêm vars.
+            color: #fff; 
+            transform: rotate(90deg);
+        }
     }
 }
 
 .modal-header {
     text-align: center;
     margin-bottom: 40px;
-    border-bottom: 2px dashed rgba($f-black, 0.1);
+    border-bottom: 2px dashed rgba(vars.$f-black, 0.1); // Đã thêm vars.
     padding-bottom: 30px;
 
-    h2 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 5px; }
-    p { color: $f-gray; font-weight: 500; }
+    h2 { 
+        font-size: 2rem; 
+        font-weight: 900; 
+        letter-spacing: -1px; 
+        margin-bottom: 5px; 
+        color: vars.$f-black;
+    }
+    p { 
+        color: vars.$f-gray; // Đã thêm vars.
+        font-weight: 500; 
+    }
 }
 
 .score-breakdown {
@@ -57,28 +85,46 @@
     .score-item {
         font-family: 'Be Vietnam Pro', sans-serif;
         padding: 15px;
-        border: 2px solid $f-black;
+        border: 2px solid vars.$f-black; // Đã thêm vars.
         border-radius: 12px;
         text-align: center;
 
-        label { display: block; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: $f-gray; }
-        strong { font-size: 1.5rem; font-weight: 900; font-family: 'Space Mono', monospace; }
+        label { 
+            display: block; 
+            font-size: 0.65rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            color: vars.$f-gray; // Đã thêm vars.
+        }
+        strong { 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            font-family: 'Space Mono', monospace; 
+            color: vars.$f-black;
+        }
 
         &.final {
-            background: $f-black;
-            color: #fff;
+            background: vars.$f-black; // Đã thêm vars.
+            color: #fff; 
+            
             label { color: rgba(255,255,255,0.6); }
+            strong { color: vars.$f-yellow; } // Nhấn mạnh điểm tổng bằng màu vàng
         }
     }
 }
 
 .modal-body {
-    h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 20px; color: $f-black; }
+    h3 { 
+        font-size: 1.1rem; 
+        font-weight: 800; 
+        margin-bottom: 20px; 
+        color: vars.$f-black; // Đã thêm vars.
+    }
 }
 
 .review-card {
-    background: $f-bg;
-    border: 2px solid $f-black;
+    background: vars.$f-bg; // Đã thêm vars.
+    border: 2px solid vars.$f-black; // Đã thêm vars.
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
@@ -89,10 +135,17 @@
         align-items: flex-start;
         margin-bottom: 15px;
 
-        strong { font-size: 1rem; display: block; }
-        .date { font-size: 0.75rem; color: $f-gray; }
+        strong { 
+            font-size: 1rem; 
+            display: block; 
+            color: vars.$f-black; 
+        }
+        .date { 
+            font-size: 0.75rem; 
+            color: vars.$f-gray; // Đã thêm vars.
+        }
         .totalGiven {
-            background: $f-purple;
+            background: vars.$f-purple; // Đã thêm vars.
             color: #fff;
             padding: 4px 12px;
             border-radius: 100px;
@@ -103,11 +156,11 @@
 
     .reason {
         font-style: italic;
-        color: $f-gray;
+        color: vars.$f-gray; // Đã thêm vars.
         line-height: 1.5;
         margin-bottom: 20px;
         padding-left: 15px;
-        border-left: 3px solid $f-cyan;
+        border-left: 3px solid vars.$f-cyan; // Đã thêm vars.
     }
 }
 
@@ -117,7 +170,13 @@
     gap: 12px;
 
     .criterion {
-        span { font-size: 0.75rem; font-weight: 700; margin-bottom: 4px; display: block; }
+        span { 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            margin-bottom: 4px; 
+            display: block; 
+            color: vars.$f-black;
+        }
         
         .barContainer {
             display: flex;
@@ -127,7 +186,7 @@
             .bar {
                 flex: 1;
                 height: 8px;
-                background: rgba($f-black, 0.05);
+                background: rgba(vars.$f-black, 0.05); // Đã thêm vars.
                 border-radius: 10px;
                 position: relative;
                 overflow: hidden;
@@ -135,18 +194,30 @@
                 &::after {
                     content: '';
                     position: absolute;
-                    top: 0; left: 0; height: 100%;
-                    width: var(--progress); // Sẽ được set bằng inline style
-                    background: linear-gradient(90deg, $f-cyan, $f-purple);
+                    top: 0; 
+                    left: 0; 
+                    height: 100%;
+                    width: var(--progress); // Được điều khiển bằng JS Inline Style
+                    background: linear-gradient(90deg, vars.$f-cyan, vars.$f-purple); // Đã thêm vars.
                     border-radius: 10px;
+                    transition: width 0.6s cubic-bezier(0.1, 0, 0.3, 1);
                 }
             }
-            .cScore { font-weight: 800; font-size: 0.8rem; min-width: 20px; }
+            .cScore { 
+                font-weight: 800; 
+                font-size: 0.8rem; 
+                min-width: 20px; 
+                color: vars.$f-black;
+            }
         }
     }
 }
 
 @media (max-width: 600px) {
-    .score-breakdown { grid-template-columns: 1fr; }
-    .modal-content { padding: 25px 20px; }
+    .score-breakdown { 
+        grid-template-columns: 1fr; 
+    }
+    .modal-content { 
+        padding: 25px 20px; 
+    }
 }

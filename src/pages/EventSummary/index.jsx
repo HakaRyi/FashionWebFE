@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {PostsTab,RatingModal, LeaderboardTab, formatVND, useEventSummary} from '@/features/events';
+import { PostsTab, RatingModal, LeaderboardTab, formatVND, useEventSummary } from '@/features/events';
 import styles from './EventSummary.module.scss';
 
 const EventSummary = () => {
@@ -22,7 +22,7 @@ const EventSummary = () => {
   return (
     <div className={styles['event-summary']}>
       <div className={styles.container}>
-        
+
         {/* Banner & Header */}
         <header className={styles.header}>
           {/* <div className={styles.badges}>
@@ -30,7 +30,7 @@ const EventSummary = () => {
           </div> */}
           <h1>{eventInfo?.title} <span>Summary</span></h1>
           {/* <p className={styles.description}>{eventInfo?.description}</p> */}
-          
+
           <div className={styles.eventMeta}>
             <div className={styles.metaItem}>
               <label>Tổng giải thưởng</label>
@@ -38,7 +38,9 @@ const EventSummary = () => {
             </div>
             <div className={styles.metaItem}>
               <label>Trọng số (Expert/User)</label>
-              <strong>{eventInfo?.expertWeight * 100}% / {eventInfo?.userWeight * 100}%</strong>
+              <strong>
+                {Math.round((eventInfo?.expertWeight || 0) * 100)}% / {Math.round((eventInfo?.userWeight || 0) * 100)}%
+              </strong>
             </div>
             <div className={styles.metaItem}>
               <label>Thành viên BGK</label>
@@ -53,14 +55,14 @@ const EventSummary = () => {
           </div>
 
           <div className={styles.tabs}>
-            <button 
-              className={activeTab === 'leaderboard' ? styles.active : ''} 
+            <button
+              className={activeTab === 'leaderboard' ? styles.active : ''}
               onClick={() => setActiveTab('leaderboard')}
             >
               Bảng Vàng
             </button>
-            <button 
-              className={activeTab === 'posts' ? styles.active : ''} 
+            <button
+              className={activeTab === 'posts' ? styles.active : ''}
               onClick={() => setActiveTab('posts')}
             >
               Bài Dự Thi ({postsData.length})
@@ -70,25 +72,29 @@ const EventSummary = () => {
 
         {/* Tab Content Rendering */}
         {activeTab === 'leaderboard' && (
-          <LeaderboardTab 
-            leaderboardData={leaderboardData} 
-            onOpenModal={handleOpenModal} 
+          <LeaderboardTab
+            leaderboardData={leaderboardData}
+            onOpenModal={handleOpenModal}
           />
         )}
 
         {activeTab === 'posts' && (
-          <PostsTab 
-            postsData={postsData} 
-            onOpenModal={handleOpenModal} 
+          <PostsTab
+            postsData={postsData}
+            onOpenModal={handleOpenModal}
           />
         )}
       </div>
 
       {/* Modal Section */}
       {isModalOpen && (
-        <RatingModal 
-          postId={selectedPostId} 
-          onClose={() => setIsModalOpen(false)} 
+        <RatingModal
+          postId={selectedPostId}
+          onClose={() => setIsModalOpen(false)}
+          eventWeights={{
+            expertWeight: eventInfo?.expertWeight || 0.7,
+            userWeight: eventInfo?.userWeight || 0.3
+          }}
         />
       )}
     </div>

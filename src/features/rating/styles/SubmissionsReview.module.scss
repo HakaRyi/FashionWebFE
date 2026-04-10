@@ -19,8 +19,12 @@ $border-color: #e2e8f0;
 $gold: #fbbf24;
 
 $shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-$shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-md:
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-lg:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
 @mixin flex-center {
@@ -100,7 +104,10 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             p {
                 color: $slate-500;
                 font-size: 0.938rem;
-                span { font-weight: 600; color: $slate-700; }
+                span {
+                    font-weight: 600;
+                    color: $slate-700;
+                }
             }
         }
 
@@ -126,7 +133,9 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                     position: relative;
                     transition: $transition;
 
-                    &:hover { color: $slate-600; }
+                    &:hover {
+                        color: $slate-600;
+                    }
 
                     &.active {
                         color: $primary;
@@ -164,7 +173,10 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                         width: 320px;
                     }
 
-                    svg { color: $slate-400; margin-right: 0.6rem; }
+                    svg {
+                        color: $slate-400;
+                        margin-right: 0.6rem;
+                    }
                     input {
                         background: transparent;
                         border: none;
@@ -182,7 +194,7 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                     padding: 0 0.75rem;
                     border-radius: 10px;
                     border: 1px solid $border-color;
-                    
+
                     select {
                         height: 40px;
                         border: none;
@@ -222,7 +234,9 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                 box-shadow: $shadow-lg;
                 border-color: $primary;
 
-                .cardOverlay { opacity: 1; }
+                .cardOverlay {
+                    opacity: 1;
+                }
             }
 
             .imageArea {
@@ -230,7 +244,11 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                 height: 220px;
                 background: $slate-100;
 
-                img { width: 100%; height: 100%; object-fit: cover; }
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
 
                 .cardOverlay {
                     position: absolute;
@@ -299,8 +317,17 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                     gap: 0.75rem;
                     margin-bottom: 1.25rem;
 
-                    img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-                    span { font-size: 0.875rem; font-weight: 600; color: $slate-600; }
+                    img {
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                    span {
+                        font-size: 0.875rem;
+                        font-weight: 600;
+                        color: $slate-600;
+                    }
                 }
 
                 .cardFooter {
@@ -310,15 +337,25 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                     padding-top: 1rem;
                     border-top: 1px solid $slate-50;
 
-                    .date { font-size: 0.75rem; color: $slate-400; }
+                    .date {
+                        font-size: 0.75rem;
+                        color: $slate-400;
+                    }
 
                     .scoreDisplay {
                         background: $slate-50;
                         padding: 0.4rem 0.75rem;
                         border-radius: 8px;
                         color: $slate-400;
-                        strong { font-size: 1.125rem; color: $primary; margin-right: 2px; }
-                        span { font-size: 0.75rem; font-weight: 600; }
+                        strong {
+                            font-size: 1.125rem;
+                            color: $primary;
+                            margin-right: 2px;
+                        }
+                        span {
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                        }
                     }
                 }
             }
@@ -353,8 +390,16 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             justify-content: space-between;
             align-items: center;
 
-            h3 { font-size: 1.25rem; font-weight: 800; color: $slate-900; margin: 0; }
-            small { color: $slate-400; font-weight: 500; }
+            h3 {
+                font-size: 1.25rem;
+                font-weight: 800;
+                color: $slate-900;
+                margin: 0;
+            }
+            small {
+                color: $slate-400;
+                font-weight: 500;
+            }
 
             .btnClose {
                 background: $slate-50;
@@ -365,7 +410,11 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                 @include flex-center;
                 cursor: pointer;
                 transition: $transition;
-                &:hover { background: $red-500; color: $white; transform: rotate(90deg); }
+                &:hover {
+                    background: $red-500;
+                    color: $white;
+                    transform: rotate(90deg);
+                }
             }
         }
 
@@ -377,14 +426,48 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             .previewSection {
                 margin-bottom: 2.5rem;
 
-                .mainImg {
+                .imageGallery {
                     width: 100%;
-                    border-radius: 16px;
-                    margin-bottom: 1.5rem;
-                    box-shadow: $shadow-md;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    margin-bottom: 16px;
+                    background: #f3f4f6;
+                    aspect-ratio: 4 / 3;
+
+                    :global(.swiper) {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
 
-                h4 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+                .mainImg {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                    transition: transform 0.3s ease;
+
+                    &:hover {
+                        transform: scale(1.02);
+                    }
+                }
+
+                .noImage {
+                    width: 100%;
+                    height: 100%;
+                    @include flex-center;
+                    background: $slate-50;
+                    color: $slate-400;
+                    font-size: 0.875rem;
+                    border: 2px dashed $slate-200;
+                    border-radius: 12px;
+                }
+
+                h4 {
+                    font-size: 1.25rem;
+                    font-weight: 700;
+                    margin-bottom: 0.75rem;
+                }
                 .contentDesc {
                     font-size: 0.938rem;
                     line-height: 1.6;
@@ -411,7 +494,8 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                         margin-bottom: 0.75rem;
                     }
 
-                    input, textarea {
+                    input,
+                    textarea {
                         width: 100%;
                         padding: 1rem;
                         border-radius: 12px;
@@ -427,7 +511,7 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                         }
                     }
 
-                    input[type="number"] {
+                    input[type='number'] {
                         font-size: 1.5rem;
                         font-weight: 800;
                         color: $primary;
@@ -460,26 +544,39 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                         cursor: not-allowed;
                     }
 
-                    .spinner { animation: spin 1s linear infinite; }
+                    .spinner {
+                        animation: spin 1s linear infinite;
+                    }
                 }
             }
         }
     }
 
     // --- STATES ---
-    .loadingState, .emptyState {
+    .loadingState,
+    .emptyState {
         height: 100%;
         @include flex-center;
         flex-direction: column;
         color: $slate-400;
         gap: 1rem;
 
-        .spinner { animation: spin 1s linear infinite; color: $primary; }
+        .spinner {
+            animation: spin 1s linear infinite;
+            color: $primary;
+        }
     }
 }
 
 // --- ANIMATIONS ---
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 // --- RESPONSIVE ---
 @media (max-width: 768px) {
@@ -492,10 +589,17 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                 gap: 1rem;
                 .filters {
                     flex-direction: column;
-                    .searchBar { width: 100%; &:focus-within { width: 100%; } }
+                    .searchBar {
+                        width: 100%;
+                        &:focus-within {
+                            width: 100%;
+                        }
+                    }
                 }
             }
         }
-        .reviewPanel { width: 100%; }
+        .reviewPanel {
+            width: 100%;
+        }
     }
 }

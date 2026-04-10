@@ -8,7 +8,7 @@ $border-color: #eef2f6;
 .section {
     background: white;
     border-radius: 20px;
-    padding: 30px; // Giảm nhẹ padding để cân đối hơn
+    padding: 30px;
     border: 1px solid $border-color;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 
@@ -34,7 +34,7 @@ $border-color: #eef2f6;
     background: #fff;
     padding: 24px;
     border-radius: 20px;
-    border: 1px solid $border-color; // Thêm border cho card bên trong
+    border: 1px solid $border-color;
 
     .cardHeader {
         display: flex;
@@ -72,51 +72,48 @@ $border-color: #eef2f6;
     }
 
     .prizeScroll {
-        max-height: 280px; // Tăng thêm một chút để thấy được nhiều dòng hơn
+        max-height: 400px; // Tăng lên để đủ chỗ cho các dòng thông báo lỗi
         overflow-y: auto;
         padding-right: 8px;
         margin-bottom: 15px;
 
-        &::-webkit-scrollbar { width: 5px; }
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
         &::-webkit-scrollbar-thumb {
             background: #e2e8f0;
             border-radius: 10px;
         }
     }
 
+    // Container bọc mỗi dòng giải thưởng và thông báo lỗi của nó
+    .prizeItemBlock {
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+    }
+
     .prizeRow {
         display: flex;
         gap: 12px;
-        margin-bottom: 12px;
         align-items: center;
+        transition: all 0.2s;
 
-        input[type="text"] {
-            flex: 2; // Cho phép input tên giải rộng hơn
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 14px;
-            transition: border-color 0.2s;
-
-            &:focus {
-                outline: none;
-                border-color: $blue;
-                background: #fff;
-            }
+        &.rowError {
+            // Có thể thêm hiệu ứng nhẹ cho dòng bị lỗi nếu muốn
         }
 
         .inputWrap {
-            flex: 1.5;
+            flex: 1;
             position: relative;
             display: flex;
             align-items: center;
 
-            input[type="number"] {
+            input[type='number'] {
                 width: 100%;
                 background: #f8fafc;
                 border: 1px solid #e2e8f0;
-                padding: 10px 35px 10px 14px; // Padding right rộng để né icon
+                padding: 10px 35px 10px 14px;
                 border-radius: 12px;
                 font-size: 14px;
                 font-weight: 700;
@@ -129,7 +126,6 @@ $border-color: #eef2f6;
                     background: #fff;
                 }
 
-                // Ẩn mũi tên tăng giảm của input number
                 &::-webkit-inner-spin-button,
                 &::-webkit-outer-spin-button {
                     -webkit-appearance: none;
@@ -143,16 +139,31 @@ $border-color: #eef2f6;
                 color: $gold;
                 pointer-events: none;
             }
+
+            // Style khi ô input bị lỗi
+            &.inputErr {
+                input {
+                    border-color: $red;
+                    background: #fffafa;
+
+                    &:focus {
+                        box-shadow: 0 0 0 2px rgba($red, 0.1);
+                    }
+                }
+                svg {
+                    color: $red;
+                }
+            }
         }
 
-        button {
+        .removeBtn {
             background: #f1f5f9;
             border: none;
             color: $text-sub;
             cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -164,10 +175,31 @@ $border-color: #eef2f6;
             }
 
             &:disabled {
-                opacity: 0.3;
+                opacity: 0.2;
                 cursor: not-allowed;
             }
         }
+    }
+
+    .prizeLabelContainer {
+        display: flex;
+        align-items: center;
+        min-width: 80px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .prizeLabelText {
+        font-size: 15px;
+    }
+
+    .inlineError {
+        color: $red;
+        font-size: 12px;
+        font-weight: 500;
+        margin-top: 4px;
+        margin-left: 92px;
+        animation: fadeIn 0.3s ease;
     }
 
     .addBtn {
@@ -194,27 +226,45 @@ $border-color: #eef2f6;
     }
 }
 
-// Style cho thông báo lỗi ngân sách
 .budgetError {
     background: #fff1f0;
     border: 1px solid #ffa39e;
     color: #cf1322;
-    padding: 10px 16px;
-    border-radius: 10px;
+    padding: 12px 16px;
+    border-radius: 12px;
     font-size: 13px;
     font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 8px;
-    
+    gap: 10px;
+    animation: fadeIn 0.4s ease;
+
     &::before {
-        content: "⚠️";
+        content: '⚠️';
+        font-size: 16px;
     }
 }
 
-// Hiệu ứng rung khi vượt ngân sách
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-4px);
+    }
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

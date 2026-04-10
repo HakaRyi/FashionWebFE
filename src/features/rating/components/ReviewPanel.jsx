@@ -2,17 +2,22 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { X, CheckCircle, Loader2 } from 'lucide-react';
 import styles from '../styles/SubmissionsReview.module.scss';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
-const ReviewPanel = ({ 
-    submission, 
+const ReviewPanel = ({
+    submission,
     criteria,
     criterionScores,
     onScoreChange,
-    comment, 
-    setComment, 
-    onClose, 
-    onSubmit, 
-    isSubmitting 
+    comment,
+    setComment,
+    onClose,
+    onSubmit,
+    isSubmitting
 }) => {
     if (!submission) return null;
 
@@ -46,9 +51,36 @@ const ReviewPanel = ({
 
             <div className={styles.panelScroll}>
                 <div className={styles.previewSection}>
-                    {submission.imageUrls && submission.imageUrls.length > 0 && (
-                        <img src={submission.imageUrls[0]} alt="Preview" className={styles.mainImg} />
-                    )}
+                    <div className={styles.imageGallery}>
+                        {submission.imageUrls && submission.imageUrls.length > 0 ? (
+                            submission.imageUrls.length > 1 ? (
+                                <Swiper
+                                    modules={[Pagination, Navigation]}
+                                    pagination={{ clickable: true }}
+                                    navigation={true}
+                                    className={styles.reviewSwiper}
+                                >
+                                    {submission.imageUrls.map((url, idx) => (
+                                        <SwiperSlide key={idx}>
+                                            <img
+                                                src={url}
+                                                alt={`Slide ${idx}`}
+                                                className={styles.mainImg}
+                                            />
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                            ) : (
+                                <img
+                                    src={submission.imageUrls[0]}
+                                    alt="Preview"
+                                    className={styles.mainImg}
+                                />
+                            )
+                        ) : (
+                            <div className={styles.noImage}>Không có hình ảnh</div>
+                        )}
+                    </div>
                     <h4>{submission.title}</h4>
                     <p className={styles.contentDesc}>{submission.content}</p>
                 </div>
@@ -77,7 +109,7 @@ const ReviewPanel = ({
                         ) : (
                             <p>Sự kiện này chưa có tiêu chí đánh giá.</p>
                         )}
-                        
+
                         {criteria && criteria.length > 0 && (
                             <div className={styles.totalScorePreview} style={{ marginTop: '10px', fontWeight: 'bold', color: '#4f46e5' }}>
                                 Điểm tổng dự kiến: {calculatePreviewTotal()}
@@ -96,8 +128,8 @@ const ReviewPanel = ({
                         />
                     </div>
 
-                    <button 
-                        className={styles.submitBtn} 
+                    <button
+                        className={styles.submitBtn}
                         onClick={onSubmit}
                         disabled={isSubmitting || !criteria || criteria.length === 0}
                     >

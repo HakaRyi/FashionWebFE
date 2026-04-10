@@ -13,6 +13,7 @@ export { default as ReviewModal } from "./components/ReviewModal";
 export { default as useExperts } from './hooks/useExperts';
 export { useExpertApplication } from "./hooks/useExpertApplication";
 export { useInvitationStore } from "./store/useInvitationStore";
+export { useExpertReputation } from "./hooks/useExpertReputation";
 
 // Utils & API
 export { filterExperts } from './utils/expertUtils';
