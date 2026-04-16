@@ -16,22 +16,42 @@ const MyEventsPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const now = new Date();
+    const [statusFilter, setStatusFilter] = useState("All");
+    const [sortOrder, setSortOrder] = useState("desc");
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm, activeTab]);
+    }, [searchTerm, activeTab, statusFilter, sortOrder]);
 
     // Chọn danh sách dựa trên Tab
     const currentRawList = useMemo(() => {
         return activeTab === "hosted" ? hostedEvents : judgingEvents;
     }, [activeTab, hostedEvents, judgingEvents]);
 
-    // Filter tìm kiếm
     const filteredEvents = useMemo(() => {
-        return currentRawList.filter((event) =>
+        let list = [...currentRawList];
+
+        // 1. Lọc theo Search Term
+        list = list.filter((event) =>
             event.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [currentRawList, searchTerm]);
+
+        // 2. Lọc theo Status (Active/Completed)
+        if (statusFilter !== "All") {
+            list = list.filter((event) =>
+                event.status?.toLowerCase() === statusFilter.toLowerCase()
+            );
+        }
+
+        // 3. Sắp xếp theo Date
+        list.sort((a, b) => {
+            const dateA = new Date(a.createdAt || 0);
+            const dateB = new Date(b.createdAt || 0);
+            return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+        });
+
+        return list;
+    }, [currentRawList, searchTerm, statusFilter, sortOrder]);
 
     const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
 
@@ -91,6 +111,10 @@ const MyEventsPage = () => {
                     <EventToolbar
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
+                        statusFilter={statusFilter}
+                        setStatusFilter={setStatusFilter}
+                        sortOrder={sortOrder}
+                        setSortOrder={setSortOrder}
                     />
 
                     {filteredEvents.length > 0 ? (

@@ -1,49 +1,52 @@
 import axiosClient from '@/shared/lib/axios';
 
 export const registerExpert = async (payload) => {
-  const data = new FormData();
+    const data = new FormData();
 
-  data.append('Style', payload.style || '');
-  data.append('StyleAesthetic', payload.styleAesthetic || '');
-  data.append('YearsOfExperience', parseInt(payload.yearsOfExperience) || 0);
-  data.append('Bio', payload.bio || '');
-  data.append('EvidenceType', payload.evidenceType);
+    data.append('Style', payload.style || '');
+    data.append('StyleAesthetic', payload.styleAesthetic || '');
+    data.append('YearsOfExperience', parseInt(payload.yearsOfExperience) || 0);
+    data.append('Bio', payload.bio || '');
+    data.append('EvidenceType', payload.evidenceType);
 
-  if (payload.evidenceType === 'pdf') {
-    data.append('File', payload.file);
-  } else {
-    data.append('PortfolioUrl', payload.portfolioUrl || '');
-  }
+    if (payload.evidenceType === 'pdf') {
+        data.append('File', payload.file);
+    } else {
+        data.append('PortfolioUrl', payload.portfolioUrl || '');
+    }
 
-  const res = await axiosClient.post('/expert/register', data, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+    const res = await axiosClient.post('/expert/register', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
 
-  return res.data;
+    return res.data;
 };
 
 export const expertApi = {
-  getAllExperts: () => axiosClient.get('/experts'),
+    getAllExperts: () => axiosClient.get('/experts'),
 
-  getPending: () => axiosClient.get('/expert/admin/pending'),
+    getPending: () => axiosClient.get('/expert/admin/pending'),
 
-  getAllVerified: () => axiosClient.get('/expert/verified'),
+    getAllVerified: () => axiosClient.get('/expert/verified'),
 
-  processApplication: (fileId, status, reason = '') =>
-    axiosClient.post(`/expert/admin/process`, null, {
-      params: { fileId, status, reason },
-    }),
+    processApplication: (fileId, status, reason) => {
+        const url = '/expert/admin/process';
+        return axiosClient.post(url, {
+            fileId: fileId,
+            status: status,
+            reason: reason,
+        });
+    },
 
-  deleteExpert: (profileId) =>
-    axiosClient.delete(`/expert/${profileId}`),
+    deleteExpert: (profileId) => axiosClient.delete(`/expert/${profileId}`),
 
-  // Lấy danh sách expert đang hoạt động để mời vào Event
-  getActiveList: () => axiosClient.get('/expert/active-list'),
+    // Lấy danh sách expert đang hoạt động để mời vào Event
+    getActiveList: () => axiosClient.get('/expert/active-list'),
 
-  // Xem chi tiết hồ sơ công khai
-  getDetails: (profileId) => axiosClient.get(`/expert/details/${profileId}`),
+    // Xem chi tiết hồ sơ công khai
+    getDetails: (profileId) => axiosClient.get(`/expert/details/${profileId}`),
 
-  getMyStatus: () => axiosClient.get('/expert/my-status'),
+    getMyStatus: () => axiosClient.get('/expert/my-status'),
 
-  getMyReputation: () => axiosClient.get('/expert-reputation/my-reputation')
+    getMyReputation: () => axiosClient.get('/expert-reputation/my-reputation'),
 };

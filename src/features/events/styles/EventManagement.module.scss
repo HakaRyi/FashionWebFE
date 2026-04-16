@@ -422,6 +422,57 @@ $shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     border: 1px solid $border-color !important;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+
+  .pageNumbers {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .pageBtn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #64748b;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      border-color: #3b82f6;
+      color: #3b82f6;
+      background: #eff6ff;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f8fafc;
+    }
+
+    &.activePage {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+  }
+}
+
+.stats {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-left: auto;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);

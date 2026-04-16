@@ -3,16 +3,18 @@ import { motion } from 'framer-motion';
 import styles from '../styles/SubmissionsReview.module.scss';
 
 const SubmissionCard = ({ sub, onSelect }) => {
-
+console.log(`Bài thi ${sub.postId} có điểm là:`, sub.score);
     const renderScore = (score) => {
-        if (score === null || score === undefined || score === '') {
+        if (score === null || score === undefined) {
             return '--';
         }
-        const formattedScore = Number(score).toFixed(2);
 
-        return formattedScore.replace(/\.?0+$/, '');
+        const numScore = Number(score);
+        if (isNaN(numScore)) return '--';
+
+        return numScore.toFixed(2).replace(/\.?0+$/, '');
     };
-    
+
     return (
         <motion.div
             layoutId={`card-${sub.postId}`}
