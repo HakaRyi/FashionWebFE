@@ -249,6 +249,36 @@
   }
 }
 
+.otp-input {
+  text-align: center;
+  font-size: 1.8rem;
+  letter-spacing: 0.5rem;
+  font-weight: bold;
+  border-bottom: 2px solid #333 !important;
+  
+  &::placeholder {
+    font-size: 1rem;
+    letter-spacing: normal;
+    font-weight: normal;
+  }
+}
+
+.subtitle strong {
+  color: #222;
+  font-size: 0.95rem;
+}
+
+.server-error-box {
+  color: #ff4d4f;
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  text-align: center;
+}
+
 .spinner {
   width: 20px;
   height: 20px;

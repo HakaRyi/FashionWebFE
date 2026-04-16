@@ -3,7 +3,7 @@ import styles from "../../styles/StepExperts.module.scss";
 import { useExperts } from "@/features/expert";
 import { useEffect, useState, useMemo } from "react";
 
-const ITEMS_PER_PAGE = 8; // Số lượng expert trên mỗi trang
+const ITEMS_PER_PAGE = 6; // Số lượng expert trên mỗi trang
 
 const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
     const { activeExperts, loading, error, fetchActiveExperts } = useExperts();

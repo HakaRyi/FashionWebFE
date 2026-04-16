@@ -152,7 +152,7 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    padding: 1rem;
+    padding: 2rem 1rem;
 }
 
 .modalContent {
@@ -162,6 +162,9 @@
     border-radius: 24px;
     overflow: hidden;
     position: relative;
+    max-height: 95vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .closeBtn {
@@ -189,6 +192,7 @@
 
 .modalBody {
     padding: 1.5rem;
+    padding-bottom: 2.5rem;
     max-height: 60vh;
     overflow-y: auto;
 

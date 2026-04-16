@@ -1,12 +1,12 @@
-@import '../../shared/styles/abstracts/variables';
+@use '../../shared/styles/abstracts/variables' as v;
 
 .event-summary {
     width: 100%;
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
-    background-color: $f-bg;
-    color: $f-black;
+    background-color: v.$f-bg;
+    color: v.$f-black;
     font-family: 'Lexend', sans-serif;
     padding: 40px 20px;
     box-sizing: border-box;
@@ -16,7 +16,7 @@
         margin: 0 auto;
     }
 
-    // --- Header Section (Đã chỉnh sửa hoàn thiện) ---
+    // --- Header Section ---
     .header {
         text-align: center;
         margin-bottom: 50px;
@@ -24,7 +24,7 @@
         .badges {
             margin-bottom: 15px;
             .statusBadge {
-                background: $f-black;
+                background: v.$f-black;
                 color: #fff;
                 padding: 6px 16px;
                 border-radius: 100px;
@@ -43,21 +43,21 @@
             line-height: 1.1;
 
             span {
-                background: linear-gradient(90deg, $f-pink, $f-purple);
+                background: linear-gradient(90deg, v.$f-pink, v.$f-purple);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
         }
 
         .description {
-            color: $f-gray;
+            color: v.$f-gray;
             max-width: 600px;
             margin: 0 auto 30px;
             line-height: 1.6;
             font-size: 1rem;
         }
 
-        // Meta Data (Phần mới bổ sung)
+        // Meta Data
         .eventMeta {
             display: flex;
             flex-wrap: wrap;
@@ -66,16 +66,16 @@
             margin-bottom: 40px;
             padding: 20px;
             background: #fff;
-            border: 2px solid $f-black;
+            border: 2px solid v.$f-black;
             border-radius: 16px;
-            box-shadow: 8px 8px 0px rgba($f-black, 0.05);
+            box-shadow: 8px 8px 0px rgba(v.$f-black, 0.05);
 
             .metaItem {
                 text-align: left;
                 label {
                     display: block;
                     font-size: 0.7rem;
-                    color: $f-gray;
+                    color: v.$f-gray;
                     text-transform: uppercase;
                     font-weight: 700;
                     margin-bottom: 4px;
@@ -92,18 +92,18 @@
                     margin-top: 5px;
 
                     .expertNameTag {
-                        background: rgba($f-black, 0.05);
-                        color: $f-black;
+                        background: rgba(v.$f-black, 0.05);
+                        color: v.$f-black;
                         padding: 4px 12px;
                         border-radius: 6px;
                         font-size: 0.85rem;
                         font-weight: 600;
-                        border: 1px solid $f-black;
+                        border: 1px solid v.$f-black;
                         white-space: nowrap;
                         transition: all 0.2s ease;
 
                         &:hover {
-                            background: $f-black;
+                            background: v.$f-black;
                             color: #fff;
                             transform: translateY(-2px);
                         }
@@ -117,7 +117,7 @@
             display: flex;
             justify-content: center;
             gap: 40px;
-            border-bottom: 2px solid $f-border;
+            border-bottom: 2px solid v.$f-border;
 
             button {
                 background: none;
@@ -125,7 +125,7 @@
                 padding: 15px 10px;
                 font-weight: 700;
                 font-size: 0.95rem;
-                color: $f-gray;
+                color: v.$f-gray;
                 cursor: pointer;
                 position: relative;
                 transition: color 0.3s;
@@ -137,18 +137,18 @@
                     left: 0;
                     width: 0;
                     height: 2px;
-                    background: $f-black;
+                    background: v.$f-black;
                     transition: width 0.3s ease;
                 }
 
                 &.active {
-                    color: $f-black;
+                    color: v.$f-black;
                     &::after {
                         width: 100%;
                     }
                 }
                 &:hover {
-                    color: $f-black;
+                    color: v.$f-black;
                 }
             }
         }
@@ -157,15 +157,19 @@
     // --- States ---
     .loadingState,
     .errorState {
-        @include flex-center;
+        // Nếu flex-center nằm trong file variables/abstracts, hãy gọi v.flex-center
+        // Ở đây mình viết padding/display cơ bản để thay thế nếu mixin bị lỗi
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 300px;
         font-weight: 700;
-        color: $f-gray;
+        color: v.$f-gray;
         font-size: 1.1rem;
     }
 
     .errorState {
-        color: $f-pink;
+        color: v.$f-pink;
     }
 }
 

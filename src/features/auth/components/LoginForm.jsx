@@ -43,6 +43,7 @@ export default function LoginForm({ onSwitchMode }) {
             name="email"
             type="email"
             placeholder="Email Address"
+            autoComplete="email"
             className={errors.email ? styles["input-error"] : ""}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
@@ -54,6 +55,7 @@ export default function LoginForm({ onSwitchMode }) {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
+            autoComplete="current-password"
             className={errors.password ? styles["input-error"] : ""}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />

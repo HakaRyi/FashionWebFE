@@ -45,7 +45,7 @@ const InvitationDetailModal = ({ invite, onClose, onAccept, onDecline, isHistory
 
                 <div className={styles.section}>
                     <h3><Info size={16} /> Nội dung sự kiện</h3>
-                    <p>{invite.description}</p>
+                    <p style={{ whiteSpace: 'pre-line' }}>{invite.description}</p>
                 </div>
 
                 {invite.prizes && invite.prizes.length > 0 && (

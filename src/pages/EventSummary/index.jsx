@@ -7,12 +7,20 @@ const EventSummary = () => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('leaderboard');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPostId, setSelectedPostId] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   const { eventInfo, leaderboardData, postsData, isLoading, error } = useEventSummary(id);
 
   const handleOpenModal = (postId) => {
-    setSelectedPostId(postId);
+    const leaderInfo = leaderboardData.find(p => p.postId === postId);
+
+    const contentInfo = postsData.find(p => p.postId === postId);
+
+    setSelectedPost({
+      ...contentInfo,
+      ...leaderInfo
+    });
+
     setIsModalOpen(true);
   };
 
@@ -61,12 +69,12 @@ const EventSummary = () => {
             >
               Bảng Vàng
             </button>
-            <button
+            {/* <button
               className={activeTab === 'posts' ? styles.active : ''}
               onClick={() => setActiveTab('posts')}
             >
               Bài Dự Thi ({postsData.length})
-            </button>
+            </button> */}
           </div>
         </header>
 
@@ -77,20 +85,23 @@ const EventSummary = () => {
             onOpenModal={handleOpenModal}
           />
         )}
-
+        {/* 
         {activeTab === 'posts' && (
           <PostsTab
             postsData={postsData}
             onOpenModal={handleOpenModal}
           />
-        )}
+        )} */}
       </div>
 
       {/* Modal Section */}
       {isModalOpen && (
         <RatingModal
-          postId={selectedPostId}
-          onClose={() => setIsModalOpen(false)}
+          post={selectedPost}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedPost(null);
+          }}
           eventWeights={{
             expertWeight: eventInfo?.expertWeight || 0.7,
             userWeight: eventInfo?.userWeight || 0.3

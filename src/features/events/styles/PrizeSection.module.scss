@@ -1,0 +1,120 @@
+/* EventDetail.module.scss */
+
+.prizeSection {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(to bottom right, #ffffff, #fdfbfb);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
+    .sectionHeader {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.5rem;
+        
+        .mainIcon {
+            color: #d4af37;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+    }
+}
+
+.prizeGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.prizeCard {
+    position: relative;
+    padding: 1.5rem;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .prizeIconWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    .rankLabel {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+        opacity: 0.8;
+    }
+
+    .amount {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #1a1a1a;
+
+        span {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+    }
+}
+
+/* Biến thể màu sắc cho từng hạng */
+.rank1 {
+    background: linear-gradient(135deg, #fff9e6 0%, #ffecb3 100%);
+    border: 1px solid #ffe082;
+    .prizeIconWrapper { color: #f59e0b; }
+    .rankLabel { color: #b45309; }
+}
+
+.rank2 {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border: 1px solid #d1d5db;
+    .prizeIconWrapper { color: #6b7280; }
+    .rankLabel { color: #374151; }
+}
+
+.rank3 {
+    background: linear-gradient(135deg, #fff5f0 0%, #fed7aa 100%);
+    border: 1px solid #ffedd5;
+    .prizeIconWrapper { color: #c2410c; }
+    .rankLabel { color: #9a3412; }
+}
+
+.rankDefault {
+    background: white;
+    .prizeIconWrapper { color: #94a3b8; }
+}
+
+/* Hiệu ứng trang trí Fashion */
+.cardDecoration {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 60px;
+    height: 60px;
+    background: currentColor;
+    opacity: 0.05;
+    border-radius: 50%;
+}
