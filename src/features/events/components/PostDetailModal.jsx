@@ -55,7 +55,7 @@ const PostDetailModal = ({ post, onClose }) => {
                             </div>
                             {post.isExpertPost && (
                                 <span className={styles.expertBadge}>
-                                    <Award size={14} /> Chuyên gia
+                                    <Award size={14} /> Expert
                                 </span>
                             )}
                         </div>
@@ -65,18 +65,18 @@ const PostDetailModal = ({ post, onClose }) => {
 
                         <div className={styles.statsGrid}>
                             <div className={styles.statItem}>
-                                <Heart size={18} /> <span>{post.likeCount} lượt thích</span>
+                                <Heart size={18} /> <span>{post.likeCount} likes</span>
                             </div>
                             <div className={styles.statItem}>
-                                <MessageCircle size={18} /> <span>{post.commentCount} bình luận</span>
+                                <MessageCircle size={18} /> <span>{post.commentCount} comments</span>
                             </div>
                             <div className={styles.statItem}>
-                                <Share2 size={18} /> <span>{post.shareCount} chia sẻ</span>
+                                <Share2 size={18} /> <span>{post.shareCount} shares</span>
                             </div>
                         </div>
 
                         <div className={styles.scoreSection}>
-                            <div className={styles.scoreLabel}>Điểm đánh giá hiện tại</div>
+                            <div className={styles.scoreLabel}>Current Rating</div>
                             <div className={styles.scoreValue}>{post.score?.toFixed(2) || "0.00"}</div>
                         </div>
                     </div>

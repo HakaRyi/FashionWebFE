@@ -23,25 +23,25 @@ const ServiceSection = () => {
             icon: <LayoutGrid />,
             title: 'Smart Closet',
             label: '01',
-            desc: 'Số hóa tủ đồ, gợi ý phối đồ hàng ngày dựa trên thời tiết và sự kiện.',
+            desc: 'Digitize your wardrobe and get daily outfit ideas based on the weather and occasion.',
         },
         {
             icon: <Users />,
             title: 'Social Feed',
             label: '02',
-            desc: 'Nơi các Fashionista chia sẻ cảm hứng và kết nối cùng cộng đồng.',
+            desc: 'A place where fashionistas share inspiration and connect with the community.',
         },
         {
             icon: <ShoppingBag />,
             title: 'Marketplace',
             label: '03',
-            desc: 'Sàn thương mại điện tử dành cho các sản phẩm thời trang cao cấp.',
+            desc: 'An online marketplace for high-end fashion products.',
         },
         {
             icon: <Zap />,
             title: 'AI Consultant',
             label: '04',
-            desc: 'Trợ lý ảo phân tích vóc dáng và tư vấn phong cách riêng biệt.',
+            desc: 'An AI assistant that analyzes your body type and provides personalized style advice.',
         },
     ];
 
@@ -55,8 +55,8 @@ const ServiceSection = () => {
                 className={styles.contentWrapper}
             >
                 <motion.div variants={itemVariants} className={styles.sectionHeader}>
-                    <span className={styles.preTitle}>DỊCH VỤ CỐT LÕI</span>
-                    <h2>Khám phá hệ sinh thái của chúng tôi</h2>
+                    <span className={styles.preTitle}>CORE SERVICES</span>
+                    <h2>Explore Our Ecosystem</h2>
                 </motion.div>
 
                 <div className={styles.serviceGrid}>

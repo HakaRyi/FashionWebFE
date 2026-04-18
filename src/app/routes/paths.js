@@ -8,6 +8,10 @@ export const PATHS = {
     USER_FEED: '/home',
     PAYMENT_RESULT: '/payment-result',
     USER_POLICY: '/policy',
+    SEARCH_RESULTS: '/search',
+    POST_DETAIL: '/post/:id',
+    EVENT_DETAIL: '/events/:id',
+    EVENT_SUMMARY: '/summary-event/:id',
 
     //expert
     EXPERT_APPLICATION: '/expert/registration',

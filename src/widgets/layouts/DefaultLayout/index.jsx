@@ -28,58 +28,58 @@ function DefaultLayout({ children }) {
 
     const handleLogout = () => {
         Swal.fire({
-            title: 'Đăng xuất?',
-            text: 'Bạn có chắc chắn muốn rời khỏi hệ thống quản trị?',
+            title: 'Log out?',
+            text: 'Are you sure you want to leave the admin system?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#6366f1',
             cancelButtonColor: '#ef4444',
-            confirmButtonText: 'Đồng ý, đăng xuất!',
-            cancelButtonText: 'Hủy',
+            confirmButtonText: 'Yes, log out!',
+            cancelButtonText: 'Cancel',
             reverseButtons: true,
             background: '#ffffff',
             borderRadius: '16px',
         }).then((result) => {
             if (result.isConfirmed) {
                 logout();
-                toast.success('Đã đăng xuất thành công!');
+                toast.success('Successfully logged out!');
                 navigate(PATHS.HOME);
             }
         });
     };
     const menuGroups = [
         {
-            title: 'Tổng quan',
-            items: [{ path: '/dashboard', icon: <FaChartPie />, label: 'Bảng điều khiển' }],
+            title: 'Overview',
+            items: [{ path: '/dashboard', icon: <FaChartPie />, label: 'Dashboard' }],
         },
         {
-            title: 'Quản lý người dùng',
+            title: 'User Management',
             items: [
-                { path: '/users', icon: <FaUsers />, label: 'Thành viên' },
-                { path: '/experts', icon: <FaUserTie />, label: 'Chuyên gia' },
+                { path: '/users', icon: <FaUsers />, label: 'Members' },
+                { path: '/experts', icon: <FaUserTie />, label: 'Experts' },
             ],
         },
         {
-            title: 'Nội dung & Cộng đồng',
+            title: 'Content and Community',
             items: [
-                { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Quản lý Events' },
-                { path: '/posts', icon: <FaNewspaper />, label: 'Bài viết Blog' },
-                { path: '/reports', icon: <FaFlag />, label: 'Báo cáo vi phạm' },
+                { path: PATHS.EVENTS, icon: <MdEventNote />, label: 'Event Management' },
+                { path: '/posts', icon: <FaNewspaper />, label: 'Blog Posts' },
+                { path: '/reports', icon: <FaFlag />, label: 'Violation Reports' },
             ],
         },
         {
-            title: 'Tài chính & Gói cước',
+            title: 'Finance & Packages',
             items: [
                 // { path: '/products', icon: <FaCoins />, label: 'Gói nạp Coin' },
-                { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Lịch sử giao dịch' },
-                { path: '/refunds', icon: <FaFileInvoiceDollar />, label: 'Yêu cầu hoàn tiền' },
+                { path: '/transactions', icon: <FaMoneyBillTransfer />, label: 'Transaction history' },
+                { path: '/refunds', icon: <FaFileInvoiceDollar />, label: 'Refund requests' },
             ],
         },
         {
-            title: 'Hệ thống & Cấu hình',
+            title: 'System & Configuration',
             items: [
                 { path: PATHS.QUARTZ, icon: <FaClock />, label: 'Quartz Manager' },
-                { path: PATHS.SYSTEM, icon: <FaGear />, label: 'Cấu hình chung' },
+                { path: PATHS.SYSTEM, icon: <FaGear />, label: 'System configuration' },
             ],
         },
     ];
@@ -114,13 +114,13 @@ function DefaultLayout({ children }) {
                     <div className={styles.adminProfile}>
                         <img src="https://ui-avatars.com/api/?name=Admin&background=4f46e5&color=fff" alt="avatar" />
                         <div className={styles.adminInfo}>
-                            <p>Quản trị viên</p>
-                            <span>Trực tuyến</span>
+                            <p>Administrator</p>
+                            <span>Online</span>
                         </div>
                     </div>
                     <button className={styles.logoutBtn} onClick={handleLogout}>
                         <FaRightFromBracket className={styles.icon} />
-                        <span>Đăng xuất</span>
+                        <span>Logout</span>
                     </button>
                 </div>
             </aside>

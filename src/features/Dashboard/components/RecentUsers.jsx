@@ -5,11 +5,6 @@ import { useEffect, useState } from "react";
 import UserDetailDialog from "./UserDetailDialog";
 function RecentUsers(){
 
-//  const users = [
-//   {id:1,name:"Nguyễn Văn A",role:"User",status:"Active",date:"01/02"},
-//   {id:2,name:"Trần Thị B",role:"Expert",status:"Active",date:"01/02"},
-//   {id:3,name:"Lê Hoàng C",role:"User",status:"Pending",date:"31/01"}
-//  ]
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -22,7 +17,7 @@ function RecentUsers(){
         // Kiểm tra xem res.data có phải là mảng không
         setUsers(res.data || []);
       } catch (error) {
-        console.error("Lỗi fetch users:", error);
+        console.error("fetch users error:", error);
       } finally {
         setLoading(false);
       }
@@ -31,21 +26,21 @@ function RecentUsers(){
     fetchRecentUsers();
   }, []);
 
-  if (loading) return <div className={styles.panel}>Đang tải...</div>;
+  if (loading) return <div className={styles.panel}>Loading...</div>;
 
  return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
-        <h3>Người dùng mới</h3>
+        <h3>New users</h3>
       </div>
 
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Tên</th>
-            <th>Vai trò</th>
-            <th>Ngày tham gia</th>
-            <th>Trạng thái</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Join Date</th>
+            <th>Status</th>
           </tr>
         </thead>
 
@@ -89,7 +84,7 @@ function RecentUsers(){
           ) : (
             <tr>
               <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
-                Chưa có dữ liệu
+                No data available
               </td>
             </tr>
           )}

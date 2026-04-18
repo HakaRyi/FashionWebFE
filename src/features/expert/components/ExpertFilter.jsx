@@ -16,7 +16,7 @@ function ExpertFilter({
       <div className={styles.searchBox}>
         <FaSearch color="#64748b" />
         <input
-          placeholder="Tìm tên, chuyên môn..."
+          placeholder="Search name, specialty..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -30,10 +30,10 @@ function ExpertFilter({
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
-            <option value="All">Tất cả trạng thái</option>
-            <option value="Pending">Đang chờ (Pending)</option>
-            <option value="Approved">Đã duyệt (Approved)</option>
-            <option value="Rejected">Đã từ chối (Rejected)</option>
+            <option value="All">All states</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
           </select>
         </div>
 
@@ -42,12 +42,12 @@ function ExpertFilter({
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
           >
-            <option value="newest">Mới nhất</option>
-            <option value="oldest">Cũ nhất</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
           </select>
         </div>
 
-        <button className={styles.btnSync} onClick={refresh} title="Làm mới">
+        <button className={styles.btnSync} onClick={refresh} title="Refresh list">
           <FaSync />
         </button>
       </div>

@@ -4,11 +4,11 @@ import WalletFilter from "./WalletFilter";
 import styles from "../styles/ExpertWallet.module.scss";
 import { exportToCsv } from "@/features/wallet/utils/exportCsv";
 
-// Dịch trạng thái sang tiếng Việt cho UI
+
 const STATUS_MAP = {
-  Success: 'Thành công',
-  Pending: 'Đang xử lý',
-  Failed: 'Thất bại'
+  Success: 'Success',
+  Pending: 'Pending',
+  Failed: 'Failed'
 };
 
 const WalletTransactionTable = ({
@@ -25,16 +25,16 @@ const WalletTransactionTable = ({
       <div className={styles.historyHeader}>
         <div className={styles.left}>
           <History size={20} />
-          <h3>Lịch sử giao dịch</h3>
+          <h3>Transaction History</h3>
         </div>
 
         <div className={styles.actions}>
           <WalletFilter filter={filter} setFilter={setFilter} />
           <button
             className={styles.btnExport}
-            onClick={() => exportToCsv(allData, 'lich-su-giao-dich')}
+            onClick={() => exportToCsv(allData, 'transaction-history')}
           >
-            <Download size={14} /> Xuất CSV
+            <Download size={14} /> Export CSV
           </button>
         </div>
       </div>
@@ -43,33 +43,33 @@ const WalletTransactionTable = ({
         <table className={styles.transactionTable}>
           <thead>
             <tr>
-              <th>Mã GD</th>
-              <th>Chi tiết</th>
-              <th>Ngày</th>
-              <th>Số lượng</th>
-              <th>Trạng thái</th>
+              <th>Transaction Code</th>
+              <th>Details</th>
+              <th>Date</th>
+              <th>Quantity</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {transactions.map((tx) => {
               const isCredit = tx.amount > 0;
               const displayStatus = STATUS_MAP[tx.status] || tx.status; // Dịch Status
-              
+
               return (
                 <tr key={tx.id}>
                   <td className={styles.idCol}>{tx.id}</td>
-                  
+
                   {/* Sử dụng trực tiếp detail từ Backend */}
                   <td className={styles.detailCol}>{tx.detail}</td>
-                  
+
                   <td>{tx.date}</td>
-                  
+
                   {/* Xử lý số tiền âm/dương */}
                   <td className={isCredit ? styles.plus : styles.minus}>
                     {isCredit ? "+" : "-"}
                     {Math.abs(tx.amount).toLocaleString('vi-VN')} đ
                   </td>
-                  
+
                   <td>
                     <span className={`${styles.statusBadge} ${styles[tx.status.toLowerCase()] || styles.default}`}>
                       {displayStatus}

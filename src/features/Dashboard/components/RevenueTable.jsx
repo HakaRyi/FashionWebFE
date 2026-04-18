@@ -1,11 +1,11 @@
 //src/features/Dashboard/components/RevenueTable.jsx
-import { useState, useEffect, useMemo} from "react"
+import { useState, useEffect, useMemo } from "react"
 import styles from "../styles/Dashboard.module.scss"
 import { FaMoneyBill1Wave } from "react-icons/fa6"
 import { expertApi } from "../api/dashboardApi";
-function RevenueTable(){
+function RevenueTable() {
 
- const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
   const [revenueMonth, setRevenueMonth] = useState(currentMonth);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,20 +13,20 @@ function RevenueTable(){
     const fetchTransactions = async () => {
       setLoading(true);
       try {
-      const [year, month] = revenueMonth.split("-").map(Number);
-      const StartDate = `${revenueMonth}-01`;
-      const lastDay = new Date(year, month, 0).getDate();
-      const EndDate = `${revenueMonth}-${lastDay}`;
+        const [year, month] = revenueMonth.split("-").map(Number);
+        const StartDate = `${revenueMonth}-01`;
+        const lastDay = new Date(year, month, 0).getDate();
+        const EndDate = `${revenueMonth}-${lastDay}`;
 
-      console.log(`Fetching from ${StartDate} to ${EndDate}`); 
+        console.log(`Fetching from ${StartDate} to ${EndDate}`);
 
-      const res = await expertApi.getTransactionList({ StartDate, EndDate });
-      setTransactions(res.data || []);
-    } catch (error) {
-      console.error("Lỗi lấy danh sách giao dịch:", error);
-    } finally {
-      setLoading(false);
-    }
+        const res = await expertApi.getTransactionList({ StartDate, EndDate });
+        setTransactions(res.data || []);
+      } catch (error) {
+        console.error("Error retrieving transaction list:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchTransactions();
@@ -43,11 +43,11 @@ function RevenueTable(){
     }).format(amount);
   };
 
- return (
+  return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <h3>
-          <FaMoneyBill1Wave color="#10b981" /> Doanh thu Hệ thống
+          <FaMoneyBill1Wave color="#10b981" /> System Revenue
         </h3>
 
         <input
@@ -62,16 +62,16 @@ function RevenueTable(){
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Khách hàng</th>
-              <th>Loại dịch vụ</th>
-              <th>Ngày</th>
-              <th style={{ textAlign: "right" }}>Thành tiền</th>
+              <th>Customer</th>
+              <th>Service Type</th>
+              <th>Date</th>
+              <th style={{ textAlign: "right" }}>Total Amount</th>
             </tr>
           </thead>
 
           <tbody>
             {loading ? (
-              <tr><td colSpan="4" style={{textAlign: "center", padding: "20px"}}>Đang tải...</td></tr>
+              <tr><td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>Loading...</td></tr>
             ) : transactions.length > 0 ? (
               transactions.map((t) => (
                 <tr key={t.transactionId}>
@@ -80,7 +80,7 @@ function RevenueTable(){
                   </td>
                   <td>
                     <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
-                      {t.type === "PayForVTON" ? "Thử đồ ảo AI" : "Gợi ý phối đồ AI"}
+                      {t.type === "PayForVTON" ? "Try-on AI" : "AI Outfit Suggestions"}
                     </span>
                   </td>
                   <td>
@@ -92,14 +92,14 @@ function RevenueTable(){
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="4" style={{textAlign: "center", padding: "20px"}}>Không có giao dịch nào</td></tr>
+              <tr><td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>No transactions</td></tr>
             )}
           </tbody>
         </table>
       </div>
 
       <div className={styles.panelFooter}>
-        <span className={styles.footerLabel}>Tổng cộng trong tháng:</span>
+        <span className={styles.footerLabel}>Total for the month:</span>
         <span className={styles.footerValue}>{formatVND(totalRevenue)}</span>
       </div>
     </div>

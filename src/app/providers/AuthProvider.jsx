@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
-    // 1. Hàm giải mã token (giữ nguyên logic cũ của bạn)
     const decodeToken = (token) => {
         try {
             const decoded = jwtDecode(token);
@@ -35,14 +34,13 @@ export const AuthProvider = ({ children }) => {
     const fetchFullProfile = useCallback(async (userId) => {
         try {
             const response = await axiosClient.get(`/profile/${userId}`);
-            return response.data; 
+            return response.data;
         } catch (error) {
-            console.error("Lỗi lấy profile chi tiết:", error);
+            console.error("Error retrieving detailed profile:", error);
             return null;
         }
     }, []);
 
-    // 3. Khởi tạo Auth khi load trang
     useEffect(() => {
         const initAuth = async () => {
             const token = localStorage.getItem("token");
@@ -63,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (accessToken, refreshToken) => {
         localStorage.setItem("token", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-        
+
         const decoded = decodeToken(accessToken);
         if (decoded) {
             const fullUser = await fetchFullProfile(decoded.id);

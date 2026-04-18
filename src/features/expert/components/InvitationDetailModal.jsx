@@ -27,34 +27,34 @@ const InvitationDetailModal = ({ invite, onClose, onAccept, onDecline, isHistory
                 <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>
                         <User className={styles.icon} />
-                        <div><label>Nhà tổ chức</label><p>{invite.creatorName}</p></div>
+                        <div><label>Organizer</label><p>{invite.creatorName}</p></div>
                     </div>
                     <div className={styles.infoItem}>
                         <Calendar className={styles.icon} />
-                        <div><label>Thời gian</label><p>{new Date(invite.startTime).toLocaleDateString()} - {new Date(invite.endTime).toLocaleDateString()}</p></div>
+                        <div><label>Time</label><p>{new Date(invite.startTime).toLocaleDateString()} - {new Date(invite.endTime).toLocaleDateString()}</p></div>
                     </div>
                     <div className={styles.infoItem}>
                         <Trophy className={styles.icon} />
-                        <div><label>Tổng giải thưởng</label><p>{invite.totalPrizePool?.toLocaleString()} đ</p></div>
+                        <div><label>Total Prize Pool</label><p>{invite.totalPrizePool?.toLocaleString()} VND</p></div>
                     </div>
                     <div className={styles.infoItem}>
                         <Users className={styles.icon} />
-                        <div><label>Người tham gia</label><p>{invite.participantCount} bài dự thi</p></div>
+                        <div><label>Participants</label><p>{invite.participantCount} entries</p></div>
                     </div>
                 </div>
 
                 <div className={styles.section}>
-                    <h3><Info size={16} /> Nội dung sự kiện</h3>
+                    <h3><Info size={16} /> Event Details</h3>
                     <p style={{ whiteSpace: 'pre-line' }}>{invite.description}</p>
                 </div>
 
                 {invite.prizes && invite.prizes.length > 0 && (
                     <div className={styles.section}>
-                        <h3><Trophy size={16} /> Cơ cấu giải thưởng</h3>
+                        <h3><Trophy size={16} /> Prize Structure</h3>
                         <div className={styles.expertTags}>
                             {invite.prizes.map((p, idx) => (
                                 <span key={idx} className={styles.tag}>
-                                    Hạng {p.ranked}: {p.rewardAmount?.toLocaleString()} đ
+                                    Rank {p.ranked}: {p.rewardAmount?.toLocaleString()} VND
                                 </span>
                             ))}
                         </div>
@@ -64,8 +64,8 @@ const InvitationDetailModal = ({ invite, onClose, onAccept, onDecline, isHistory
 
             {!isHistory && (
                 <div className={styles.modalActions}>
-                    <button className={styles.btnDecline} onClick={() => onDecline(invite.eventId)}>Từ chối</button>
-                    <button className={styles.btnAccept} onClick={() => onAccept(invite.eventId)}>Đồng ý tham gia</button>
+                    <button className={styles.btnDecline} onClick={() => onDecline(invite.eventId)}>Decline</button>
+                    <button className={styles.btnAccept} onClick={() => onAccept(invite.eventId)}>Accept</button>
                 </div>
             )}
         </motion.div>

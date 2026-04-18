@@ -27,14 +27,14 @@ const RefundManagement = () => {
         let adminNote = '';
 
         if (action === 'reject') {
-            adminNote = window.prompt('Nhập lý do từ chối yêu cầu hoàn tiền:');
+            adminNote = window.prompt('Please enter a reason for rejection:');
             if (adminNote === null) return;
             if (adminNote.trim() === '') {
-                alert('Vui lòng nhập lý do từ chối.');
+                alert('Please enter a reason for rejection.');
                 return;
             }
         } else {
-            if (!window.confirm('Bạn có chắc chắn muốn chấp nhận yêu cầu này?')) return;
+            if (!window.confirm('Are you sure you want to approve this request?')) return;
         }
 
         try {
@@ -44,22 +44,22 @@ const RefundManagement = () => {
             const payload = action === 'reject' ? { AdminNote: adminNote } : undefined;
 
             await axiosClient.post(endpoint, payload);
-            alert('Đã xử lý yêu cầu thành công!');
+            alert('The request has been processed successfully.!');
             fetchRefunds();
         } catch (error) {
             console.error(error);
-            alert(`Lỗi: ${error.response?.data?.message || 'Có lỗi xảy ra'}`);
+            alert(`Error: ${error.response?.data?.message || 'An error occurred.'}`);
         }
     };
 
     const getStatusBadge = (status) => {
         switch (status) {
             case 'PENDING':
-                return <span className={`${styles.badge} ${styles.pending}`}>Chờ xử lý</span>;
+                return <span className={`${styles.badge} ${styles.pending}`}>Pending</span>;
             case 'APPROVED':
-                return <span className={`${styles.badge} ${styles.approved}`}>Đã chấp nhận</span>;
+                return <span className={`${styles.badge} ${styles.approved}`}>Approved</span>;
             case 'REJECTED':
-                return <span className={`${styles.badge} ${styles.rejected}`}>Từ chối</span>;
+                return <span className={`${styles.badge} ${styles.rejected}`}>Rejected</span>;
             default:
                 return <span className={styles.badge}>{status}</span>;
         }
@@ -68,23 +68,23 @@ const RefundManagement = () => {
     return (
         <div className={styles.refundContainer}>
             <div className={styles.header}>
-                <h2>Quản lý yêu cầu hoàn tiền</h2>
+                <h2>Refund Management</h2>
             </div>
 
             <div className={styles.tableWrapper}>
                 {isLoading ? (
-                    <div className={styles.loading}>Đang tải dữ liệu...</div>
+                    <div className={styles.loading}>Loading data...</div>
                 ) : (
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Mã YC</th>
-                                <th>Mã Đơn</th>
-                                <th>Lý do của khách</th>
-                                <th>Hình ảnh</th>
-                                <th>Ghi chú Admin</th>
-                                <th>Trạng thái</th>
-                                <th>Thao tác</th>
+                                <th>Refund Request ID</th>
+                                <th>Order ID</th>
+                                <th>Customer Reason</th>
+                                <th>Images</th>
+                                <th>Admin Note</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,7 +104,7 @@ const RefundManagement = () => {
                                                 })
                                             }
                                         >
-                                            <FaEye /> Xem ảnh
+                                            <FaEye /> View Images
                                         </button>
                                     </td>
                                     <td className={styles.reasonCell}>{item.adminNote || '-'}</td>
@@ -115,14 +115,14 @@ const RefundManagement = () => {
                                                 <button
                                                     className={styles.approveBtn}
                                                     onClick={() => handleAction(item.orderId, 'approve')}
-                                                    title="Chấp nhận"
+                                                    title="Approve"
                                                 >
                                                     <FaCheck />
                                                 </button>
                                                 <button
                                                     className={styles.rejectBtn}
                                                     onClick={() => handleAction(item.orderId, 'reject')}
-                                                    title="Từ chối"
+                                                    title="Reject"
                                                 >
                                                     <FaTimes />
                                                 </button>
@@ -134,7 +134,7 @@ const RefundManagement = () => {
                             {refunds.length === 0 && (
                                 <tr>
                                     <td colSpan="7" className={styles.empty}>
-                                        Không có dữ liệu
+                                        No data available
                                     </td>
                                 </tr>
                             )}
@@ -149,18 +149,18 @@ const RefundManagement = () => {
                         <button className={styles.closeModal} onClick={() => setSelectedImages(null)}>
                             <FaTimes />
                         </button>
-                        <h3>Chi tiết hình ảnh</h3>
+                        <h3>Image Details</h3>
                         <div className={styles.imageSection}>
-                            <h4>Ảnh mặt hàng</h4>
+                            <h4>Product Photo</h4>
                             <div className={styles.imageGridSingle}>
                                 {selectedImages.itemImage ? (
                                     <img src={selectedImages.itemImage} alt="Item" />
                                 ) : (
-                                    <div className={styles.noImage}>Không có ảnh mặt hàng</div>
+                                    <div className={styles.noImage}>No product photos available.</div>
                                 )}
                             </div>
 
-                            <h4>Ảnh minh chứng</h4>
+                            <h4>Proof photo</h4>
                             <div className={styles.imageGrid}>
                                 <img src={selectedImages.proof1} alt="Proof 1" />
                                 <img src={selectedImages.proof2} alt="Proof 2" />

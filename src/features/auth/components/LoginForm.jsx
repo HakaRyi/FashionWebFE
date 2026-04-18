@@ -25,7 +25,7 @@ export default function LoginForm({ onSwitchMode }) {
       await handleLogin(formData.email, formData.password);
     } catch (error) {
       setErrors({
-        server: error.response?.data?.message || "Email hoặc mật khẩu không chính xác!"
+        server: error.response?.data?.message || "Incorrect email or password!"
       });
     } finally {
       setIsLoading(false);

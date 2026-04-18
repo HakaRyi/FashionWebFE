@@ -20,7 +20,7 @@ export const useWallet = (itemsPerPage = 5) => {
         try {
             setLoading(true);
             setError(null);
-            
+
             // Gọi API Dashboard
             const data = await getWalletDashboard();
 
@@ -33,9 +33,8 @@ export const useWallet = (itemsPerPage = 5) => {
             // 2. Set thẳng dữ liệu vào state vì Backend đã format chuẩn xác
             setStats(mappedStats);
             setTransactions(data.transactions || []);
-            
         } catch (err) {
-            console.error('Lỗi khi lấy dữ liệu ví:', err);
+            console.error('Error retrieving wallet data:', err);
             setError(err);
         } finally {
             setLoading(false);

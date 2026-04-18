@@ -10,15 +10,15 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
 
             // 1. Kiểm tra số tiền phải > 0
             if (!prize.amount || prize.amount <= 0) {
-                error = "Số tiền phải lớn hơn 0";
+                error = "Amount must be greater than 0";
             }
             // 2. Kiểm tra thứ tự: Giải sau không được lớn hơn giải trước
             else if (i > 0 && prize.amount > arr[i - 1].amount) {
-                error = `Không được lớn hơn ${arr[i - 1].label}`;
+                error = `It must not be greater than ${arr[i - 1].label}`;
             }
             // 3. Kiểm tra thứ tự: Giải trước không được nhỏ hơn giải sau
             else if (i < arr.length - 1 && arr[i + 1].amount > 0 && prize.amount < arr[i + 1].amount) {
-                error = `Không được nhỏ hơn ${arr[i + 1].label}`;
+                error = `It must not be smaller than ${arr[i + 1].label}`;
             }
 
             return { ...prize, error };
@@ -42,7 +42,7 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
                 ...prev,
                 {
                     id: crypto.randomUUID(),
-                    label: `Giải ${nextNumber}`,
+                    label: `Prize ${nextNumber}`,
                     amount: 0,
                     error: ""
                 }
@@ -67,16 +67,16 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
     return (
         <section className={styles.section}>
             <header className={styles.stepHeader}>
-                <h2 className={styles.sectionTitle}>Cơ cấu giải thưởng</h2>
-                <p className={styles.sectionSub}>Thiết lập các hạng mục phần thưởng cho người thắng cuộc</p>
+                <h2 className={styles.sectionTitle}>Prize structure</h2>
+                <p className={styles.sectionSub}>Set up reward categories for the winners</p>
             </header>
 
             <div className={styles.configCard}>
                 <div className={styles.cardHeader}>
                     <Trophy size={18} />
-                    <h3>Cơ chế giải thưởng</h3>
+                    <h3>Prize mechanism</h3>
                     <div className={`${styles.totalBadge} ${isOverBudget ? styles.err : ""}`}>
-                        Tổng: {totalBudget.toLocaleString()} VND
+                        Total: {totalBudget.toLocaleString()} VND
                     </div>
                 </div>
 
@@ -127,14 +127,14 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
                         onClick={addPrize}
                     >
                         <Plus size={16} />
-                        Thêm hạng mục
+                        Add prize category
                     </button>
                 </div>
             </div>
 
             {isOverBudget && (
                 <div className={styles.budgetError} style={{ marginTop: '1rem' }}>
-                    Số dư hiện tại không đủ để chi trả cho tổng giải thưởng này.
+                    The current balance is not enough to cover the total prize pool.
                 </div>
             )}
         </section>

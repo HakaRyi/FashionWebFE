@@ -29,9 +29,9 @@ const ProfilePage = () => {
         <div className={styles.actionGroup}>
             {isOwnProfile ? (
                 <>
-                    <button className={styles.primaryBtn}>
+                    {/* <button className={styles.primaryBtn}>
                         <Edit2 size={14} /> Edit Profile
-                    </button>
+                    </button> */}
                     <button className={styles.iconBtn}>
                         <Settings size={18} />
                     </button>

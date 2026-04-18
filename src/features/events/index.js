@@ -23,6 +23,8 @@ export { default as PostDetailModal} from "@/features/events/components/PostDeta
 
 export { getEventStatusInfo } from './utils/eventStatus';
 export { default as QuickUpdateModal} from "@/features/events/components/QuickUpdateModal";
+export { default as EventMiniCard} from "@/features/events/components/EventMiniCard";
+export { default as EventQuickViewModal} from "@/features/events/components/EventQuickViewModal";
 
 export { default as LeaderboardTab } from '@/features/events/components/LeaderboardTab';
 export { default as PostsTab } from '@/features/events/components/PostsTab';

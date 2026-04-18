@@ -16,8 +16,8 @@ const EventRow = ({ event, onOpenDetail, onQuickEdit }) => {
             </td>
             <td className={styles.timeCol}>
                 <div className={styles.timeRange}>
-                    <span>BĐ: {new Date(event.startTime).toLocaleDateString('vi-VN')}</span>
-                    <span>KT: {new Date(event.endTime).toLocaleDateString('vi-VN')}</span>
+                    <span>Start day: {new Date(event.startTime).toLocaleDateString('vi-VN')}</span>
+                    <span>End day: {new Date(event.endTime).toLocaleDateString('vi-VN')}</span>
                 </div>
             </td>
             <td className={styles.priceCol}>
@@ -30,10 +30,10 @@ const EventRow = ({ event, onOpenDetail, onQuickEdit }) => {
             </td>
             <td style={{ textAlign: 'right' }}>
                 <button className={styles.btnView} onClick={() => onOpenDetail(event)}>
-                    <Eye size={16} /> Chi tiết
+                    <Eye size={16} /> View Details
                 </button>
                 <button className={styles.btnEdit} onClick={() => onQuickEdit(event)}>
-                    <Edit3 size={16} /> <span>Sửa</span>
+                    <Edit3 size={16} /> <span>Edit</span>
                 </button>
             </td>
         </tr>

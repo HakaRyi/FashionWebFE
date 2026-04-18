@@ -13,7 +13,7 @@ export const useEvents = () => {
             const res = await eventApi.getAllAdmin();
             setEvents(Array.isArray(res.data) ? res.data : []);
         } catch (error) {
-            console.error('Lỗi fetch events:', error);
+            console.error('Error fetching events:', error);
             setEvents([]);
         } finally {
             setLoading(false);
@@ -26,7 +26,7 @@ export const useEvents = () => {
             const res = await getEventApi.getEventDetail(id);
             return res.data;
         } catch (error) {
-            console.error('Lỗi lấy chi tiết:', error);
+            console.error('Error fetching event detail:', error);
             return null;
         } finally {
             setIsFetchingDetail(false);
@@ -40,7 +40,7 @@ export const useEvents = () => {
             onSuccess?.();
             return { success: true };
         } catch (err) {
-            return { success: false, error: err.response?.data?.message || 'Lỗi phê duyệt' };
+            return { success: false, error: err.response?.data?.message || 'Error approving event' };
         }
     };
 
@@ -51,7 +51,7 @@ export const useEvents = () => {
             onSuccess?.();
             return { success: true };
         } catch (err) {
-            return { success: false, error: 'Lỗi khi thực hiện lệnh từ chối' };
+            return { success: false, error: 'Error when executing the rejection order' };
         }
     };
 
@@ -61,7 +61,7 @@ export const useEvents = () => {
             await fetchEvents();
             return { success: true };
         } catch (err) {
-            return { success: false, error: err.response?.data?.message || 'Lỗi cập nhật' };
+            return { success: false, error: err.response?.data?.message || 'Error updating event' };
         }
     };
 
@@ -69,6 +69,14 @@ export const useEvents = () => {
         fetchEvents();
     }, [fetchEvents]);
 
-    return { events, loading, fetchEvents, fetchEventById, 
-        isFetchingDetail, handleApprove, handleReject, handleUpdate };
+    return {
+        events,
+        loading,
+        fetchEvents,
+        fetchEventById,
+        isFetchingDetail,
+        handleApprove,
+        handleReject,
+        handleUpdate,
+    };
 };

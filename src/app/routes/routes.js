@@ -27,6 +27,8 @@ import ExpertReputation from '../../pages/ExpertReputation';
 
 import Home from '../../pages/Home';
 import FashionFeed from '../../pages/Feed';
+import SearchResultsPage from '../../pages/FeedSearch';
+import PostDetailPage from '../../pages/PostDetail';
 
 import DefaultLayout from '../../widgets/layouts/DefaultLayout';
 import HomeLayout from '../../widgets/layouts/HomeLayout';
@@ -67,6 +69,30 @@ export const routes = [
     {
         path: PATHS.USER_FEED,
         component: FashionFeed,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.SEARCH_RESULTS,
+        component: SearchResultsPage,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.POST_DETAIL,
+        component: PostDetailPage,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.EVENT_DETAIL,
+        component: EventDetailPage,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.EVENT_SUMMARY,
+        component: EventSummary,
         layout: HomeLayout,
         roles: ['user', 'expert'],
     },

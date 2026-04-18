@@ -86,9 +86,9 @@ function ChartSection() {
             value={timeRange}
             onChange={(e)=>setTimeRange(e.target.value)}
           >
-            <option value="week">7 ngày</option>
-            <option value="month">Tháng</option>
-            <option value="custom">Tuỳ chọn</option>
+            <option value="week">7 days</option>
+            <option value="month">Month</option>
+            <option value="custom">Custom</option>
           </select>
 
           {timeRange==="custom" && (

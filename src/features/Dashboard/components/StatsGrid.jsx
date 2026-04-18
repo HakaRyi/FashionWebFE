@@ -10,7 +10,7 @@ function StatsGrid({ data }) {
   const stats = [
     {
     id: 1, // Thêm ô doanh thu lên đầu hoặc tùy vị trí bạn muốn
-    title: "Tổng Doanh Thu",
+    title: "Total Revenue",
     value: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.totalRevenue), // Sau này map từ api /admin/dashboard-information
     type: "revenue",
     icon: <FaMoneyBillTrendUp />,
@@ -20,7 +20,7 @@ function StatsGrid({ data }) {
   },  
     {
       id: 2,
-      title: "Tổng Người Dùng",
+      title: "Total Users",
       value: data.totalUsers.toLocaleString(),
       type: "users",
       icon: <FaUsers />,
@@ -30,7 +30,7 @@ function StatsGrid({ data }) {
     },
     {
       id: 3,
-      title: "Tổng Chuyên Gia",
+      title: "Chief Experts",
       value: data.totalExperts.toLocaleString(),
       type: "experts",
       icon: <FaUserTie />,
@@ -40,7 +40,7 @@ function StatsGrid({ data }) {
     },
     {
       id: 4,
-      title: "Tổng Bài Viết",
+      title: "Total Articles",
       value: data.totalPosts.toLocaleString(),
       type: "posts",
       icon: <FaNewspaper />,

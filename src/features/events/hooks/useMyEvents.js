@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { getEventApi } from "../api/getEvent";
+import { useEffect, useState, useCallback } from 'react';
+import { getEventApi } from '../api/getEvent';
 
 export const useMyEvents = () => {
     const [hostedEvents, setHostedEvents] = useState([]);
@@ -12,13 +12,13 @@ export const useMyEvents = () => {
             // Gọi song song 2 API để tối ưu tốc độ
             const [hostedRes, judgingRes] = await Promise.all([
                 getEventApi.getMyCreatedEvents(),
-                getEventApi.getHistory()
+                getEventApi.getHistory(),
             ]);
-            
+
             setHostedEvents(hostedRes.data || []);
             setJudgingEvents(judgingRes.data || []);
         } catch (error) {
-            console.error("Error fetching events:", error);
+            console.error('Error fetching events:', error);
         } finally {
             setLoading(false);
         }
@@ -32,6 +32,6 @@ export const useMyEvents = () => {
         hostedEvents,
         judgingEvents,
         loading,
-        refetch: fetchAllData
+        refetch: fetchAllData,
     };
 };

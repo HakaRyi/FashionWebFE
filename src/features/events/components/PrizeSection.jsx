@@ -17,11 +17,11 @@ const PrizeSection = ({ prizes }) => {
         <div className={styles.prizeSection}>
             <div className={styles.sectionHeader}>
                 <Trophy className={styles.mainIcon} />
-                <h3>Cơ cấu giải thưởng</h3>
+                <h3>Prize structure</h3>
             </div>
-            
+
             <div className={styles.prizeGrid}>
-                {prizes?.sort((a,b) => a.ranked - b.ranked).map((prize) => {
+                {prizes?.sort((a, b) => a.ranked - b.ranked).map((prize) => {
                     const styleInfo = getPrizeStyle(prize.ranked);
                     return (
                         <div key={prize.prizeEventId} className={`${styles.prizeCard} ${styleInfo.class}`}>
@@ -29,7 +29,7 @@ const PrizeSection = ({ prizes }) => {
                                 {styleInfo.icon}
                             </div>
                             <div className={styles.prizeContent}>
-                                <div className={styles.rankLabel}>Hạng {prize.ranked}</div>
+                                <div className={styles.rankLabel}>Rank {prize.ranked}</div>
                                 <div className={styles.amount}>
                                     {prize.rewardAmount.toLocaleString()} <span>VNĐ</span>
                                 </div>

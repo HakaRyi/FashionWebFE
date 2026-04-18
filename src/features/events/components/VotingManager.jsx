@@ -1,7 +1,7 @@
-import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import styles from '../styles/VotingManager.module.scss';
 
+// Class unused
 const VotingManager = ({ expertWeight, setWeight }) => {
     const handleChange = (e) => {
         setWeight(Number(e.target.value));
@@ -11,12 +11,12 @@ const VotingManager = ({ expertWeight, setWeight }) => {
         <div className={styles.configCard}>
             <div className={styles.cardHeader}>
                 <CheckCircle2 size={18} />
-                <h3>Trọng số chấm điểm</h3>
+                <h3>Weight of Expert Reviews</h3>
             </div>
             <div className={styles.votingRules}>
                 <div className={styles.ruleRow}>
                     <div className={styles.ruleLabel}>
-                        <span>Expert (Bạn)</span>
+                        <span>Expert (You)</span>
                         <strong>{expertWeight}%</strong>
                     </div>
                     <input 
@@ -28,7 +28,7 @@ const VotingManager = ({ expertWeight, setWeight }) => {
                 </div>
                 <div className={styles.ruleRow}>
                     <div className={styles.ruleLabel}>
-                        <span>Cộng đồng</span>
+                        <span>Community</span>
                         <strong>{100 - expertWeight}%</strong>
                     </div>
                     <div className={styles.subBar}>

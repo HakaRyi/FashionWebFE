@@ -29,8 +29,8 @@ const StepPublish = ({
     return (
         <section className={styles.section}>
             <header className={styles.stepHeader}>
-                <h2 className={styles.sectionTitle}>Cấu hình xuất bản</h2>
-                <p className={styles.sectionSub}>Xác nhận tài chính và thiết lập điều kiện bắt đầu</p>
+                <h2 className={styles.sectionTitle}>Publishing configuration</h2>
+                <p className={styles.sectionSub}>Confirm your finances and set the conditions for starting.</p>
             </header>
 
             <div className={styles.publishOptions}>
@@ -44,11 +44,11 @@ const StepPublish = ({
                             {!form.isAutoStart && <div className={styles.radioInner} />}
                         </div>
                         <div className={styles.cardInfo}>
-                            <h4>Kích hoạt thủ công</h4>
-                            <p>Sự kiện sẽ ở trạng thái <b>Chờ duyệt</b>. Bạn sẽ tự tay bấm "Bắt đầu" sau khi hệ thống phê duyệt.</p>
+                            <h4>Manual Activation</h4>
+                            <p>The event will be in a <b>Pending Approval</b> state. You will manually click "Start" after the system approves it.</p>
                             <div className={styles.manualNote}>
                                 <Check size={14} />
-                                <span>Lưu ý: Chỉ có thể bắt đầu khi có ít nhất <b>{systemMinRequired - 1} chuyên gia</b> xác nhận tham gia.</span>
+                                <span>Note: You can only start when you have at least <b>{systemMinRequired - 1} expert</b> confirmed participation.</span>
                             </div>
                         </div>
                     </div>
@@ -64,8 +64,8 @@ const StepPublish = ({
                             {form.isAutoStart && <div className={styles.radioInner} />}
                         </div>
                         <div className={styles.cardInfo}>
-                            <h4>Kích hoạt tự động</h4>
-                            <p>Sự kiện tự động "Lên sàn" ngay khi đạt đủ số lượng Expert xác nhận tham gia.</p>
+                            <h4>Automatic Activation</h4>
+                            <p>The event will automatically go "Live" as soon as it reaches the required number of expert confirmations.</p>
                         </div>
                     </div>
 
@@ -80,7 +80,7 @@ const StepPublish = ({
                                 <div className={styles.divider}></div>
                                 <div className={styles.configField}>
                                     <label>
-                                        <Info size={14} /> Số Expert tối thiểu cần đồng ý:
+                                        <Info size={14} /> Minimum number of experts required to start the event:
                                     </label>
 
                                     {maxExperts > 0 ? (
@@ -117,12 +117,12 @@ const StepPublish = ({
                                             </div>
                                             <p className={styles.configHint}>
                                                 {currentMinExperts === maxExperts
-                                                    ? "Yêu cầu tất cả Expert được mời phải xác nhận."
-                                                    : `Chỉ cần ít nhất ${currentMinExperts} Expert xác nhận là sự kiện sẽ chạy.`}
+                                                    ? "All invited experts must confirm their participation."
+                                                    : `At least ${currentMinExperts} expert must confirm their participation for the event to proceed.`}
                                             </p>
                                         </div>
                                     ) : (
-                                        <p className={styles.textWarning}>Bạn chưa chọn Expert nào ở Bước 2.</p>
+                                        <p className={styles.textWarning}>You haven't selected an Expert in Step 2.</p>
                                     )}
                                 </div>
                             </motion.div>
@@ -133,26 +133,26 @@ const StepPublish = ({
 
             {/* PHẦN THANH TOÁN */}
             <div className={styles.billingContainer}>
-                <h3 className={styles.subTitle}>Tóm tắt tài chính</h3>
+                <h3 className={styles.subTitle}>Financial Summary</h3>
 
                 <div className={styles.billingTable}>
                     <div className={styles.billingRow}>
-                        <span>Tổng giải thưởng (Prizes)</span>
+                        <span>Total Prizes</span>
                         <span>{(totalBudget || 0).toLocaleString()} VND</span>
                     </div>
 
                     <div className={styles.billingRow}>
                         <div className={styles.feeLabelGroup}>
-                            <span>Phí nền tảng</span>
+                            <span>Platform Fee</span>
                             <span className={styles.feeBadge}>
-                                {isMinFeeApplied ? "Áp dụng mức phí tối thiểu" : `${feePercentage}%`}
+                                {isMinFeeApplied ? "Minimum fee applied" : `${feePercentage}%`}
                             </span>
                         </div>
                         <div className={styles.feeValueGroup}>
                             <span>{(platformFee || 0).toLocaleString()} VND</span>
                             {isMinFeeApplied && (
                                 <small className={styles.feeNote}>
-                                    (Do tổng giải thưởng thấp hơn mức phí sàn)
+                                    (Because the total prize pool is lower than the minimum entry fee.)
                                 </small>
                             )}
                         </div>
@@ -161,7 +161,7 @@ const StepPublish = ({
                     <div className={styles.billingDivider}></div>
 
                     <div className={`${styles.billingRow} ${styles.totalRow}`}>
-                        <strong>Tổng cộng thanh toán</strong>
+                        <strong>Total Payment</strong>
                         <div className={styles.totalPrice}>
                             <strong className={isOverBudget ? styles.textDanger : styles.textSuccess}>
                                 {(totalRequired || 0).toLocaleString()} VND
@@ -178,8 +178,8 @@ const StepPublish = ({
                     >
                         <AlertTriangle size={18} />
                         <div>
-                            <strong>Số dư không đủ</strong>
-                            <span>Bạn cần nạp thêm ít nhất {(totalRequired - expertBalance).toLocaleString()} VND để tiếp tục.</span>
+                            <strong>Insufficient Balance</strong>
+                            <span>You need to deposit at least {(totalRequired - expertBalance).toLocaleString()} VND to continue.</span>
                         </div>
                     </motion.div>
                 )}
@@ -191,11 +191,11 @@ const StepPublish = ({
                     <ShieldCheck size={20} />
                 </div>
                 <div className={styles.infoContent}>
-                    <strong>Quyền lợi của Organizer:</strong>
+                    <strong>Organizer Benefits:</strong>
                     <ul>
-                        <li>Ngân sách sẽ được hệ thống <b>tạm giữ an toàn</b>.</li>
-                        <li><b>Hoàn tiền 100%:</b> Nếu sự kiện bị hủy hoặc không đủ Expert xác nhận.</li>
-                        <li>Phí dịch vụ chỉ được tính khi sự kiện chính thức bắt đầu.</li>
+                        <li>The budget will be securely held by the system.</li>
+                        <li><b>100% Refund:</b> If the event is canceled or doesn't have enough expert confirmations.</li>
+                        <li>Service fees are only charged when the event officially starts.</li>
                     </ul>
                 </div>
             </div>

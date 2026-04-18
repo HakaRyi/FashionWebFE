@@ -1,34 +1,37 @@
-import React from "react";
-import { 
-    WalletHeader, 
-    WalletStats, 
-    WalletTransactionTable, 
-    useWallet 
+import React, { useState } from "react";
+import {
+  WalletHeader,
+  WalletStats,
+  WalletTransactionTable,
+  useWallet,
+  DepositModal
 } from "@/features/wallet";
 import styles from "@/features/wallet/styles/ExpertWallet.module.scss";
 
 const ExpertWalletPage = () => {
-  // Khởi tạo hook với 5 items mỗi trang
-  const { 
-      stats, 
-      transactions, 
-      allData, // Dữ liệu đã lọc đầy đủ để Export CSV
-      filter, 
-      setFilter, 
-      currentPage, 
-      totalPages, 
-      setCurrentPage,
-      loading,
-      error,
-      refreshData 
-  } = useWallet(5); 
+
+  const [showDepositModal, setShowDepositModal] = useState(false);
+
+  const {
+    stats,
+    transactions,
+    allData, // Dữ liệu đã lọc đầy đủ để Export CSV
+    filter,
+    setFilter,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    loading,
+    error,
+    refreshData
+  } = useWallet(5);
 
   // 1. Trạng thái Loading
   if (loading) {
     return (
       <div className={styles.loadingWrapper}>
         <div className={styles.spinner}></div>
-        <p>Đang tải dữ liệu ví...</p>
+        <p>Loading wallet data...</p>
       </div>
     );
   }
@@ -37,16 +40,15 @@ const ExpertWalletPage = () => {
   if (error) {
     return (
       <div className={styles.errorWrapper}>
-        <p>Không thể tải dữ liệu: {error.message}</p>
-        <button onClick={refreshData} className={styles.btnRetry}>Thử lại</button>
+        <p>Cannot load wallet data: {error.message}</p>
+        <button onClick={refreshData} className={styles.btnRetry}>Try Again</button>
       </div>
     );
   }
 
   return (
     <div className={styles.walletContainer}>
-      {/* Header: Truyền callback để refetch data sau khi nạp tiền thành công */}
-      <WalletHeader onDepositSuccess={refreshData} />
+      <WalletHeader onDepositClick={() => setShowDepositModal(true)} />
 
       {/* Stats: Hiển thị 3 thẻ số dư */}
       <WalletStats stats={stats} />
@@ -62,14 +64,22 @@ const ExpertWalletPage = () => {
           totalPages={totalPages}
           setCurrentPage={setCurrentPage}
         />
-        
+
         {/* Empty State: Chỉ hiện khi trang hiện tại không có data */}
         {transactions.length === 0 && (
           <div className={styles.emptyState}>
-            <p>Không tìm thấy lịch sử giao dịch nào.</p>
+            <p>No transaction history was found.</p>
           </div>
         )}
       </div>
+      {showDepositModal && (
+        <DepositModal
+          onClose={() => setShowDepositModal(false)}
+          onRefreshBalance={refreshData}
+          amount={0}
+          isFixedAmount={false}
+        />
+      )}
     </div>
   );
 };

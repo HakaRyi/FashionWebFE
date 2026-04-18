@@ -12,7 +12,7 @@ export const useExpertReputation = () => {
             const response = await expertApi.getMyReputation();
             setData(response.data);
         } catch (err) {
-            console.error('Lỗi khi lấy dữ liệu uy tín:', err);
+            console.error('Error when retrieving reputable data:', err);
             setError(err);
         } finally {
             setLoading(false);

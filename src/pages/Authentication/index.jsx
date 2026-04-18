@@ -10,7 +10,7 @@ export default function AuthenticationPage() {
       <div className={styles["auth-visual"]}>
         <div className={styles.overlay}>
           <p>The Art of Style</p>
-          <h1>Expert<br />Curation</h1>
+          <h1>Into<br />Elegance</h1>
         </div>
       </div>
 

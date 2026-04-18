@@ -9,10 +9,10 @@ const SuccessState = () => {
     const navigate = useNavigate();
 
     return (
-        <motion.div 
-            key="s3" 
-            initial={{ scale: 0.9, opacity: 0 }} 
-            animate={{ scale: 1, opacity: 1 }} 
+        <motion.div
+            key="s3"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
             className={styles.successState}
         >
             <div className={styles.successIcon}>
@@ -20,10 +20,10 @@ const SuccessState = () => {
             </div>
             <h2>Application Sent!</h2>
             <p>
-                Cảm ơn bạn! Hồ sơ của bạn đang được hội đồng chuyên môn WAPO xét duyệt trong vòng 24-48h tới.
+                Thank you! Your application is currently being reviewed by the WAPO expert panel and will be available within the next 24-48 hours.
             </p>
-            <button 
-                className={styles.btnPrimary} 
+            <button
+                className={styles.btnPrimary}
                 onClick={() => navigate(PATHS.USER_FEED)}
             >
                 Return to Home

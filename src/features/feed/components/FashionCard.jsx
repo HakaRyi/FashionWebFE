@@ -44,7 +44,7 @@ const FashionCard = ({ post, lastPostRef, commentsMap, toggleComments, addCommen
                         alt="avatar"
                     />
                     <div className={styles.userMeta}>
-                        <span className={styles.userName}>@{post.userName}</span>
+                        <span className={styles.userName}>{post.userName}</span>
                         <span className={styles.userRole}>
                             {post.isEvent ? `Event: ${post.eventName}` : 'Contributor'}
                         </span>
@@ -133,19 +133,19 @@ const FashionCard = ({ post, lastPostRef, commentsMap, toggleComments, addCommen
                                 {commentsMap[post.postId].length > 0 ? (
                                     commentsMap[post.postId].map((comment, i) => (
                                         <div key={comment.id || i} className={styles.commentItem}>
-                                            <span className={styles.commentUser}>@{comment.userName}</span>
+                                            <span className={styles.commentUser}>{comment.userName}</span>
                                             <span className={styles.commentContent}>{comment.content}</span>
                                         </div>
                                     ))
                                 ) : (
-                                    <p className={styles.noComments}>Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+                                    <p className={styles.noComments}>No comments yet. Be the first!</p>
                                 )}
                             </div>
 
                             <div className={styles.inputWrapper}>
                                 <input
                                     type="text"
-                                    placeholder="Viết bình luận..."
+                                    placeholder="Write a comment..."
                                     value={localComment}
                                     onChange={(e) => setLocalComment(e.target.value)}
                                     onKeyDown={handleKeyDown}

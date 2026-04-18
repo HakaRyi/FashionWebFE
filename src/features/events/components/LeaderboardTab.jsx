@@ -34,7 +34,7 @@ const LeaderboardTab = ({ leaderboardData, onOpenModal }) => {
               
               <div className={styles.cardContent}>
                 <div className={styles.userMeta}>
-                  <span className={styles.userHandle}>@{user.userName.toLowerCase()}</span>
+                  {/* <span className={styles.userHandle}>@{user.userName.toLowerCase()}</span> */}
                   <h3 className={styles.displayName}>{user.userName}</h3>
                 </div>
                 
@@ -71,7 +71,7 @@ const LeaderboardTab = ({ leaderboardData, onOpenModal }) => {
               <div key={user.accountId} className={styles.tableRow}>
                 <div className={styles.colRank}>{user.rank.toString().padStart(2, '0')}</div>
                 <div className={styles.colUser}>
-                  <span className={styles.name}>@{user.userName}</span>
+                  <span className={styles.name}>{user.userName}</span>
                 </div>
                 <div className={styles.colScore}>
                     <strong>{user.finalScore?.toFixed(3)}</strong>

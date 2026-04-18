@@ -9,14 +9,13 @@ const SystemSettingsPage = () => {
 
   useEffect(() => {
     fetchAll();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const onTriggerUpdate = useCallback(async (setting, newVal) => {
     const val = newVal.trim();
 
-    // Không làm gì nếu giá trị không đổi hoặc đang trong quá trình xử lý key này
     if (
-      val === String(setting.settingValue) || 
+      val === String(setting.settingValue) ||
       isProcessingRef.current === setting.settingKey ||
       updatingKey === setting.settingKey
     ) {
@@ -35,7 +34,7 @@ const SystemSettingsPage = () => {
   if (loading && settings.length === 0) {
     return (
       <div className={styles.pageLoading}>
-        <FaSpinner className={styles.spin} /> Đang tải cấu hình...
+        <FaSpinner className={styles.spin} /> Loading configuration...
       </div>
     );
   }
@@ -44,16 +43,16 @@ const SystemSettingsPage = () => {
     <div className={styles.settingsContainer}>
       <header className={styles.header}>
         <div className={styles.titleInfo}>
-          <h1>Cấu hình hệ thống</h1>
-          <p>Quản lý các tham số tài chính và vận hành nền tảng.</p>
+          <h1>System Configuration</h1>
+          <p>Manage financial and operational parameters of the platform.</p>
         </div>
-        <button 
-          onClick={fetchAll} 
-          className={styles.refreshBtn} 
-          title="Làm mới"
+        <button
+          onClick={fetchAll}
+          className={styles.refreshBtn}
+          title="Refresh"
           disabled={loading}
         >
-          {loading ? <FaSpinner className={styles.spin} /> : 'Làm mới dữ liệu'}
+          {loading ? <FaSpinner className={styles.spin} /> : 'Refresh Data'}
         </button>
       </header>
 
@@ -61,21 +60,21 @@ const SystemSettingsPage = () => {
         <table className={styles.settingsTable}>
           <thead>
             <tr>
-              <th>Tham số</th>
-              <th style={{ width: '300px' }}>Giá trị cấu hình</th>
-              <th>Loại</th>
-              <th>Mô tả & Ghi chú</th>
+              <th>Parameter</th>
+              <th style={{ width: '300px' }}>Configuration Value</th>
+              <th>Type</th>
+              <th>Description & Notes</th>
             </tr>
           </thead>
           <tbody>
             {settings.map((s) => {
               const isUpdating = updatingKey === s.settingKey;
-              
+
               return (
                 <tr key={s.settingKey} className={isUpdating ? styles.rowSaving : ''}>
                   <td className={styles.keyCell}>
                     <strong>{s.settingKey}</strong>
-                    {isUpdating && <span className={styles.savingTag}>Đang lưu...</span>}
+                    {isUpdating && <span className={styles.savingTag}>Saving...</span>}
                   </td>
 
                   <td className={styles.inputCell}>
@@ -92,7 +91,7 @@ const SystemSettingsPage = () => {
                             e.currentTarget.blur();
                           }
                           if (e.key === 'Escape') {
-                            e.currentTarget.value = s.settingValue; // Trả về giá trị cũ
+                            e.currentTarget.value = s.settingValue;
                             e.currentTarget.blur();
                           }
                         }}
@@ -101,7 +100,7 @@ const SystemSettingsPage = () => {
                         {isUpdating ? (
                           <FaSpinner className={styles.spin} />
                         ) : (
-                          <FaCheck className={styles.checkIcon} title="Đã lưu" />
+                          <FaCheck className={styles.checkIcon} title="Saved" />
                         )}
                       </div>
                     </div>
@@ -120,7 +119,7 @@ const SystemSettingsPage = () => {
                     </div>
                     {s.updatedAt && (
                       <small className={styles.updatedAt}>
-                        Cập nhật: {new Date(s.updatedAt).toLocaleString('vi-VN')}
+                        Updated: {new Date(s.updatedAt).toLocaleString('vi-VN')}
                       </small>
                     )}
                   </td>

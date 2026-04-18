@@ -13,22 +13,21 @@ const Analytics = () => {
 
     const { stats, topEvents, chartData, loading, error, refresh } = useAnalytics(period);
 
-    // Map icon với các chỉ số thực tế từ DB
     const iconMap = {
-        'Tổng bài dự thi': <ImageIcon size={20} color="#3b82f6" />,
-        'Tiến độ chấm điểm': <PenTool size={20} color="#10b981" />,
-        'Tương tác cộng đồng': <Heart size={20} color="#ec4899" />,
-        'Chi phí tạo sự kiện': <CreditCard size={20} color="#f59e0b" />,
+        'Total number of entries': <ImageIcon size={20} color="#3b82f6" />,
+        'Progress in grading': <PenTool size={20} color="#10b981" />,
+        'Community engagement': <Heart size={20} color="#ec4899" />,
+        'Event creation costs': <CreditCard size={20} color="#f59e0b" />,
     };
 
     if (error) return (
         <div className={styles.errorContainer}>
             <div className={styles.errorCard}>
                 <AlertCircle size={48} className={styles.errorIcon} />
-                <h2>Đã xảy ra lỗi hệ thống</h2>
+                <h2>An error occurred</h2>
                 <p>{error}</p>
                 <button onClick={refresh} className={styles.retryButton}>
-                    <RefreshCw size={18} /> Thử lại ngay
+                    <RefreshCw size={18} /> Try again now
                 </button>
             </div>
         </div>
@@ -38,8 +37,8 @@ const Analytics = () => {
         <div className={styles.container}>
             <header className={styles.header}>
                 <div className={styles.titleArea}>
-                    <h1>Tổng quan Sự kiện Thời trang</h1>
-                    <p>Theo dõi tiến độ chấm bài, tương tác và hiệu quả từ các sự kiện của bạn.</p>
+                    <h1>Event Analytics</h1>
+                    <p>Track submission progress, engagement, and performance across your events.</p>
                 </div>
 
                 <div className={styles.controls}>
@@ -51,7 +50,7 @@ const Analytics = () => {
                                 onClick={() => setPeriod(p)}
                                 disabled={loading}
                             >
-                                {p === '30d' ? '30 ngày qua' : '90 ngày qua'}
+                                {p === '30d' ? '30 days ago' : '90 days ago'}
                             </button>
                         ))}
                     </div>
@@ -88,8 +87,8 @@ const Analytics = () => {
 
                 <aside className={styles.sideContent}>
                     <div className={styles.sideCardHeader}>
-                        <h3>Sự kiện cần chú ý</h3>
-                        <p>Dựa trên lượng bài chưa chấm & Tương tác</p>
+                        <h3>Events Requiring Attention</h3>
+                        <p>Based on the number of ungraded submissions & engagement</p>
                     </div>
 
                     {loading ? (

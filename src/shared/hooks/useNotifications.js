@@ -8,28 +8,29 @@ export const useNotifications = (isLoggedIn) => {
     const connectionRef = useRef(null);
     const isFetchingRef = useRef(false);
 
-    // 1. Hàm fetch thông báo với cơ chế lọc trùng tuyệt đối
+    // 1. Hàm fetch thông báo (Lấy snapshot chuẩn từ Server)
     const fetchNotifications = useCallback(async () => {
         if (!isLoggedIn || isFetchingRef.current) return;
 
         try {
             isFetchingRef.current = true;
             const res = await axiosClient.get('/notifications/me');
-            const data = Array.isArray(res.data) ? res.data : [];
 
-            setNotifications((prev) => {
-                const incomingData = Array.isArray(res.data) ? res.data.filter((n) => n?.id) : [];
-                const combined = [...incomingData, ...prev];
-                const uniqueMap = new Map(combined.map((item) => [item.id, item]));
-                const finalData = Array.from(uniqueMap.values()).sort(
-                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-                );
+            const rawData = Array.isArray(res.data) ? res.data : [];
 
-                const unread = finalData.some((n) => n.status === 'Unread' || n.status === 'unread');
-                setHasUnread(unread);
+            const finalData = rawData
+                .filter((n) => n.id || n.notificationId)
+                .map((n) => ({
+                    ...n,
+                    id: n.id || n.notificationId,
+                }))
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-                return finalData;
-            });
+            setNotifications(finalData);
+
+            // Cập nhật trạng thái chưa đọc
+            const unread = finalData.some((n) => n.status?.toLowerCase() === 'unread');
+            setHasUnread(unread);
         } catch (error) {
             console.error('Error fetching notifications:', error);
         } finally {
@@ -43,7 +44,7 @@ export const useNotifications = (isLoggedIn) => {
             await axiosClient.put(`/notifications/${notifId}/read`);
             setNotifications((prev) => {
                 const updated = prev.map((n) => (n.id === notifId ? { ...n, status: 'Read' } : n));
-                setHasUnread(updated.some((n) => n.status === 'Unread' || n.status === 'unread'));
+                setHasUnread(updated.some((n) => n.status?.toLowerCase() === 'unread'));
                 return updated;
             });
         } catch (error) {
@@ -63,10 +64,9 @@ export const useNotifications = (isLoggedIn) => {
         }
     };
 
-    // 4. Quản lý vòng đời SignalR (Hoàn hảo cho cả Strict Mode)
+    // 4. Quản lý SignalR và Vòng đời Hook
     useEffect(() => {
         let isMounted = true;
-        let connection = null;
 
         if (!isLoggedIn) {
             setNotifications([]);
@@ -74,13 +74,14 @@ export const useNotifications = (isLoggedIn) => {
             return;
         }
 
+        // Gọi fetch lần đầu khi login
         fetchNotifications();
 
         const setupConnection = async () => {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            connection = new signalR.HubConnectionBuilder()
+            const connection = new signalR.HubConnectionBuilder()
                 .withUrl('http://localhost:5196/notificationHub', {
                     accessTokenFactory: () => token,
                 })
@@ -88,6 +89,7 @@ export const useNotifications = (isLoggedIn) => {
                 .configureLogging(signalR.LogLevel.None)
                 .build();
 
+            // Lắng nghe thông báo thời gian thực
             connection.on('ReceiveNotification', (newNotif) => {
                 if (!isMounted || !newNotif) return;
 
@@ -98,12 +100,10 @@ export const useNotifications = (isLoggedIn) => {
                     createdAt: newNotif.createdAt || new Date().toISOString(),
                 };
 
-                if (!normalizedNotif.id) {
-                    console.error('Thông báo nhận được không có ID hợp lệ:', newNotif);
-                    return;
-                }
+                if (!normalizedNotif.id) return;
 
                 setNotifications((prev) => {
+                    // Chống trùng: Nếu thông báo đã tồn tại trong list thì không thêm nữa
                     if (prev.some((n) => n.id === normalizedNotif.id)) return prev;
 
                     setHasUnread(true);
@@ -120,7 +120,6 @@ export const useNotifications = (isLoggedIn) => {
                     await connection.stop();
                 }
             } catch (err) {
-                // Chỉ log lỗi nếu component vẫn còn mount và không phải lỗi Abort do stop giữa chừng
                 if (isMounted && err.name !== 'AbortError') {
                     console.error('SignalR Connection Error:', err);
                 }
@@ -131,14 +130,13 @@ export const useNotifications = (isLoggedIn) => {
 
         return () => {
             isMounted = false;
-            if (connection) {
-                connection.off('ReceiveNotification');
-                // Chỉ dừng nếu đang ở trạng thái có thể dừng (tránh lỗi negotiation)
-                if (connection.state !== signalR.HubConnectionState.Disconnected) {
-                    connection.stop().catch(() => {}); // Nuốt lỗi khi stop âm thầm
+            if (connectionRef.current) {
+                connectionRef.current.off('ReceiveNotification');
+                if (connectionRef.current.state !== signalR.HubConnectionState.Disconnected) {
+                    connectionRef.current.stop().catch(() => {});
                 }
+                connectionRef.current = null;
             }
-            connectionRef.current = null;
         };
     }, [isLoggedIn, fetchNotifications]);
 

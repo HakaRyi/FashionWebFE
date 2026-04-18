@@ -46,6 +46,46 @@ class FeedApi {
             throw error;
         }
     }
+
+    async globalSearch(keyword) {
+        try {
+            const response = await axiosClient.get('/search/finding', {
+                params: { q: keyword },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('FeedApi -> globalSearch -> error', error);
+            return { users: [], posts: [] };
+        }
+    }
+
+    async getPostDetail(postId) {
+        try {
+            const response = await axiosClient.get(`/post/${postId}`);
+            return response.data;
+        } catch (error) {
+            console.error('FeedApi -> getPostDetail -> error', error);
+            throw error;
+        }
+    }
+
+    async createPost(formData) {
+        try {
+            const hasEventId = formData.has('EventId') && formData.get('EventId') !== 'null';
+
+            const endpoint = hasEventId ? '/post/event-participation' : '/post';
+
+            const response = await axiosClient.post(endpoint, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('FeedApi -> createPost -> error', error);
+            throw error;
+        }
+    }
 }
 
 export const feedApi = new FeedApi();

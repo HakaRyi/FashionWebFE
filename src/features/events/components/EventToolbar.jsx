@@ -13,7 +13,7 @@ const EventToolbar = ({
                 <Search size={18} />
                 <input
                     type="text"
-                    placeholder="Tìm kiếm sự kiện..."
+                    placeholder="Search for events..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -28,7 +28,7 @@ const EventToolbar = ({
                             className={statusFilter === status ? styles.activeFilter : ""}
                             onClick={() => setStatusFilter(status)}
                         >
-                            {status === "All" ? "Tất cả" : status}
+                            {status === "All" ? "All" : status}
                         </button>
                     ))}
                 </div>
@@ -41,8 +41,8 @@ const EventToolbar = ({
                         onChange={(e) => setSortOrder(e.target.value)}
                         className={styles.sortSelect}
                     >
-                        <option value="desc">Mới nhất</option>
-                        <option value="asc">Cũ nhất</option>
+                        <option value="desc">Newest</option>
+                        <option value="asc">Oldest</option>
                     </select>
                 </div>
             </div>

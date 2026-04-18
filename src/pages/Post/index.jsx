@@ -67,11 +67,11 @@ function PostManagement() {
         <div className={styles.wrapper}>
             <div className={styles.header}>
                 <div>
-                    <h2>Quản Lý Bài Viết</h2>
-                    <p>Ưu tiên xử lý các bài viết đang chờ duyệt</p>
+                    <h2>Post Management</h2>
+                    <p>Prioritize processing posts that are pending approval</p>
                 </div>
                 <button className={styles.btnAdd}>
-                    <FaPlus /> Viết bài mới
+                    <FaPlus /> Write New Post
                 </button>
             </div>
 
@@ -79,7 +79,7 @@ function PostManagement() {
                 <div className={styles.searchGroup}>
                     <div className={styles.searchBox}>
                         <FaSearch />
-                        <input type="text" placeholder="Tìm kiếm bài viết..." />
+                        <input type="text" placeholder="Search posts..." />
                     </div>
                 </div>
             </div>
@@ -88,10 +88,10 @@ function PostManagement() {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>Bài viết</th>
-                            <th>Trạng thái</th>
-                            <th>Tác giả</th>
-                            <th style={{ textAlign: 'center' }}>Thao tác</th>
+                            <th>Article</th>
+                            <th>Status</th>
+                            <th>Author</th>
+                            <th style={{ textAlign: 'center' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -150,7 +150,7 @@ function PostManagement() {
                                         <button
                                             className={styles.btnView}
                                             onClick={() => setSelectedPost(post)}
-                                            title="Xem chi tiết & Duyệt"
+                                            title="View details & Browse"
                                         >
                                             <FaEye />
                                         </button>
@@ -159,7 +159,7 @@ function PostManagement() {
                                             <button
                                                 className={styles.btnQuickApprove}
                                                 onClick={() => handleApprove(post.postId)}
-                                                title="Duyệt nhanh"
+                                                title="Quick browse"
                                             >
                                                 <FaCheck />
                                             </button>

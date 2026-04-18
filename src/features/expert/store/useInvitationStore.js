@@ -12,7 +12,7 @@ export const useInvitationStore = create((set) => ({
             const count = Array.isArray(res.data) ? res.data.length : 0;
             set({ pendingCount: count, loading: false });
         } catch (error) {
-            console.error("Lỗi fetch count:", error);
+            console.error("Fetch count error:", error);
             set({ loading: false });
         }
     },

@@ -29,7 +29,7 @@ const StepVerification = ({ formData, updateData, onBack, onSubmit, loading }) =
 
             <div className={styles.inputWrapper}>
                 <label>Bio / Philosophy</label>
-                <textarea rows="3" placeholder="Chia sẻ góc nhìn thời trang của bạn..." value={formData.bio} onChange={(e) => updateData({ bio: e.target.value })} />
+                <textarea rows="3" placeholder="Share your fashion perspective..." value={formData.bio} onChange={(e) => updateData({ bio: e.target.value })} />
             </div>
 
             <div className={styles.btnGroup}>

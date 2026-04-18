@@ -3,19 +3,19 @@ import { ShieldAlert, Star, BookOpen, AlertCircle, TrendingDown, CheckCircle, Ro
 import styles from './Policy.module.scss';
 
 const Policy = () => {
-  // Dữ liệu đồng bộ với logic Backend
+
   const penaltyRules = [
-    { id: 1, action: "Chấm thiếu dưới 10% số lượng bài thi", points: "-2 điểm", type: "Nhắc nhở" },
-    { id: 2, action: "Chấm thiếu từ 10% - 50% số lượng bài thi", points: "-10 điểm", type: "Vi phạm" },
-    { id: 3, action: "Bỏ dở trên 50% số lượng bài thi", points: "-20 điểm", type: "Vi phạm nặng" },
-    { id: 4, action: "Không thực hiện bất kỳ lượt chấm nào", points: "-30 điểm", type: "Nghiêm trọng" },
+    { id: 1, action: "Missing grading below 10% of total assignments", points: "-2 points", type: "Reminder" },
+    { id: 2, action: "Missing grading from 10% - 50% of total assignments", points: "-10 points", type: "Violation" },
+    { id: 3, action: "Abandoning more than 50% of total assignments", points: "-20 points", type: "Serious Violation" },
+    { id: 4, action: "Not completing any grading sessions", points: "-30 points", type: "Severe" },
   ];
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Chính sách Uy tín Chuyên gia</h1>
-        <p>Hệ thống tự động đánh giá trách nhiệm và năng lực giám khảo</p>
+        <h1>Expert Reputation Policy</h1>
+        <p>Automated system for evaluating responsibility and expertise of graders</p>
       </header>
 
       <div className={styles.grid}>
@@ -23,15 +23,15 @@ const Policy = () => {
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <Star className={styles.iconGold} />
-            <h3>Chỉ số Uy tín</h3>
+            <h3>Reputation Score</h3>
           </div>
           <div className={styles.content}>
-            <p>Điểm uy tín mặc định là <strong>100</strong>. Chỉ số này phản ánh sự chuyên nghiệp của bạn.</p>
+            <p>The default reputation score is <strong>100</strong>. This score reflects your professionalism.</p>
             <div className={styles.miniFeature}>
-              <CheckCircle size={16} /> <span><b>Thưởng:</b> +5 điểm khi hoàn thành 100% bài chấm trong sự kiện.</span>
+              <CheckCircle size={16} /> <span><b>Reward:</b> +5 points for completing 100% of assignments in an event.</span>
             </div>
             <div className={styles.miniFeature}>
-              <CheckCircle size={16} /> <span><b>Quyền lợi:</b> Điểm cao giúp tăng trọng số đánh giá bài viết.</span>
+              <CheckCircle size={16} /> <span><b>Benefits:</b> A higher score helps increase the weight of your article evaluations.</span>
             </div>
           </div>
           <div className={styles.progressBar}>
@@ -43,14 +43,14 @@ const Policy = () => {
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <RotateCcw className={styles.iconBlue} />
-            <h3>Cơ chế Phục hồi</h3>
+            <h3>Recovery Mechanism</h3>
           </div>
           <div className={styles.content}>
-            <p>Hệ thống luôn tạo điều kiện để chuyên gia cải thiện chỉ số uy tín thông qua trách nhiệm:</p>
+            <p>The system always provides opportunities for experts to improve their reputation score through responsibility:</p>
             <ul className={styles.listList}>
-              <li>Tự động phục hồi điểm sau mỗi sự kiện hoàn thành xuất sắc.</li>
-              <li>Tích lũy điểm uy tín để nhận danh hiệu "Chuyên gia tin cậy".</li>
-              <li>Điểm thấp chỉ làm giảm thứ hạng đề xuất, không ảnh hưởng quyền truy cập.</li>
+              <li>Automatic point recovery after each successful event completion.</li>
+              <li>Accumulate reputation points to earn the title "Trusted Expert".</li>
+              <li>Low scores only affect the ranking of recommendations, not access rights.</li>
             </ul>
           </div>
         </div>
@@ -59,16 +59,16 @@ const Policy = () => {
       <section className={styles.policySection}>
         <div className={styles.sectionTitle}>
           <ShieldAlert />
-          <h2>Khung khấu trừ điểm trách nhiệm</h2>
+          <h2>Responsibility Point Deduction Framework</h2>
         </div>
-        
+
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Hành vi (Dựa trên tỷ lệ hoàn thành)</th>
-                <th>Phân loại</th>
-                <th>Mức khấu trừ</th>
+                <th>Behavior (Based on Completion Rate)</th>
+                <th>Category</th>
+                <th>Deduction Level</th>
               </tr>
             </thead>
             <tbody>
@@ -88,9 +88,9 @@ const Policy = () => {
         <div className={styles.note}>
           <AlertCircle size={24} />
           <div>
-            <strong>Cam kết từ hệ thống:</strong>
+            <strong>Commitment from the system:</strong>
             <p>
-              Chúng tôi <b>không thực hiện khóa hay đình chỉ</b> tài khoản chuyên gia vì lý do chấm thiếu bài. Tuy nhiên, nếu điểm uy tín quá thấp, hệ thống sẽ hạn chế tần suất gửi lời mời tham gia các sự kiện lớn để đảm bảo công bằng cho thí sinh.
+              We <b>do not lock or suspend.</b> expert accounts may be suspended due to insufficient grading. However, if the reputation score is too low, the system will limit the frequency of invitations to major events to ensure fairness for all participants.
             </p>
           </div>
         </div>

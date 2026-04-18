@@ -41,14 +41,14 @@ const StepBasicInfo = ({
 
     return (
         <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>Thông tin cơ bản</h2>
+            <h2 className={styles.sectionTitle}>Basic information</h2>
 
             {/* TITLE */}
             <div className={styles.inputGroup}>
-                <label>Tiêu đề sự kiện</label>
+                <label>Event Title</label>
                 <input
                     type="text"
-                    placeholder="VD: Hackathon Global 2026"
+                    placeholder="e.g., Hackathon Global 2026"
                     value={form.title}
                     onChange={(e) =>
                         setForm({ ...form, title: e.target.value })
@@ -60,7 +60,7 @@ const StepBasicInfo = ({
             <div className={styles.grid3} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
                 <div className={styles.inputGroup}>
                     <label>
-                        <Calendar size={14} /> Ngày bắt đầu
+                        <Calendar size={14} /> Start Date
                     </label>
                     <DatePicker
                         selected={startDate}
@@ -78,12 +78,12 @@ const StepBasicInfo = ({
                         filterTime={filterStartTime} // Chặn giờ cụ thể
                         showTimeSelect
                         dateFormat="dd/MM/yyyy h:mm aa"
-                        placeholderText="Sau 24h tính từ bây giờ"
+                        placeholderText="After 24h from now"
                     />
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label style={{ color: '#e67e22' }}><Calendar size={14} /> Hạn nộp bài</label>
+                    <label style={{ color: '#e67e22' }}><Calendar size={14} /> Submission Deadline</label>
                     <DatePicker
                         selected={submissionDeadline}
                         onChange={(date) => {
@@ -96,13 +96,13 @@ const StepBasicInfo = ({
                         disabled={!startDate}
                         showTimeSelect
                         dateFormat="dd/MM/yyyy h:mm aa"
-                        placeholderText="Trước kết thúc 24h"
+                        placeholderText="Before the event ends 24h"
                     />
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label>
-                        <Calendar size={14} /> Ngày kết thúc
+                        <Calendar size={14} /> End Date
                     </label>
                     <DatePicker
                         selected={endDate}
@@ -111,7 +111,7 @@ const StepBasicInfo = ({
                         filterTime={filterEndTime}
                         showTimeSelect
                         dateFormat="dd/MM/yyyy h:mm aa"
-                        placeholderText="Sau ngày bắt đầu 24h"
+                        placeholderText="After the event starts 24h"
                         disabled={!submissionDeadline}
                     />
                 </div>
@@ -120,7 +120,7 @@ const StepBasicInfo = ({
             {/* BANNER */}
             <div className={styles.inputGroup}>
                 <label>
-                    <ImageIcon size={14} /> Ảnh bìa (Banner)
+                    <ImageIcon size={14} /> Event Banner
                 </label>
 
                 <input
@@ -149,7 +149,7 @@ const StepBasicInfo = ({
                     ) : (
                         <>
                             <Plus size={24} />
-                            <span>Kéo thả hoặc click để tải ảnh</span>
+                            <span>Drag and drop or click to upload image</span>
                         </>
                     )}
                 </div>
@@ -157,10 +157,10 @@ const StepBasicInfo = ({
 
             {/* DESCRIPTION */}
             <div className={styles.inputGroup}>
-                <label>Mô tả chi tiết</label>
+                <label>Event Description</label>
                 <textarea
                     rows={6}
-                    placeholder="Chia sẻ về mục đích, thể lệ cuộc thi..."
+                    placeholder="Share details about the purpose, rules, and guidelines of the event..."
                     value={form.description || ""}
                     onChange={(e) =>
                         setForm({ ...form, description: e.target.value })

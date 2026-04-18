@@ -5,9 +5,9 @@ function DashboardHeader() {
   return (
     <div className={styles.header}>
       <div>
-        <h2>Tổng Quan</h2>
+        <h2>Overview</h2>
         <p style={{ color: "var(--text-muted)" }}>
-          Chào mừng trở lại, Admin!
+          Welcome back, Admin!
         </p>
       </div>
 

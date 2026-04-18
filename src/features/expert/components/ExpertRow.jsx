@@ -45,7 +45,7 @@ function ExpertRow({ expert, onView }) {
             className={styles.btnView} 
             onClick={() => onView(expert)}
           >
-            <FaIdCard /> Chi tiết
+            <FaIdCard /> Detail
           </button>
         </div>
       </td>

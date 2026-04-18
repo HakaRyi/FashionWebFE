@@ -25,7 +25,7 @@ const WalletStats = ({ stats }) => {
 
             <div className={styles.cardBody}>
               <h3>
-                {item.value} <span>Coins</span>
+                {item.value} <span>VND</span>
               </h3>
               <p>{item.label}</p>
             </div>

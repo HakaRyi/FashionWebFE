@@ -6,14 +6,14 @@ const BentoShowcase = () => (
     <section className={styles.bentoSection}>
         <div className={styles.bentoHeader}>
             <h2>STYLE MOMENTS</h2>
-            <button className={styles.viewAll}>XEM TẤT CẢ</button>
+            <button className={styles.viewAll}>VIEW ALL</button>
         </div>
         <div className={styles.bentoGrid}>
             <div className={styles.bentoMain}>
                 <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800" alt="Main" />
                 <div className={styles.overlay}>
-                    <h3>CỘNG ĐỒNG WAPO</h3>
-                    <p>Hơn 1 triệu bộ outfit được chia sẻ</p>
+                    <h3>WAPO COMMUNITY</h3>
+                    <p>Over 1 million outfits have been shared.</p>
                 </div>
             </div>
             <div className={styles.bentoSide}>
@@ -22,7 +22,7 @@ const BentoShowcase = () => (
                 </div>
                 <div className={styles.sideBottom}>
                     <div className={styles.darkCard}>
-                        <h4>Nâng tầm phong cách cá nhân ngay hôm nay</h4>
+                        <h4>Elevate your personal style today!</h4>
                         <ArrowRight />
                     </div>
                 </div>

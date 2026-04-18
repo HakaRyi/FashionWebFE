@@ -10,8 +10,8 @@ const PerformanceChart = ({ chartData }) => (
     <section className={styles.mainChart}>
         <div className={styles.chartHeader}>
             <div className={styles.titleArea}>
-                <h3>Tương quan Bài thi & Độ phủ sóng</h3>
-                <p>Theo dõi số lượng thiết kế nộp vào và lượt tương tác (Like/Share)</p>
+                <h3>Correlation between Tests and Coverage</h3>
+                <p>Tracking the number of designs submitted and engagement metrics (Likes/Shares)</p>
             </div>
             <TrendingUp size={18} className={styles.trendIcon} />
         </div>
@@ -37,8 +37,8 @@ const PerformanceChart = ({ chartData }) => (
                     <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
                     <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}/>
                     
-                    <Area yAxisId="left" type="monotone" name="Bài dự thi (Posts)" dataKey="submissions" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorPosts)" />
-                    <Area yAxisId="right" type="monotone" name="Tương tác (Likes & Shares)" dataKey="engagements" stroke="#ec4899" strokeWidth={2} fillOpacity={1} fill="url(#colorEngagement)" />
+                    <Area yAxisId="left" type="monotone" name="Contest entry (Posts)" dataKey="submissions" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorPosts)" />
+                    <Area yAxisId="right" type="monotone" name="Interact (Likes & Shares)" dataKey="engagements" stroke="#ec4899" strokeWidth={2} fillOpacity={1} fill="url(#colorEngagement)" />
                 </AreaChart>
             </ResponsiveContainer>
         </div>

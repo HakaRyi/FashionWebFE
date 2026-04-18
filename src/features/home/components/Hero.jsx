@@ -22,13 +22,12 @@ const Hero = () => {
                         NEW ERA OF FASHION
                     </div>
                     <h1 className={styles.mainTitle}>
-                        CURATING <br />
-                        <span className={styles.italic}>Digital</span> <br />
-                        <span className={styles.outline}>Elegance.</span>
+                        STYLING <br />
+                        <span className={styles.italic}>Future</span> <br />
+                        <span className={styles.outline}>Moments.</span>
                     </h1>
                     <p className={styles.heroSub}>
-                        Hệ sinh thái thời trang tích hợp AI đầu tiên giúp bạn quản lý, kết nối và nâng tầm phong
-                        cách cá nhân một cách chuyên nghiệp.
+                        The first AI-integrated fashion ecosystem that helps you manage, connect with, and elevate your personal style professionally.
                     </p>
                     <div className={styles.heroActions}>
                         <motion.button
@@ -37,7 +36,7 @@ const Hero = () => {
                             className={styles.primaryBtn}
                             onClick={() => navigate(PATHS.LOGIN)}
                         >
-                            BẮT ĐẦU HÀNH TRÌNH <ArrowRight size={18} />
+                            GET STARTED <ArrowRight size={18} />
                         </motion.button>
                         <button className={styles.videoBtn}>
                             <div className={styles.playCircle}><Play size={12} fill="currentColor" /></div>
@@ -54,14 +53,14 @@ const Hero = () => {
                         className={styles.imageCard}
                     >
                         <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000" alt="Fashion" />
-                        <motion.div
+                        {/* <motion.div
                             animate={{ y: [0, -15, 0] }}
                             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                             className={styles.floatingTag}
                         >
                             <Star size={14} fill="#000" />
                             <span>AI Stylist Online</span>
-                        </motion.div>
+                        </motion.div> */}
                     </motion.div>
                 </div>
             </div>

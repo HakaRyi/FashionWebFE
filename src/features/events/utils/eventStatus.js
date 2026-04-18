@@ -4,45 +4,46 @@
  */
 export const EVENT_STATUS_CONFIG = {
     Pending_Review: {
-        label: "Chờ kiểm duyệt",
-        variant: "warning",
-        description: "Admin đang kiểm tra nội dung sự kiện của bạn."
+        label: 'Awaiting censorship',
+        variant: 'warning',
+        description: 'The administrator is reviewing your event content.',
     },
     Rejected: {
-        label: "Bị từ chối",
-        variant: "error",
-        description: "Sự kiện không được duyệt. Tiền ký quỹ đã được hoàn trả về ví của bạn."
+        label: 'Rejected',
+        variant: 'error',
+        description: 'The event has been rejected. The deposit has been refunded to your wallet.',
     },
     Inviting: {
-        label: "Đang mời chuyên gia",
-        variant: "info",
-        description: "Hệ thống đang đợi các chuyên gia xác nhận tham gia hội đồng chấm thi."
+        label: 'Inviting Experts',
+        variant: 'info',
+        description: 'The system is waiting for experts to confirm their participation in the judging panel.',
     },
     Active: {
-        label: "Đang diễn ra",
-        variant: "success",
-        description: "Sự kiện đang công khai. Người dùng có thể bắt đầu nộp bài dự thi."
+        label: 'Active',
+        variant: 'success',
+        description: 'The event is publicly available. Users can start submitting their entries.',
     },
     Judging: {
-        label: "Đang chấm điểm",
-        variant: "secondary",
-        description: "Đã hết hạn nộp bài. Ban giám khảo đang tiến hành đánh giá các tác phẩm."
+        label: 'Judging in progress',
+        variant: 'secondary',
+        description: 'The judging process is currently in progress.',
     },
     Completed: {
-        label: "Đã kết thúc",
-        variant: "default",
-        description: "Sự kiện đã hoàn tất quá trình chấm điểm và trao giải thành công."
+        label: 'Completed',
+        variant: 'default',
+        description: 'The event has completed the judging process and awards have been distributed.',
     },
     Cancelled_NotEnoughExperts: {
-        label: "Đã hủy (Thiếu Expert)",
-        variant: "error",
-        description: "Sự kiện tự động hủy do không đủ số lượng chuyên gia xác nhận. Tiền đã hoàn về ví."
+        label: 'Cancelled (Not Enough Experts)',
+        variant: 'error',
+        description:
+            'The event was automatically cancelled due to insufficient expert confirmations. The deposit has been refunded to your wallet.',
     },
     Cancelled_By_Creator: {
-        label: "Đã hủy (Do người tạo sự kiện)",
-        variant: "error",
-        description: "Sự kiện đã bị hủy bởi người tạo sự kiện. Tiền đã hoàn về ví."
-    }
+        label: 'Cancelled (By Event Creator)',
+        variant: 'error',
+        description: 'The event has been cancelled by the event creator. The deposit has been refunded to your wallet.',
+    },
 };
 
 /**
@@ -52,9 +53,11 @@ export const EVENT_STATUS_CONFIG = {
  */
 export const getEventStatusInfo = (status) => {
     // Nếu status từ BE trả về không nằm trong danh sách, hiển thị mặc định để tránh crash
-    return EVENT_STATUS_CONFIG[status] || { 
-        label: status || "Không xác định", 
-        variant: "default", 
-        description: "Trạng thái hiện tại đang được cập nhật..." 
-    };
+    return (
+        EVENT_STATUS_CONFIG[status] || {
+            label: status || 'Undetermined',
+            variant: 'default',
+            description: 'Current status is being updated...',
+        }
+    );
 };

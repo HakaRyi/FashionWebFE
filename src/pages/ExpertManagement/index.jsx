@@ -62,14 +62,14 @@ function ExpertManagementPage() {
     const handleApprove = async (exp) => {
         const fileId = exp.expertRequests?.[0]?.expertFileId;
 
-        if (!fileId) return toast.error("Không tìm thấy mã số hồ sơ!");
+        if (!fileId) return toast.error("The file number was not found!");
 
-        const loadId = toast.loading("Đang thiết lập quyền chuyên gia...");
+        const loadId = toast.loading("Establishing expert rights...");
         try {
-            await expertApi.processApplication(fileId, "Approved", "Hồ sơ đầy đủ và hợp lệ.");
+            await expertApi.processApplication(fileId, "Approved", "The application is complete and valid.");
 
             toast.update(loadId, {
-                render: `Đã cấp quyền Chuyên gia cho ${exp.userName || 'người dùng'}!`,
+                render: `Expert rights granted to ${exp.userName || 'user'}!`,
                 type: "success",
                 isLoading: false,
                 autoClose: 3000
@@ -79,7 +79,7 @@ function ExpertManagementPage() {
             fetchExperts();
         } catch (err) {
             toast.update(loadId, {
-                render: `Lỗi: ${err.response?.data?.message || "Không thể phê duyệt"}`,
+                render: `Error: ${err.response?.data?.message || "Cannot approve"}`,
                 type: "error",
                 isLoading: false,
                 autoClose: 4000
@@ -89,17 +89,17 @@ function ExpertManagementPage() {
 
     const handleReject = async (exp) => {
         if (!rejectReason.trim()) {
-            return toast.warning("Bạn phải nhập lý do từ chối để thông báo cho người dùng.");
+            return toast.warning("You must enter a reason for rejection to notify the user.");
         }
 
         const fileId = exp.expertRequests?.[0]?.expertFileId;
-        const loadId = toast.loading("Đang gửi phản hồi từ chối...");
+        const loadId = toast.loading("Sending rejection feedback...");
 
         try {
             await expertApi.processApplication(fileId, "Rejected", rejectReason);
 
             toast.update(loadId, {
-                render: "Đã từ chối và gửi thông báo cho ứng viên.",
+                render: "Rejected and notification sent to the applicant.",
                 type: "info",
                 isLoading: false,
                 autoClose: 3000
@@ -110,7 +110,7 @@ function ExpertManagementPage() {
             fetchExperts();
         } catch (err) {
             toast.update(loadId, {
-                render: `Lỗi: ${err.response?.data?.message || "Thao tác thất bại"}`,
+                render: `Error: ${err.response?.data?.message || "Failed to perform action"}`,
                 type: "error",
                 isLoading: false,
                 autoClose: 4000
@@ -122,9 +122,9 @@ function ExpertManagementPage() {
     return (
         <div className={styles.wrapper}>
             <header className={styles.header}>
-                <h2>Quản lý Chuyên gia</h2>
+                <h2>Expert Management</h2>
                 <div className={styles.stats}>
-                    <strong>{filteredExperts.length}</strong> chuyên gia tìm thấy
+                    <strong>{filteredExperts.length}</strong> experts found
                 </div>
             </header>
 
@@ -138,13 +138,13 @@ function ExpertManagementPage() {
                 refresh={() => {
                     fetchExperts();
                     setCurrentPage(1);
-                    toast.info("Đã làm mới dữ liệu");
+                    toast.info("Data refreshed");
                 }}
             />
 
             <div className={styles.tableContainer}>
                 {loading ? (
-                    <div className={styles.empty}>Đang tải dữ liệu...</div>
+                    <div className={styles.empty}>Loading data...</div>
                 ) : filteredExperts.length > 0 ? (
                     <>
                         <ExpertTable
@@ -158,7 +158,7 @@ function ExpertManagementPage() {
                                     disabled={currentPage === 1}
                                     onClick={() => setCurrentPage(prev => prev - 1)}
                                 >
-                                    Trước
+                                    Previous
                                 </button>
 
                                 {[...Array(totalPages)].map((_, index) => (
@@ -175,13 +175,13 @@ function ExpertManagementPage() {
                                     disabled={currentPage === totalPages}
                                     onClick={() => setCurrentPage(prev => prev + 1)}
                                 >
-                                    Sau
+                                    Next
                                 </button>
                             </div>
                         )}
                     </>
                 ) : (
-                    <div className={styles.empty}>Không tìm thấy chuyên gia nào phù hợp.</div>
+                    <div className={styles.empty}>No matching experts found.</div>
                 )}
             </div>
 

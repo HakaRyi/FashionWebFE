@@ -85,7 +85,7 @@ const SubmissionsReview = () => {
         for (const c of criteria) {
             const val = parseFloat(criterionScores[c.eventCriterionId]);
             if (isNaN(val) || val < 0 || val > 10) {
-                return toast.warn(`Vui lòng chấm điểm hợp lệ (0 - 10) cho tiêu chí: ${c.name}`);
+                return toast.warn(`Please give a valid score (0 - 10) for each criterion: ${c.name}`);
             }
             ratingsPayload.push({
                 eventCriterionId: c.eventCriterionId,
@@ -95,7 +95,7 @@ const SubmissionsReview = () => {
         }
 
         setIsSubmitting(true);
-        const loadId = toast.loading("Đang lưu kết quả đánh giá...");
+        const loadId = toast.loading("Saving the evaluation results....");
 
         try {
             await expertRatingApi.submitRating({
@@ -105,7 +105,7 @@ const SubmissionsReview = () => {
             });
 
             toast.update(loadId, {
-                render: "Đã cập nhật đánh giá thành công!",
+                render: "Evaluation results saved successfully!",
                 type: "success",
                 isLoading: false,
                 autoClose: 2000,
@@ -116,7 +116,7 @@ const SubmissionsReview = () => {
             setTimeout(() => setSelectedSubmission(null), 300);
         } catch (error) {
             toast.update(loadId, {
-                render: "Lỗi: " + (error.response?.data?.message || "Không thể lưu điểm"),
+                render: "Error: " + (error.response?.data?.message || "Cannot save score"),
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
@@ -137,13 +137,13 @@ const SubmissionsReview = () => {
                         <ChevronLeft size={20} /> Quay lại
                     </button>
                     <div className={styles.badge}>
-                        <Award size={14} /> Hội đồng chuyên gia
+                        <Award size={14} /> Expert panel
                     </div>
                 </div>
 
                 <div className={styles.titleSection}>
                     <h1>{eventInfo.name}</h1>
-                    <p>• Hệ thống quản lý chấm điểm</p>
+                    <p>• Expert Evaluation System</p>
                 </div>
 
                 <div className={styles.toolbar}>
@@ -151,7 +151,7 @@ const SubmissionsReview = () => {
                         <div className={styles.searchBar}>
                             <Search size={16} />
                             <input
-                                placeholder="Tìm tên thí sinh..."
+                                placeholder="Search contestant names..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -159,9 +159,9 @@ const SubmissionsReview = () => {
                         <div className={styles.sortBox}>
                             <ArrowUpDown size={16} />
                             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                                <option value="newest">Mới nhất</option>
-                                <option value="oldest">Cũ nhất</option>
-                                <option value="score">Điểm cao nhất</option>
+                                <option value="newest">Latest</option>
+                                <option value="oldest">Oldest</option>
+                                <option value="score">Highest Score</option>
                             </select>
                         </div>
                     </div>
@@ -173,12 +173,12 @@ const SubmissionsReview = () => {
                 {isLoading ? (
                     <div className={styles.loadingState}>
                         <Loader2 className={styles.spinner} size={40} />
-                        <p>Đang tải dữ liệu bài thi...</p>
+                        <p>Loading submission data...</p>
                     </div>
                 ) : filteredData.length === 0 ? (
                     <div className={styles.emptyState}>
                         <AlertCircle size={40} />
-                        <p>{searchTerm ? "Không tìm thấy kết quả." : "Chưa có bài dự thi nào."}</p>
+                        <p>{searchTerm ? "No results found." : "No submissions available."}</p>
                     </div>
                 ) : (
                     <div className={styles.submissionGrid}>

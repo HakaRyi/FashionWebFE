@@ -2,24 +2,31 @@ import React, { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CheckCircle2, XCircle, ArrowRight, Wallet } from "lucide-react";
 import { PATHS } from "@/app/routes/paths";
-import styles from "./PaymentResult.module.scss"; // Bạn tự tạo file CSS/SCSS nhé
+import styles from "./PaymentResult.module.scss";
 
 const PaymentResult = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    
+
     const status = searchParams.get("status");
     const orderCode = searchParams.get("orderCode");
     const isSuccess = status === "00";
 
+    const returnPath = sessionStorage.getItem("post_payment_url") || PATHS.USER_FEED;
+
     useEffect(() => {
         if (isSuccess) {
             const timer = setTimeout(() => {
-                navigate(PATHS.EXPERT_CREATE_EVENTS);
+                handleBack();
             }, 5000);
             return () => clearTimeout(timer);
         }
-    }, [isSuccess, navigate]);
+    }, [isSuccess]);
+
+    const handleBack = () => {
+        sessionStorage.removeItem("post_payment_url");
+        navigate(returnPath);
+    };
 
     return (
         <div className={styles.container}>
@@ -33,38 +40,32 @@ const PaymentResult = () => {
                 </div>
 
                 <h1 className={isSuccess ? styles.successText : styles.errorText}>
-                    {isSuccess ? "Nạp tiền thành công!" : "Giao dịch thất bại"}
+                    {isSuccess ? "Deposit successful!" : "Deposit failed"}
                 </h1>
 
                 <div className={styles.details}>
-                    <p>Mã đơn hàng: <strong>{orderCode}</strong></p>
+                    <p>Order Code: <strong>{orderCode}</strong></p>
                     {isSuccess ? (
-                        <p>Số dư ví của bạn đã được cập nhật. Hãy quay lại để hoàn tất sự kiện.</p>
+                        <p>Your wallet balance has been updated.</p>
                     ) : (
-                        <p>Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại sau.</p>
+                        <p>An error occurred during the payment process. Please try again later.</p>
                     )}
                 </div>
 
                 <div className={styles.actions}>
-                    <button 
-                        onClick={() => navigate(PATHS.CREATE_EVENT)} 
-                        className={styles.btnMain}
-                    >
-                        {isSuccess ? "Tiếp tục tạo sự kiện" : "Quay lại thử lại"} 
+                    <button onClick={handleBack} className={styles.btnMain}>
+                        {isSuccess ? "Continue working" : "Go back and try again"}
                         <ArrowRight size={18} />
                     </button>
-                    
-                    <button 
-                        onClick={() => navigate(PATHS.DASHBOARD)} 
-                        className={styles.btnSub}
-                    >
-                        Về trang chủ
+
+                    <button onClick={() => navigate(PATHS.USER_FEED)} className={styles.btnSub}>
+                        Back to Home
                     </button>
                 </div>
 
                 {isSuccess && (
                     <div className={styles.footerNote}>
-                        Tự động quay lại sau 5 giây...
+                        Automatically redirecting in 5 seconds...
                     </div>
                 )}
             </div>

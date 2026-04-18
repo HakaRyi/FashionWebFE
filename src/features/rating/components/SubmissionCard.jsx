@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import styles from '../styles/SubmissionsReview.module.scss';
 
 const SubmissionCard = ({ sub, onSelect }) => {
-console.log(`Bài thi ${sub.postId} có điểm là:`, sub.score);
+
     const renderScore = (score) => {
         if (score === null || score === undefined) {
             return '--';
@@ -29,13 +29,13 @@ console.log(`Bài thi ${sub.postId} có điểm là:`, sub.score);
                     loading="lazy"
                 />
                 <div className={styles.cardOverlay}>
-                    <button className={styles.btnOpen}>Chi tiết & Chấm điểm</button>
+                    <button className={styles.btnOpen}>Details & Grading</button>
                 </div>
-                {sub.score !== null && <div className={styles.scoredBadge}>Đã chấm</div>}
+                {sub.score !== null && <div className={styles.scoredBadge}>Graded</div>}
             </div>
 
             <div className={styles.cardBody}>
-                <h4 className={styles.postTitle}>{sub.title || "Không tiêu đề"}</h4>
+                <h4 className={styles.postTitle}>{sub.title || "No Title"}</h4>
                 <div className={styles.userInfo}>
                     <img src={sub.avatarUrl || `https://ui-avatars.com/api/?name=${sub.userName}`} alt="" />
                     <span>{sub.userName}</span>

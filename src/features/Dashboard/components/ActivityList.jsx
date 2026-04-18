@@ -17,7 +17,7 @@ function ActivityList() {
         const res = await expertApi.getAdminNotifications({ pageIndex: page, pageSize });
         setData(res.data);
       } catch (error) {
-        console.error("Lỗi fetch activities:", error);
+        console.error("Fetch activities error:", error);
       } finally {
         setLoading(false);
       }
@@ -40,12 +40,12 @@ function ActivityList() {
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
-        <h3>Hoạt động gần đây</h3>
+        <h3>Recent Activities</h3>
       </div>
 
       <div className={styles.activityList}>
         {loading ? (
-          <p>Đang tải...</p>
+          <p>Loading...</p>
         ) : data.items.length > 0 ? (
           data.items.map((item) => (
             <div key={item.notificationId} className={styles.activityItem}>
@@ -64,7 +64,7 @@ function ActivityList() {
           ))
         ) : (
           <div style={{textAlign: 'center', padding: '20px', color: 'var(--text-muted)'}}>
-            <FaCircleInfo /> <br/> Không có thông báo nào gần đây.
+            <FaCircleInfo /> <br/> No recent notifications.
           </div>
         )}
       </div>
