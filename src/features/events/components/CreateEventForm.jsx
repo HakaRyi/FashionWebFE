@@ -200,6 +200,8 @@ const CreateEventForm = () => {
             pending: 'Creating event...',
             success: {
                 render() {
+                    localStorage.removeItem("event_draft");
+                    del("event_banner_file");
                     setTimeout(() => navigate(PATHS.EXPERT_EVENTS), 1500);
                     return "Event created successfully!";
                 }
