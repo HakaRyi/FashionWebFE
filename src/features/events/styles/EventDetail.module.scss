@@ -327,6 +327,13 @@ $shadow:
                 justify-content: center;
                 font-weight: bold;
                 flex-shrink: 0;
+                overflow: hidden;
+                img {
+                    width: 100%;    // Đảm bảo ảnh rộng bằng container
+                    height: 100%;   // Đảm bảo ảnh cao bằng container
+                    object-fit: cover; // QUAN TRỌNG: Giữ đúng tỷ lệ ảnh và lấp đầy vòng tròn
+                    display: block;
+                }
             }
 
             .expertInfo {

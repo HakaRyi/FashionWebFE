@@ -104,7 +104,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                             <input
                                 type="number"
                                 min="0"
-                                value={form.pointPerShare ?? 3}
+                                value={form.pointPerShare ?? 1}
                                 onChange={(e) => handlePointChange("pointPerShare", e.target.value)}
                             />
                         </div>
