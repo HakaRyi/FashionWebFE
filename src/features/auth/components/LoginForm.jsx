@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import { validateAuthForm } from "../utils/validateAuthForm";
 import styles from "../styles/Authentication.module.scss";
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function LoginForm({ onSwitchMode }) {
-  const { handleLogin } = useLogin();
+  const { handleLogin, handleGoogleLogin } = useLogin();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -88,6 +89,25 @@ export default function LoginForm({ onSwitchMode }) {
           {isLoading ? <div className={styles.spinner}></div> : "LOGIN TO ACCOUNT"}
         </button>
       </form>
+
+      <div className={styles["divider"]}>
+        <span>OR</span>
+      </div>
+
+      <div className={styles["social-login"]}>
+        <GoogleLogin
+          onSuccess={credentialResponse => {
+            handleGoogleLogin(credentialResponse.credential);
+          }}
+          onError={() => {
+            setErrors({ server: "Google Login Failed" });
+          }}
+          useOneTap
+          theme="filled_black"
+          shape="rect"
+          width="100%"
+        />
+      </div>
 
       <div className={styles["switch-mode"]}>
         Don't have an account? <button onClick={onSwitchMode}>Register</button>

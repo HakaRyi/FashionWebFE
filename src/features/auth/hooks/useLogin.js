@@ -1,7 +1,8 @@
-import { loginApi } from '../api/login';
+import { loginApi, googleLoginApi } from '../api/login';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/app/routes/paths';
+import { jwtDecode } from 'jwt-decode';
 
 export const useLogin = () => {
     const { login } = useAuth();
@@ -25,5 +26,14 @@ export const useLogin = () => {
         }
     };
 
-    return { handleLogin };
+    const handleGoogleLogin = async (idToken) => {
+        try {
+            const data = await googleLoginApi(idToken);
+            await processLoginData(data);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    return { handleLogin, handleGoogleLogin };
 };
