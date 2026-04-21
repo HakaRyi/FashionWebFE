@@ -5,7 +5,7 @@ function ExpertTable({ experts, onView }) {
   if (!experts || experts.length === 0) {
     return (
       <div className={styles.empty}>
-        <p>Không có dữ liệu chuyên gia nào được tìm thấy.</p>
+        <p>No expert data found.</p>
       </div>
     );
   }
@@ -15,11 +15,11 @@ function ExpertTable({ experts, onView }) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Chuyên gia</th>
-            <th>Chuyên môn</th>
-            <th>Ngày đăng ký</th>
-            <th>Trạng thái</th>
-            <th style={{ textAlign: "right", paddingRight: "24px" }}>Thao tác</th>
+            <th>Expert</th>
+            <th>Specialty</th>
+            <th>Registration Date</th>
+            <th>Status</th>
+            <th style={{ textAlign: "right", paddingRight: "24px" }}>Actions</th>
           </tr>
         </thead>
         <tbody>

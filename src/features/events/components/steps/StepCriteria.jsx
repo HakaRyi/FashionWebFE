@@ -31,15 +31,15 @@ const StepCriteria = ({ criteria, setCriteria }) => {
     return (
         <div className={styles.stepContainer}>
             <div className={styles.stepHeader}>
-                <h2>Tiêu chí chấm điểm</h2>
-                <p>Thiết lập các tiêu chí và trọng số để ban giám khảo có cơ sở chấm điểm công bằng. Tổng trọng số phải bằng 100%.</p>
+                <h2>Scoring criteria</h2>
+                <p>Set up the criteria and weights for the judging panel to have a fair basis for scoring. The total weight must equal 100%.</p>
             </div>
 
             <div className={styles.criteriaList}>
                 {criteria.map((c, index) => (
                     <div key={c.id} className={styles.criteriaCard}>
                         <div className={styles.criteriaHeader}>
-                            <h4>Tiêu chí {index + 1}</h4>
+                            <h4>Criterion {index + 1}</h4>
                             <button
                                 type="button"
                                 className={styles.btnRemove}
@@ -50,25 +50,25 @@ const StepCriteria = ({ criteria, setCriteria }) => {
                             </button>
                         </div>
                         <div className={styles.inputGroup}>
-                            <label>Tên tiêu chí *</label>
+                            <label>Criterion Name *</label>
                             <input
                                 type="text"
-                                placeholder="VD: Tính sáng tạo, Thẩm mỹ..."
+                                placeholder="e.g., Creativity, Aesthetics..."
                                 value={c.name}
                                 onChange={(e) => handleChange(c.id, 'name', e.target.value)}
                             />
                         </div>
                         <div className={styles.inputGroup}>
-                            <label>Mô tả (Tuỳ chọn)</label>
+                            <label>Description (Optional)</label>
                             <textarea
-                                placeholder="Hướng dẫn chi tiết cho giám khảo về tiêu chí này..."
+                                placeholder="Detailed instructions for judges about this criterion..."
                                 rows={2}
                                 value={c.description}
                                 onChange={(e) => handleChange(c.id, 'description', e.target.value)}
                             />
                         </div>
                         <div className={styles.inputGroup}>
-                            <label>Trọng số (%) *</label>
+                            <label>Weight (%) *</label>
                             <input
                                 type="number"
                                 min="1"
@@ -82,19 +82,19 @@ const StepCriteria = ({ criteria, setCriteria }) => {
             </div>
 
             <button type="button" className={styles.btnAddItem} onClick={handleAddCriteria}>
-                <Plus size={16} /> Thêm tiêu chí
+                <Plus size={16} /> Add Criterion
             </button>
 
             {/* Hiển thị tổng trọng số và cảnh báo */}
             <div className={`${styles.weightSummary} ${totalWeight !== 100 ? styles.invalid : styles.valid}`}>
                 <div className={styles.weightStatus}>
-                    <span>Tổng trọng số hiện tại:</span>
+                    <span>Total weight:</span>
                     <strong>{totalWeight}%</strong>
                 </div>
                 {totalWeight !== 100 && (
                     <div className={styles.warningMessage}>
                         <AlertCircle size={16} />
-                        <span>Tổng trọng số phải bằng đúng 100%. Vui lòng điều chỉnh!</span>
+                        <span>The total weight must equal exactly 100%. Please adjust!</span>
                     </div>
                 )}
             </div>

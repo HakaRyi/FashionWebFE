@@ -22,11 +22,11 @@ import { set, get, del } from 'idb-keyval';
 import styles from "../styles/CreateEventForm.module.scss";
 
 const STEPS = [
-    { id: 1, title: "Nội dung", icon: <FileText size={18} /> },
+    { id: 1, title: "Content", icon: <FileText size={18} /> },
     { id: 2, title: "Expert", icon: <Users size={18} /> },
-    { id: 3, title: "Tiêu chí", icon: <ListChecks size={18} /> },
-    { id: 4, title: "Giải thưởng", icon: <Award size={18} /> },
-    { id: 5, title: "Xác nhận", icon: <Send size={18} /> },
+    { id: 3, title: "Criteria", icon: <ListChecks size={18} /> },
+    { id: 4, title: "Prizes", icon: <Award size={18} /> },
+    { id: 5, title: "Confirm", icon: <Send size={18} /> },
 ];
 
 const STEP_COMPONENTS = {
@@ -93,11 +93,11 @@ const CreateEventForm = () => {
                 }));
 
                 localStorage.removeItem("event_draft");
-                toast.info("Đã khôi phục dữ liệu bản nháp của bạn.");
+                toast.info("Your draft data has been recovered.");
                 refreshBalance();
 
             } catch (e) {
-                console.error("Lỗi khôi phục bản nháp:", e);
+                console.error("Draft recovery error:", e);
             }
         };
 
@@ -121,21 +121,23 @@ const CreateEventForm = () => {
         if (step === 3) {
             const hasEmptyName = criteria.some(c => !c.name || c.name.trim() === '');
             if (hasEmptyName) {
-                toast.warn("Vui lòng nhập tên cho tất cả các tiêu chí.");
+                toast.warn("Please enter names for all criteria.");
                 return;
             }
 
             const totalWeight = criteria.reduce((sum, c) => sum + Number(c.weightPercentage || 0), 0);
             if (totalWeight !== 100) {
-                toast.warn(`Tổng trọng số đang là ${totalWeight}%. Vui lòng điều chỉnh để tổng bằng đúng 100%.`);
+                toast.warn(`The total weight is ${totalWeight}%. Please adjust to make the total exactly 100%.`);
                 return;
             }
         }
 
         if (step === 4) {
-            const hasInvalidPrize = prizes.some(p => !p.amount || p.amount <= 0);
-            if (hasInvalidPrize) {
-                toast.warn("Vui lòng nhập số tiền thưởng hợp lệ cho tất cả các giải.");
+            const hasError = prizes.some(p => p.error !== "");
+            const hasEmpty = prizes.some(p => !p.amount || p.amount <= 0);
+
+            if (hasError || hasEmpty) {
+                toast.error("Please fix the errors in the prize structure before continuing.");
                 return;
             }
         }
@@ -149,10 +151,10 @@ const CreateEventForm = () => {
                 const minExpertsToInvite = minConfig - 1;
 
                 if (invitedExpertIds.length < minExpertsToInvite) {
-                    toast.warn(`Vui lòng mời ít nhất ${minExpertsToInvite} chuyên gia để tiếp tục.`);
+                    toast.warn(`Please invite at least ${minExpertsToInvite} experts to continue.`);
                 }
             } else if (step === 1) {
-                toast.warn("Vui lòng điền đầy đủ tiêu đề, mô tả và ảnh bìa.");
+                toast.warn("Please fill in all the required fields for the event title, description, and banner.");
             }
             return;
         }
@@ -184,6 +186,8 @@ const CreateEventForm = () => {
         const validation = validateEventForm(form, prizes, startDate, endDate, Infinity);
         if (!validation.isValid) return toast.warning(validation.message);
 
+        await saveDraft();
+
         if (isOverBudget) {
             await saveDraft();
             const gap = totalRequired - expertBalance;
@@ -193,14 +197,16 @@ const CreateEventForm = () => {
         }
 
         toast.promise(createEvent(), {
-            pending: '🚀 Đang khởi tạo sự kiện...',
+            pending: 'Creating event...',
             success: {
                 render() {
+                    localStorage.removeItem("event_draft");
+                    del("event_banner_file");
                     setTimeout(() => navigate(PATHS.EXPERT_EVENTS), 1500);
-                    return "Khai mạc sự kiện thành công! 🎉";
+                    return "Event created successfully!";
                 }
             },
-            error: { render: ({ data }) => `${data?.message || "Lỗi tạo sự kiện"}` }
+            error: { render: ({ data }) => `${data?.message || "Error creating event"}` }
         });
     };
 
@@ -232,7 +238,7 @@ const CreateEventForm = () => {
                                 <Wallet size={14} />
                             </div>
                             <div className={styles.walletInfo}>
-                                <small>Số dư ví</small>
+                                <small>Wallet balance</small>
                                 <strong>{(expertBalance || 0).toLocaleString()}đ</strong>
                             </div>
                         </div>
@@ -297,7 +303,7 @@ const CreateEventForm = () => {
                                     onClick={onPublishEvent}
                                     disabled={loading}
                                 >
-                                    {loading ? "Đang xử lý..." : (isOverBudget ? "Nạp tiền & Xác nhận" : "Xác nhận & Thanh toán")}
+                                    {loading ? "Processing..." : (isOverBudget ? "Deposit & Confirm" : "Confirm & Pay")}
                                 </button>
                             )}
                         </div>
@@ -308,6 +314,7 @@ const CreateEventForm = () => {
                     <DepositModal
                         isSuccess={isDepositSuccess}
                         setIsSuccess={setIsDepositSuccess}
+                        isFixedAmount={true}
                         amount={depositAmount}
                         onClose={() => {
                             setShowDepositModal(false);

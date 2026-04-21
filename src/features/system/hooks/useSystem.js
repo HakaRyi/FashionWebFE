@@ -14,7 +14,7 @@ export const useSystemSettings = () => {
             const data = await SystemSettingApi.getAllSettings();
             setSettings(data || []);
         } catch (error) {
-            toast.error('Không thể tải cấu hình hệ thống');
+            toast.error('Cannot load system settings');
         } finally {
             setLoading(false);
         }
@@ -25,12 +25,11 @@ export const useSystemSettings = () => {
             const data = await SystemSettingApi.getEventFees();
             setEventFees(data);
         } catch (error) {
-            console.error('Lỗi lấy phí sự kiện:', error);
+            console.error('Error fetching event fees:', error);
         }
     }, []);
 
     const handleUpdate = useCallback(async (key, newValue) => {
-        // Chấp nhận giá trị 0 hoặc chuỗi rỗng tùy thuộc vào nghiệp vụ, nhưng thường trim() đã xử lý
         if (newValue === undefined || newValue === null) return;
         
         setUpdatingKey(key);
@@ -41,11 +40,10 @@ export const useSystemSettings = () => {
                 prev.map((s) => (s.settingKey === key ? { ...s, settingValue: newValue, updatedAt: new Date().toISOString() } : s))
             );
             
-            toast.success(`Cập nhật thành công ${key}`, { autoClose: 2000 });
+            toast.success(`Update successful ${key}`, { autoClose: 2000 });
         } catch (error) {
-            const errorMsg = error.response?.data?.message || 'Lỗi cập nhật!';
+            const errorMsg = error.response?.data?.message || 'Update error!';
             toast.error(errorMsg);
-            // Quan trọng: Fetch lại dữ liệu để đảm bảo UI đồng bộ với Database sau khi lỗi
             fetchAll(); 
         } finally {
             setUpdatingKey(null);

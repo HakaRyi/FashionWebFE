@@ -3,7 +3,7 @@ import styles from "../../styles/StepExperts.module.scss";
 import { useExperts } from "@/features/expert";
 import { useEffect, useState, useMemo } from "react";
 
-const ITEMS_PER_PAGE = 8; // Số lượng expert trên mỗi trang
+const ITEMS_PER_PAGE = 6; // Số lượng expert trên mỗi trang
 
 const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
     const { activeExperts, loading, error, fetchActiveExperts } = useExperts();
@@ -49,7 +49,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
         return (
             <div className={styles.errorBox}>
                 <AlertCircle size={20} />
-                <span>Không thể tải danh sách chuyên gia.</span>
+                <span>Unable to load the list of experts.</span>
             </div>
         );
     }
@@ -57,8 +57,8 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
     return (
         <section className={styles.section}>
             <header className={styles.header}>
-                <h2 className={styles.sectionTitle}>Hội đồng Expert</h2>
-                <p className={styles.sectionSub}>Chọn các chuyên gia sẽ tham gia chấm điểm và cấu hình trọng số</p>
+                <h2 className={styles.sectionTitle}>Expert Panel</h2>
+                <p className={styles.sectionSub}>Select experts to participate in judging and configure weights</p>
             </header>
 
             {/* Config Trọng số & Điểm thưởng */}
@@ -66,7 +66,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                 <div className={styles.weightCard}>
                     <div className={styles.cardHead}>
                         <Percent size={18} />
-                        <h3>Trọng số chấm điểm</h3>
+                        <h3>Scoring Weight</h3>
                     </div>
                     <div className={styles.sliderContainer}>
                         <div className={styles.sliderLabels}>
@@ -85,12 +85,12 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                 <div className={styles.pointsCard}>
                     <div className={styles.cardHead}>
                         <Share2 size={18} />
-                        <h3>Điểm tương tác</h3>
+                        <h3>Interaction Points</h3>
                     </div>
                     <div className={styles.inputGroup}>
                         <div className={styles.pointField}>
                             <ThumbsUp size={14} />
-                            <label>Mỗi Like:</label>
+                            <label>Each Like:</label>
                             <input
                                 type="number"
                                 min="0"
@@ -100,7 +100,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                         </div>
                         <div className={styles.pointField}>
                             <Share2 size={14} />
-                            <label>Mỗi Share:</label>
+                            <label>Each Share:</label>
                             <input
                                 type="number"
                                 min="0"
@@ -109,7 +109,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                             />
                         </div>
                         <p style={{ fontSize: '11px', color: '#888', marginTop: '8px' }}>
-                            * Điểm này dùng để tính toán thứ hạng dựa trên sự ủng hộ của cộng đồng.
+                            * These points are used to calculate rankings based on community support.
                         </p>
                     </div>
                 </div>
@@ -122,12 +122,12 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                 <Search size={18} />
                 <input
                     type="text"
-                    placeholder="Tìm theo tên hoặc chuyên môn..."
+                    placeholder="Search by name or expertise..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <div className={styles.countBadge}>
-                    {filteredExperts.length} chuyên gia
+                    {filteredExperts.length} experts
                 </div>
             </div>
 
@@ -144,17 +144,17 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                                     <div className={styles.exInfo}>
                                         <h4>{ex.userName}</h4>
                                         <span>{ex.expertiseField}</span>
-                                        <small>{ex.yearsOfExperience} năm kinh nghiệm</small>
+                                        <small>{ex.yearsOfExperience} years of experience</small>
                                         <div className={styles.reputation}>
                                             <Award size={12} className={styles.reputationIcon} />
-                                            <span>Uy tín: <strong>{ex.reputationScore || 0}</strong></span>
+                                            <span>Reputation: <strong>{ex.reputationScore || 0}</strong></span>
                                         </div>
                                     </div>
                                     <button type="button"
                                         className={isSelected ? styles.btnInvited : styles.btnInvite}
                                         onClick={() => toggleExpert(ex.accountId)}
                                     >
-                                        {isSelected ? "Đã chọn" : "Mời"}
+                                        {isSelected ? "Selected" : "Invite"}
                                     </button>
                                 </div>
                             );
@@ -172,7 +172,7 @@ const StepExperts = ({ invitedExpertIds, toggleExpert, form, setForm }) => {
                                 <ChevronLeft size={18} />
                             </button>
                             <span className={styles.pageInfo}>
-                                Trang <strong>{currentPage}</strong> / {totalPages}
+                                Page <strong>{currentPage}</strong> / {totalPages}
                             </span>
                             <button
                                 disabled={currentPage === totalPages}

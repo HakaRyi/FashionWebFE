@@ -1,9 +1,13 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, MessageCircle } from 'lucide-react';
 import styles from '../styles/GalleryGrid.module.scss';
+import { PATHS } from '@/app/routes/paths';
+
 
 const GalleryGrid = ({ posts = [] }) => {
+    const navigate = useNavigate();
+
     if (!posts || posts.length === 0) {
         return (
             <div className={styles.emptyGallery}>
@@ -38,7 +42,9 @@ const GalleryGrid = ({ posts = [] }) => {
                     key={post.postId} 
                     className={styles.galleryItem}
                     variants={itemVariants}
-                    whileHover={{ y: -5 }} // Nhích nhẹ lên khi hover
+                    whileHover={{ y: -5 }}
+                    onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', post.postId))}
+                    style={{ cursor: 'pointer' }}
                 >
                     <div className={styles.imageContainer}>
                         <img 

@@ -16,16 +16,16 @@ const ExpertInvitations = () => {
     const { invites, loading, fetchInvites, toastError, MySwal } = useInvitations(activeTab);
 
     const handleResponse = async (eventId, accept) => {
-        const actionText = accept ? "chấp nhận" : "từ chối";
+        const actionText = accept ? "accept" : "reject";
 
         const confirm = await MySwal.fire({
-            title: `Xác nhận ${actionText}?`,
-            text: accept ? "Bạn sẽ tham gia vào hội đồng chấm điểm của sự kiện này." : "Bạn sẽ từ chối lời mời này.",
+            title: `Confirm ${actionText}?`,
+            text: accept ? "You will participate in the judging panel for this event." : "You will reject this invitation.",
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: accept ? '#10b981' : '#ef4444',
-            confirmButtonText: 'Xác nhận',
-            cancelButtonText: 'Đóng'
+            confirmButtonText: 'Confirm',
+            cancelButtonText: 'Close'
         });
 
         if (confirm.isConfirmed) {
@@ -33,8 +33,8 @@ const ExpertInvitations = () => {
                 await invitationApi.respondToInvitation(eventId, accept);
 
                 MySwal.fire({
-                    title: 'Thành công!',
-                    text: `Đã ${actionText} lời mời.`,
+                    title: 'Success!',
+                    text: `Successfully ${actionText} the invitation.`,
                     icon: 'success',
                     timer: 2000,
                     showConfirmButton: false
@@ -44,7 +44,7 @@ const ExpertInvitations = () => {
                 setSelectedInvite(null);
                 fetchInvites();
             } catch (error) {
-                toastError(error.response?.data?.message || "Thao tác thất bại");
+                toastError(error.response?.data?.message || "Failed to perform action");
             }
         }
     };
@@ -53,8 +53,8 @@ const ExpertInvitations = () => {
         <div className={styles.container}>
             <header className={styles.header}>
                 <div className={styles.titleInfo}>
-                    <h1>Lời mời tham gia</h1>
-                    <p>Xem chi tiết sự kiện và xác nhận vai trò Expert của bạn</p>
+                    <h1>Invitations</h1>
+                    <p>View event details and confirm your Expert role</p>
                 </div>
 
                 <div className={styles.tabSwitcher}>
@@ -62,7 +62,7 @@ const ExpertInvitations = () => {
                         className={activeTab === 'pending' ? styles.active : ''}
                         onClick={() => setActiveTab('pending')}
                     >
-                        <Clock size={16} /> Đang chờ
+                        <Clock size={16} /> Pending
                         {activeTab === 'pending' && invites.length > 0 && (
                             <span className={styles.badge}>{invites.length}</span>
                         )}
@@ -71,7 +71,7 @@ const ExpertInvitations = () => {
                         className={activeTab === 'history' ? styles.active : ''}
                         onClick={() => setActiveTab('history')}
                     >
-                        <History size={16} /> Đang tham gia
+                        <History size={16} /> History
                     </button>
                 </div>
             </header>
@@ -80,7 +80,7 @@ const ExpertInvitations = () => {
                 {loading ? (
                     <div className={styles.loadingState}>
                         <Loader2 className={styles.spin} size={40} />
-                        <p>Đang tải dữ liệu...</p>
+                        <p>Loading data...</p>
                     </div>
                 ) : (
                     <AnimatePresence mode="wait">
@@ -105,7 +105,7 @@ const ExpertInvitations = () => {
                             ) : (
                                 <div className={styles.emptyState}>
                                     <div className={styles.emptyIcon}><Mail size={48} /></div>
-                                    <p>Không có lời mời nào trong mục này.</p>
+                                    <p>There are no invitations in this section.</p>
                                 </div>
                             )}
                         </motion.div>

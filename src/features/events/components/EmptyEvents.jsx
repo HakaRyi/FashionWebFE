@@ -16,15 +16,15 @@ const EmptyEvents = ({ onCreate, isJudging }) => {
 
             {isJudging ? (
                 <>
-                    <h2>Chưa có lịch chấm điểm</h2>
-                    <p>Bạn hiện không tham gia hội đồng chuyên gia của sự kiện nào.</p>
+                    <h2>No grading schedule has been set yet.</h2>
+                    <p>You are not currently participating in any event judging panels.</p>
                 </>
             ) : (
                 <>
-                    <h2>Chưa có sự kiện nào</h2>
-                    <p>Hãy bắt đầu tạo workshop đầu tiên của bạn ngay hôm nay!</p>
+                    <h2>No events available.</h2>
+                    <p>Get started by creating your first event today!</p>
                     <button className={styles.btnCreateLarge} onClick={onCreate}>
-                        Tạo sự kiện mới
+                        Create New Event
                     </button>
                 </>
             )}

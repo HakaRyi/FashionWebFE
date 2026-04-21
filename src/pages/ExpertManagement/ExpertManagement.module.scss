@@ -1,0 +1,198 @@
+$primary: #3b82f6;
+$primary-hover: #2563eb;
+$success: #10b981;
+$danger: #ef4444;
+$warning: #f59e0b;
+$text-main: #1e293b;
+$text-sub: #64748b;
+$bg-body: #f8fafc;
+$border-color: #e2e8f0;
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// --- Main Wrapper ---
+.wrapper {
+  padding: 2rem;
+  background-color: $bg-body;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: $text-main;
+      margin: 0;
+      letter-spacing: -0.025em;
+    }
+
+    .stats {
+      font-size: 0.875rem;
+      color: $text-sub;
+      background: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid $border-color;
+      box-shadow: $shadow-sm;
+
+      strong {
+        color: $primary;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// --- Table Styling ---
+.tableContainer {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  box-shadow: $shadow-sm;
+  overflow: hidden; // Bo góc cho cả table bên trong
+  margin-top: 1.5rem;
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+
+    thead {
+      background-color: #f1f5f9;
+      
+      th {
+        padding: 1rem 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: $text-sub;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid $border-color;
+      }
+    }
+
+    tbody {
+      tr {
+        @include transition;
+        border-bottom: 1px solid $border-color;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: #f8fafc;
+        }
+      }
+
+      td {
+        padding: 1.25rem 1.5rem;
+        font-size: 0.875rem;
+        color: $text-main;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+// --- Pagination ---
+.pagination {
+  @include flex-center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background: white;
+  border-top: 1px solid $border-color;
+
+  button {
+    @include transition;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.75rem;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    background: white;
+    color: $text-sub;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: $primary;
+      color: $primary;
+      background: #eff6ff;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background: #f1f5f9;
+    }
+
+    &.activePage {
+      background: $primary;
+      color: white;
+      border-color: $primary;
+      box-shadow: 0 4px 10px rgba($primary, 0.3);
+
+      &:hover {
+        background: $primary-hover;
+      }
+    }
+  }
+}
+
+// --- Status Badges (Dành cho ExpertRow dùng chung class) ---
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+
+  &.Approved { background: #dcfce7; color: #166534; }
+  &.Pending { background: #fef9c3; color: #854d0e; }
+  &.Rejected { background: #fee2e2; color: #991b1b; }
+}
+
+// --- Empty & Loading State ---
+.empty {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: $text-sub;
+  font-size: 0.938rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px dashed $border-color;
+}
+
+// --- Responsive ---
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 1rem;
+    
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+
+  .tableContainer {
+    overflow-x: auto; // Cho phép cuộn ngang trên mobile
+  }
+}

@@ -25,7 +25,7 @@ const QuartzManager = () => {
                 fetch('/api/admin/quartz/triggers')
             ]);
 
-            if (!jobsRes.ok || !triggersRes.ok) throw new Error("Lỗi fetch data từ server");
+            if (!jobsRes.ok || !triggersRes.ok) throw new Error("Error fetching data from the server");
 
             const jobsData = await jobsRes.json();
             const triggersData = await triggersRes.json();
@@ -34,13 +34,13 @@ const QuartzManager = () => {
                 const relatedJob = jobsData.find(j => j.name === trigger.jobName && j.group === trigger.jobGroup);
                 return {
                     ...trigger,
-                    description: relatedJob ? relatedJob.description : "Không có mô tả"
+                    description: relatedJob ? relatedJob.description : "No description available"
                 };
             });
 
             setTriggers(mergedData);
         } catch (error) {
-            toast.error("Không thể kết nối tới Scheduler");
+            toast.error("Unable to connect to Scheduler");
         } finally {
             setIsRefreshing(false);
         }
@@ -55,10 +55,10 @@ const QuartzManager = () => {
     // Mở Modal thay vì gọi window.confirm
     const handleActionClick = (action, group, name) => {
         const messages = {
-            run: "Bạn có chắc chắn muốn chạy Job này ngay lập tức không?",
-            pause: "Hệ thống sẽ tạm dừng lịch trình này cho đến khi được kích hoạt lại.",
-            resume: "Kích hoạt lại lịch trình để tiếp tục thực thi theo thời gian đã định.",
-            delete: "Hành động này không thể hoàn tác. Xóa vĩnh viễn lịch trình này?"
+            run: "Are you sure you want to run this Job immediately?",
+            pause: "The system will pause this schedule until it is reactivated.",
+            resume: "Reactivate the schedule to continue execution according to the defined time.",
+            delete: "This action cannot be undone. Permanently delete this schedule?"
         };
 
         setConfirmModal({
@@ -83,14 +83,14 @@ const QuartzManager = () => {
             const res = await fetch(url, { method });
 
             if (res.ok) {
-                toast.success(`Thực hiện tác vụ thành công!`);
+                toast.success("Action executed successfully!");
                 loadData();
             } else {
                 const errorData = await res.json();
-                toast.error(errorData.message || "Thao tác thất bại");
+                toast.error(errorData.message || "Action failed");
             }
         } catch (err) {
-            toast.error("Lỗi hệ thống khi điều khiển Job");
+            toast.error("System error while controlling Job");
         }
     };
 
@@ -101,7 +101,7 @@ const QuartzManager = () => {
     );
 
     const formatTime = (timeStr) => {
-        if (!timeStr) return "Chưa có dữ liệu";
+        if (!timeStr) return "No data available";
         return new Date(timeStr).toLocaleString('vi-VN');
     };
 
@@ -112,7 +112,7 @@ const QuartzManager = () => {
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h3>Xác nhận tác vụ</h3>
+                            <h3>Confirm Action</h3>
                             <button onClick={() => setConfirmModal({ ...confirmModal, isOpen: false })}>
                                 <X size={20} />
                             </button>
@@ -120,15 +120,15 @@ const QuartzManager = () => {
                         <div className="modal-body">
                             <p>{confirmModal.message}</p>
                             <div className="target-info">
-                                <strong>Đối tượng:</strong> {confirmModal.name}
+                                <strong>Target:</strong> {confirmModal.name}
                             </div>
                         </div>
                         <div className="modal-footer">
                             <button className="btn-cancel" onClick={() => setConfirmModal({ ...confirmModal, isOpen: false })}>
-                                Hủy bỏ
+                                Cancel
                             </button>
                             <button className={`btn-confirm ${confirmModal.action}`} onClick={executeAction}>
-                                Đồng ý
+                                Confirm
                             </button>
                         </div>
                     </div>
@@ -137,8 +137,8 @@ const QuartzManager = () => {
 
             <div className="quartz-header">
                 <div className="header-content">
-                    <h1>Hệ thống Tác vụ Ngầm</h1>
-                    <p>Quản lý các tiến trình tự động của Fashion Shop</p>
+                    <h1>Background Job System</h1>
+                    <p>Manage automatic processes of Fashion Shop</p>
                 </div>
                 <button
                     onClick={loadData}
@@ -153,7 +153,7 @@ const QuartzManager = () => {
                 <Search className="search-icon" size={18} />
                 <input
                     type="text"
-                    placeholder="Tìm theo tên, mô tả hoặc group..."
+                    placeholder="Search by name, description or group..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -163,10 +163,10 @@ const QuartzManager = () => {
                 <table className="quartz-table">
                     <thead>
                         <tr>
-                            <th>Thông tin Trigger & Job</th>
-                            <th className="text-center">Trạng thái</th>
-                            <th>Thời gian thực thi</th>
-                            <th className="text-right">Thao tác</th>
+                            <th>Information</th>
+                            <th className="text-center">Status</th>
+                            <th>Execution Time</th>
+                            <th className="text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -191,29 +191,29 @@ const QuartzManager = () => {
                                 <td>
                                     <div className="time-row">
                                         <Clock size={14} className="icon-blue" />
-                                        <span>Tới: <strong>{formatTime(t.nextFireTime)}</strong></span>
+                                        <span>Next: <strong>{formatTime(t.nextFireTime)}</strong></span>
                                     </div>
                                     <div className="time-row history">
                                         <CheckCircle2 size={14} />
-                                        <span>Vừa xong: {formatTime(t.previousFireTime)}</span>
+                                        <span>Just completed: {formatTime(t.previousFireTime)}</span>
                                     </div>
                                 </td>
                                 <td className="text-right actions">
-                                    <button onClick={() => handleActionClick('run', t.group, t.name)} className="btn-icon run" title="Chạy ngay">
+                                    <button onClick={() => handleActionClick('run', t.group, t.name)} className="btn-icon run" title="Run now">
                                         <Play size={18} fill="currentColor" />
                                     </button>
 
                                     {t.state === 'Paused' ? (
-                                        <button onClick={() => handleActionClick('resume', t.group, t.name)} className="btn-icon resume" title="Kích hoạt lại">
+                                        <button onClick={() => handleActionClick('resume', t.group, t.name)} className="btn-icon resume" title="Reactivate">
                                             <RotateCw size={18} />
                                         </button>
                                     ) : (
-                                        <button onClick={() => handleActionClick('pause', t.group, t.name)} className="btn-icon pause" title="Tạm dừng">
+                                        <button onClick={() => handleActionClick('pause', t.group, t.name)} className="btn-icon pause" title="Pause">
                                             <Pause size={18} fill="currentColor" />
                                         </button>
                                     )}
 
-                                    <button onClick={() => handleActionClick('delete', t.group, t.name)} className="btn-icon delete" title="Xóa lịch">
+                                    <button onClick={() => handleActionClick('delete', t.group, t.name)} className="btn-icon delete" title="Delete schedule">
                                         <Trash2 size={18} />
                                     </button>
                                 </td>
@@ -224,7 +224,7 @@ const QuartzManager = () => {
                 {filteredTriggers.length === 0 && !isRefreshing && (
                     <div className="empty-state">
                         <AlertCircle size={48} />
-                        <p>Không tìm thấy Job nào đang hoạt động.</p>
+                        <p>No active jobs were found.</p>
                     </div>
                 )}
             </div>

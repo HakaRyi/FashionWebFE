@@ -4,27 +4,50 @@ import styles from "../../styles/StepPrizes.module.scss";
 
 const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
 
+    const validatePrizes = (updatedPrizes) => {
+        return updatedPrizes.map((prize, i, arr) => {
+            let error = "";
+
+            // 1. Kiểm tra số tiền phải > 0
+            if (!prize.amount || prize.amount <= 0) {
+                error = "Amount must be greater than 0";
+            }
+            // 2. Kiểm tra thứ tự: Giải sau không được lớn hơn giải trước
+            else if (i > 0 && prize.amount > arr[i - 1].amount) {
+                error = `It must not be greater than ${arr[i - 1].label}`;
+            }
+            // 3. Kiểm tra thứ tự: Giải trước không được nhỏ hơn giải sau
+            else if (i < arr.length - 1 && arr[i + 1].amount > 0 && prize.amount < arr[i + 1].amount) {
+                error = `It must not be smaller than ${arr[i + 1].label}`;
+            }
+
+            return { ...prize, error };
+        });
+    };
+
     const updatePrize = useCallback((index, field, value) => {
-        setPrizes(prev =>
-            prev.map((prize, i) =>
-                i === index
-                    ? { ...prize, [field]: field === "amount" ? Number(value) : value }
-                    : prize
-            )
-        );
+        setPrizes(prev => {
+            const newValue = field === "amount" ? Number(value) : value;
+            const updated = prev.map((prize, i) =>
+                i === index ? { ...prize, [field]: newValue } : prize
+            );
+            return validatePrizes(updated);
+        });
     }, [setPrizes]);
 
     const addPrize = useCallback(() => {
         setPrizes(prev => {
             const nextNumber = prev.length + 1;
-            return [
+            const updated = [
                 ...prev,
                 {
                     id: crypto.randomUUID(),
-                    label: `Giải ${nextNumber}`,
-                    amount: 0
+                    label: `Prize ${nextNumber}`,
+                    amount: 0,
+                    error: ""
                 }
             ];
+            return validatePrizes(updated);
         });
     }, [setPrizes]);
 
@@ -33,97 +56,85 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
 
         setPrizes(prev => {
             const filtered = prev.filter((_, i) => i !== index);
-            return filtered.map((prize, i) => ({
+            const renamed = filtered.map((prize, i) => ({
                 ...prize,
                 label: `Giải ${i + 1}`
             }));
+            return validatePrizes(renamed);
         });
     }, [prizes.length, setPrizes]);
 
     return (
         <section className={styles.section}>
             <header className={styles.stepHeader}>
-                <h2 className={styles.sectionTitle}>Cơ cấu giải thưởng</h2>
-                <p className={styles.sectionSub}>Thiết lập các hạng mục phần thưởng cho người thắng cuộc</p>
+                <h2 className={styles.sectionTitle}>Prize structure</h2>
+                <p className={styles.sectionSub}>Set up reward categories for the winners</p>
             </header>
 
-            {/* Sử dụng class cũ: configCard */}
             <div className={styles.configCard}>
-
                 <div className={styles.cardHeader}>
                     <Trophy size={18} />
-                    <h3>Cơ chế giải thưởng</h3>
-
-                    {/* Sử dụng class cũ: totalBadge và err */}
+                    <h3>Prize mechanism</h3>
                     <div className={`${styles.totalBadge} ${isOverBudget ? styles.err : ""}`}>
-                        Tổng: {totalBudget.toLocaleString()} VND
+                        Total: {totalBudget.toLocaleString()} VND
                     </div>
                 </div>
 
-                {/* Sử dụng class cũ: prizeScroll */}
                 <div className={styles.prizeScroll}>
                     {prizes.map((prize, index) => (
-                        <div key={prize.id || index} className={styles.prizeRow}>
+                        // Bọc trong một Container để quản lý dòng lỗi
+                        <div key={prize.id || index} className={styles.prizeItemBlock}>
+                            <div className={`${styles.prizeRow} ${prize.error ? styles.rowError : ""}`}>
 
-                            {/* Input giải */}
-                            <div className={styles.prizeLabelContainer} style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '8px',
-                                minWidth: '100px',
-                                fontWeight: '600',
-                                color: '#1e293b'
-                            }}>
-                                <span style={{ 
-                                    background: '#eff6ff', 
-                                    color: '#3b82f6',
-                                    padding: '4px 8px',
-                                    borderRadius: '6px',
-                                    fontSize: '0.85rem'
-                                }}>
-                                </span>
-                                <span>Giải {index + 1}</span>
+                                <div className={styles.prizeLabelContainer}>
+                                    <span className={styles.prizeLabelText}>{prize.label}</span>
+                                </div>
+
+                                <div className={`${styles.inputWrap} ${prize.error ? styles.inputErr : ""}`}>
+                                    <input
+                                        type="number"
+                                        value={prize.amount || ""}
+                                        min={0}
+                                        onChange={(e) => updatePrize(index, "amount", e.target.value)}
+                                        placeholder="0"
+                                    />
+                                    <Coins size={14} />
+                                </div>
+
+                                <button
+                                    type="button"
+                                    className={styles.removeBtn}
+                                    onClick={() => removePrize(index)}
+                                    disabled={prizes.length <= 1}
+                                    aria-label="Remove prize"
+                                >
+                                    <X size={14} />
+                                </button>
                             </div>
 
-                            <div className={styles.inputWrap}>
-                                <input
-                                    type="number"
-                                    value={prize.amount || ""}
-                                    min={0}
-                                    onChange={(e) => updatePrize(index, "amount", e.target.value)}
-                                    placeholder="0"
-                                />
-                                <Coins size={14} />
-                            </div>
-
-                            {/* Nút xóa với logic cũ */}
-                            <button
-                                type="button"
-                                onClick={() => removePrize(index)}
-                                disabled={prizes.length <= 1}
-                                aria-label="Remove prize"
-                            >
-                                <X size={14} />
-                            </button>
+                            {/* Hiển thị lỗi ngay dưới dòng nếu có */}
+                            {prize.error && (
+                                <div className={styles.inlineError}>
+                                    {prize.error}
+                                </div>
+                            )}
                         </div>
                     ))}
 
-                    {/* Sử dụng class cũ: addBtn */}
                     <button
                         type="button"
                         className={styles.addBtn}
                         onClick={addPrize}
                     >
                         <Plus size={16} />
-                        Thêm hạng mục
+                        Add prize category
                     </button>
                 </div>
             </div>
 
-            {/* Cảnh báo nếu vượt ngân sách (Dùng style từ form chung) */}
             {isOverBudget && (
                 <div className={styles.budgetError} style={{ marginTop: '1rem' }}>
-                    Số dư hiện tại không đủ để chi trả cho tổng giải thưởng này.
+                    The current balance is not enough to cover the total prize pool.
                 </div>
             )}
         </section>

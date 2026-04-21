@@ -55,12 +55,12 @@ const QuickUpdateModal = ({ event, onClose, onSave }) => {
                 </div>
                 <div className={styles.modalBody}>
                     <div className={styles.formGroup}>
-                        <label>Tiêu đề</label>
+                        <label>Title</label>
                         <input name="title" value={formData.title} onChange={handleChange} />
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label>Mô tả</label>
+                        <label>Description</label>
                         <textarea
                             name="description"
                             value={formData.description}
@@ -70,25 +70,25 @@ const QuickUpdateModal = ({ event, onClose, onSave }) => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label>Bắt đầu</label>
+                        <label>Start Time</label>
                         <input type="datetime-local" name="startTime" value={formData.startTime} onChange={handleChange} />
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label>Hạn nộp bài</label>
+                        <label>Submission Deadline</label>
                         <input type="datetime-local" name="submissionDeadline" value={formData.submissionDeadline} onChange={handleChange} />
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label>Kết thúc</label>
+                        <label>End Time</label>
                         <input type="datetime-local" name="endTime" value={formData.endTime} onChange={handleChange} />
                     </div>
 
                     <div className={styles.modalFooter}>
                         <button className={styles.btnApprove} onClick={handleSaveClick}>
-                            Lưu thay đổi
+                            Save changes
                         </button>
-                        <button className={styles.btnBack} onClick={onClose}>Hủy</button>
+                        <button className={styles.btnBack} onClick={onClose}>Cancel</button>
                     </div>
                 </div>
             </div>

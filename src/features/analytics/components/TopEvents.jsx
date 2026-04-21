@@ -21,9 +21,9 @@ const TopEvents = ({ events }) => {
                         <div className={styles.eventInfo}>
                             <span className={styles.eventTitle}>{event.title}</span>
                             <div className={styles.eventMetrics}>
-                                <small>{event.engagements} tương tác</small>
+                                <small>{event.engagements} interactions</small>
                                 <small className={styles.gradingStatus}>
-                                    Đã chấm: {event.rated}/{event.posts} bài
+                                    Marked: {event.rated}/{event.posts} submissions
                                 </small>
                             </div>
                         </div>

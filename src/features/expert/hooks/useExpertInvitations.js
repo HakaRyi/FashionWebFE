@@ -17,7 +17,7 @@ export const useInvitations = (activeTab) => {
                 : await invitationApi.getHistory();
             setInvites(res.data);
         } catch (error) {
-            toastError("Không thể tải danh sách lời mời");
+            toastError("Unable to load invitation list. Please try again later.");
         } finally {
             setLoading(false);
         }

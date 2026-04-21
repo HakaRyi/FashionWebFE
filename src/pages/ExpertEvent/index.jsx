@@ -16,22 +16,42 @@ const MyEventsPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const now = new Date();
+    const [statusFilter, setStatusFilter] = useState("All");
+    const [sortOrder, setSortOrder] = useState("desc");
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm, activeTab]);
+    }, [searchTerm, activeTab, statusFilter, sortOrder]);
 
     // Chọn danh sách dựa trên Tab
     const currentRawList = useMemo(() => {
         return activeTab === "hosted" ? hostedEvents : judgingEvents;
     }, [activeTab, hostedEvents, judgingEvents]);
 
-    // Filter tìm kiếm
     const filteredEvents = useMemo(() => {
-        return currentRawList.filter((event) =>
+        let list = [...currentRawList];
+
+        // 1. Lọc theo Search Term
+        list = list.filter((event) =>
             event.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [currentRawList, searchTerm]);
+
+        // 2. Lọc theo Status (Active/Completed)
+        if (statusFilter !== "All") {
+            list = list.filter((event) =>
+                event.status?.toLowerCase() === statusFilter.toLowerCase()
+            );
+        }
+
+        // 3. Sắp xếp theo Date
+        list.sort((a, b) => {
+            const dateA = new Date(a.createdAt || 0);
+            const dateB = new Date(b.createdAt || 0);
+            return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+        });
+
+        return list;
+    }, [currentRawList, searchTerm, statusFilter, sortOrder]);
 
     const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
 
@@ -44,7 +64,7 @@ const MyEventsPage = () => {
         return (
             <div className={styles.loadingContainer}>
                 <Loader2 className={styles.spinner} size={40} />
-                <p>Đang tải dữ liệu sự kiện...</p>
+                <p>Loading event data...</p>
             </div>
         );
     }
@@ -53,8 +73,8 @@ const MyEventsPage = () => {
         <div className={styles.container}>
             <header className={styles.header}>
                 <div className={styles.titleArea}>
-                    <h1>Quản lý sự kiện</h1>
-                    <p>Theo dõi và quản lý các hoạt động workshop của bạn.</p>
+                    <h1>Event Management</h1>
+                    <p>Track and manage your workshop activities.</p>
                 </div>
 
                 {activeTab === "hosted" && (
@@ -63,7 +83,7 @@ const MyEventsPage = () => {
                         onClick={() => navigate(PATHS.EXPERT_CREATE_EVENTS)}
                     >
                         <Plus size={20} />
-                        <span>Tạo sự kiện</span>
+                        <span>Create Event</span>
                     </button>
                 )}
             </header>
@@ -75,14 +95,14 @@ const MyEventsPage = () => {
                     onClick={() => setActiveTab('hosted')}
                 >
                     <LayoutGrid size={18} />
-                    Sự kiện tôi tạo ({hostedEvents.length})
+                    Events Created ({hostedEvents.length})
                 </button>
                 <button
                     className={`${styles.tabBtn} ${activeTab === 'judging' ? styles.active : ''}`}
                     onClick={() => setActiveTab('judging')}
                 >
                     <Award size={18} />
-                    Tôi chấm điểm ({judgingEvents.length})
+                    Events Judging ({judgingEvents.length})
                 </button>
             </div>
 
@@ -91,6 +111,10 @@ const MyEventsPage = () => {
                     <EventToolbar
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
+                        statusFilter={statusFilter}
+                        setStatusFilter={setStatusFilter}
+                        sortOrder={sortOrder}
+                        setSortOrder={setSortOrder}
                     />
 
                     {filteredEvents.length > 0 ? (
@@ -131,7 +155,7 @@ const MyEventsPage = () => {
                                                             }}
                                                         >
                                                             <ClipboardCheck size={16} />
-                                                            <span>{activeTab === 'hosted' ? 'Xem bài nộp' : 'Chấm điểm'}</span>
+                                                            <span>{activeTab === 'hosted' ? 'View Submissions' : 'Grade Submissions'}</span>
                                                         </button>
                                                     )}
 
@@ -145,7 +169,7 @@ const MyEventsPage = () => {
                                                             }}
                                                         >
                                                             <Award size={16} />
-                                                            <span>Xem kết quả</span>
+                                                            <span>View Results</span>
                                                         </button>
                                                     )}
                                                 </div>
@@ -166,7 +190,7 @@ const MyEventsPage = () => {
                                         <ChevronLeft size={18} />
                                     </button>
                                     <div className={styles.pageNumbers}>
-                                        Trang <strong>{currentPage}</strong> / {totalPages}
+                                        Page <strong>{currentPage}</strong> / {totalPages}
                                     </div>
                                     <button
                                         className={styles.pageBtn}
@@ -180,7 +204,7 @@ const MyEventsPage = () => {
                         </>
                     ) : (
                         <div className={styles.noResults}>
-                            <p>Không tìm thấy sự kiện nào khớp với "{searchTerm}"</p>
+                            <p>No events found matching "{searchTerm}"</p>
                         </div>
                     )}
                 </>

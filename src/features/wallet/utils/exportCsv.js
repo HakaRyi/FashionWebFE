@@ -1,5 +1,5 @@
 export const exportToCsv = (data, fileName) => {
-  const headers = ["Mã GD,Chi tiết,Ngày,Số lượng,Loại,Trạng thái"];
+  const headers = ["Transaction Code, Details, Date, Quantity, Type, Status"];
   const rows = data.map(tx => 
     `${tx.id},${tx.detail},${tx.date},${tx.amount},${tx.type},${tx.status}`
   );

@@ -15,8 +15,8 @@ const EventDetailPage = () => {
     const { event, posts, loading, isFinalizing, handleFinalize, isStarting, handleManualStart, isCancelling, handleCancel } = useEventDetail(id);
     const [selectedPost, setSelectedPost] = React.useState(null);
 
-    if (loading) return <div className={styles.loadingContainer}>Đang tải thông tin sự kiện...</div>;
-    if (!event) return <div className={styles.container}>Không tìm thấy sự kiện.</div>;
+    if (loading) return <div className={styles.loadingContainer}>Loading event information...</div>;
+    if (!event) return <div className={styles.container}>Event not found.</div>;
 
     const eventStatus = getEventStatusInfo(event.status);
 
@@ -24,7 +24,7 @@ const EventDetailPage = () => {
         <div className={styles.container}>
             <div className={styles.actionHeader}>
                 <button className={styles.backBtn} onClick={() => navigate(-1)}>
-                    <ChevronLeft size={20} /> Quay lại
+                    <ChevronLeft size={20} /> Back
                 </button>
 
                 <div className={styles.rightActions}>
@@ -40,12 +40,12 @@ const EventDetailPage = () => {
                                         disabled={isStarting || event.isAutoStart || !event.canManualStart}
                                     >
                                         <PlayCircle size={18} />
-                                        {isStarting ? "Đang xử lý..." : "Bắt đầu ngay"}
+                                        {isStarting ? "Processing..." : "Start Now"}
                                     </button>
 
                                     {event.isAutoStart ? (
                                         <span className={`${styles.hintText} ${styles.autoStart}`}>
-                                            <Calendar size={12} /> Tự động bắt đầu
+                                            <Calendar size={12} /> Auto Start
                                         </span>
                                     ) : (
                                         !event.canManualStart && (
@@ -65,7 +65,7 @@ const EventDetailPage = () => {
                                     disabled={isCancelling}
                                 >
                                     <XCircle size={18} />
-                                    {isCancelling ? "Đang hủy..." : "Hủy sự kiện"}
+                                    {isCancelling ? "Processing..." : "Cancel Event"}
                                 </button>
                             </div>
 
@@ -79,7 +79,7 @@ const EventDetailPage = () => {
                             onClick={handleFinalize}
                             disabled={isFinalizing}
                         >
-                            <Landmark size={18} /> {isFinalizing ? "Đang xử lý..." : "Chốt & Giải ngân"}
+                            <Landmark size={18} /> {isFinalizing ? "Processing..." : "Finalize & Disburse"}
                         </button>
                     )}
                 </div>
@@ -108,7 +108,7 @@ const EventDetailPage = () => {
                         </span>
                         <h1>{event.title}</h1>
                         <div className={styles.creatorInfo}>
-                            <User size={16} /> Được tạo bởi: <strong>{event.creatorName}</strong>
+                            <User size={16} /> Created by: <strong>{event.creatorName}</strong>
                         </div>
                     </div>
 
@@ -116,14 +116,14 @@ const EventDetailPage = () => {
                         <div className={styles.rejectReasonBox}>
                             <div className={styles.rejectHeader}>
                                 <XCircle size={18} color="#ef4444" />
-                                <strong>Lý do từ chối sự kiện:</strong>
+                                <strong>Reason for rejection:</strong>
                             </div>
-                            <p>{event.reasonRejectEvent || "Không có lý do cụ thể được cung cấp."}</p>
+                            <p>{event.reasonRejectEvent || "No specific reason provided."}</p>
                         </div>
                     )}
 
                     <div className={styles.card}>
-                        <h3><Info size={18} /> Mô tả sự kiện</h3>
+                        <h3><Info size={18} /> Event Description</h3>
                         <p className={styles.description}>{event.description}</p>
                     </div>
 
@@ -135,26 +135,26 @@ const EventDetailPage = () => {
 
                 <div className={styles.sideSection}>
                     <div className={styles.card}>
-                        <h3><Calendar size={18} /> Thời gian</h3>
+                        <h3><Calendar size={18} /> Time</h3>
                         <div className={styles.sideRow}>
-                            <span>Bắt đầu:</span>
+                            <span>Start:</span>
                             <strong>{new Date(event.startTime).toLocaleString('vi-VN')}</strong>
                         </div>
                         <div className={styles.sideRow}>
-                            <span>Thời hạn nộp bài:</span>
+                            <span>Submission Deadline:</span>
                             <strong>{new Date(event.submissionDeadline).toLocaleString('vi-VN')}</strong>
                         </div>
                         <div className={styles.sideRow}>
-                            <span>Kết thúc:</span>
+                            <span>End:</span>
                             <strong>{new Date(event.endTime).toLocaleString('vi-VN')}</strong>
                         </div>
                     </div>
 
                     <div className={styles.card}>
-                        <h3><ShieldCheck size={18} /> Trọng số chấm điểm</h3>
+                        <h3><ShieldCheck size={18} /> Weightage</h3>
                         <div className={styles.weightItem}>
                             <div className={styles.weightLabel}>
-                                <span>Chuyên gia</span>
+                                <span>Expert</span>
                                 <span>{event.expertWeight * 100}%</span>
                             </div>
                             <div className={styles.weightBar}>
@@ -163,7 +163,7 @@ const EventDetailPage = () => {
                         </div>
                         <div className={styles.weightItem}>
                             <div className={styles.weightLabel}>
-                                <span>Cộng đồng</span>
+                                <span>Community</span>
                                 <span>{event.userWeight * 100}%</span>
                             </div>
                             <div className={styles.weightBar}>
@@ -173,31 +173,50 @@ const EventDetailPage = () => {
                     </div>
 
                     <div className={styles.card}>
-                        <h3><Star size={18} color="#f59e0b" /> Hội đồng chuyên gia</h3>
+                        <h3><Star size={18} color="#f59e0b" /> Expert Panel</h3>
                         <div className={styles.expertList}>
-                            {event.experts?.map((ex) => {
-                                // LẤY CONFIG CHO TỪNG EXPERT
-                                const expertStatus = getExpertStatusInfo(ex.status);
+                            {event.experts
+                                ?.filter((ex) => {
+                                    return event.isCreator ? true : ex.status === "Accepted";
+                                })
+                                .map((ex) => {
+                                    const expertStatus = getExpertStatusInfo(ex.status);
 
-                                return (
-                                    <div key={ex.expertId} className={styles.expertItem}>
-                                        <div className={styles.expertAvatar}>{ex.fullName?.charAt(0)}</div>
-                                        <div className={styles.expertInfo}>
-                                            <div className={styles.expertNameRow}>
-                                                <p className={styles.expertName}>{ex.fullName}</p>
-
-                                                <span className={`${styles.expertStatus} ${styles[expertStatus.variant]}`}>
-                                                    {expertStatus.icon} {expertStatus.label}
-                                                </span>
+                                    return (
+                                        <div key={ex.expertId} className={styles.expertItem}>
+                                            <div className={styles.expertAvatar}>
+                                                {ex.avatarUrl ? (
+                                                    <img src={ex.avatarUrl} alt={ex.fullName} />
+                                                ) : (
+                                                    ex.fullName?.charAt(0)
+                                                )}
                                             </div>
-                                            <p className={styles.expertField}>{ex.expertiseField || "Chuyên gia đánh giá"}</p>
+
+                                            <div className={styles.expertInfo}>
+                                                <div className={styles.expertNameRow}>
+                                                    <p className={styles.expertName}>{ex.fullName}</p>
+
+                                                    <span className={`${styles.expertStatus} ${styles[expertStatus.variant]}`}>
+                                                        {expertStatus.icon} {expertStatus.label}
+                                                    </span>
+                                                </div>
+                                                <p className={styles.expertField}>
+                                                    {ex.expertiseField || "Professional Reviewer"}
+                                                </p>
+                                            </div>
                                         </div>
+                                    );
+                                })}
+
+                            {/* Empty State */}
+                            {(!event.experts ||
+                                (!event.isCreator && event.experts.filter(ex => ex.status === "Accepted").length === 0)) && (
+                                    <div className={styles.emptyExpert}>
+                                        <p className={styles.emptyText}>
+                                            {event.isCreator ? "No experts invited yet." : "Experts are being updated..."}
+                                        </p>
                                     </div>
-                                );
-                            })}
-                            {(!event.experts || event.experts.length === 0) && (
-                                <p className={styles.emptyText}>Chưa có chuyên gia nào.</p>
-                            )}
+                                )}
                         </div>
                     </div>
                 </div>

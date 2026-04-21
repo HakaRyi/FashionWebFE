@@ -8,9 +8,9 @@ const WalletFilter = ({ filter, setFilter }) => {
       <Filter size={14} />
 
       <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-        <option value="all">Tất cả</option>
-        <option value="deposit">Nạp tiền</option>
-        <option value="expense">Chi trả</option>
+        <option value="all">All</option>
+        <option value="deposit">Deposit</option>
+        <option value="expense">Expense</option>
       </select>
     </div>
   );

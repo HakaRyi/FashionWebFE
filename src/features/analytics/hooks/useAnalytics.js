@@ -27,7 +27,7 @@ export const useAnalytics = (period = '30d') => {
             }
         } catch (err) {
             if (isMounted) {
-                const message = err.response?.data?.message || "Không thể tải dữ liệu Dashboard.";
+                const message = err.response?.data?.message || "Unable to load Dashboard data.";
                 setData(prev => ({ ...prev, loading: false, error: message }));
             }
         }

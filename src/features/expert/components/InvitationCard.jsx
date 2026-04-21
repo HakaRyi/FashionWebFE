@@ -7,7 +7,7 @@ const InvitationCard = ({ invite, isHistory, onViewDetail, onAccept, onDecline }
         <div className={styles.banner}>
             <img src={invite.thumbnailUrl || '/default-event.jpg'} alt="event" />
             <div className={`${styles.statusBadge} ${styles[invite.status?.toLowerCase()]}`}>
-                {isHistory ? 'Đang tham gia' : 'Mới'}
+                {isHistory ? 'Currently Participating' : 'New Invitation'}
             </div>
         </div>
         
@@ -24,15 +24,15 @@ const InvitationCard = ({ invite, isHistory, onViewDetail, onAccept, onDecline }
             {!isHistory ? (
                 <div className={styles.actions} onClick={e => e.stopPropagation()}>
                     <button onClick={() => onDecline(invite.eventId)} className={styles.btnDecline}>
-                        Từ chối
+                        Decline
                     </button>
                     <button onClick={() => onAccept(invite.eventId)} className={styles.btnAccept}>
-                        Chấp nhận
+                        Accept
                     </button>
                 </div>
             ) : (
                 <div className={styles.historyFooter}>
-                    <Check size={14} /> Bạn đã tham gia sự kiện này
+                    <Check size={14} /> You have participated in this event
                 </div>
             )}
         </div>

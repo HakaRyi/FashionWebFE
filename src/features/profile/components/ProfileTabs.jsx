@@ -10,12 +10,12 @@ const ProfileTabs = ({ isExpert, activeTab, onChange }) => {
         { id: 'saved', label: 'SAVED', icon: <Bookmark size={16} /> },
     ];
 
-    if (isExpert) {
-        tabs.push(
-            { id: 'portfolio', label: 'PORTFOLIO', icon: <Briefcase size={16} /> },
-            { id: 'awards', label: 'AWARDS', icon: <Award size={16} /> }
-        );
-    }
+    // if (isExpert) {
+    //     tabs.push(
+    //         { id: 'portfolio', label: 'PORTFOLIO', icon: <Briefcase size={16} /> },
+    //         { id: 'awards', label: 'AWARDS', icon: <Award size={16} /> }
+    //     );
+    // }
 
     return (
         <nav className={styles.tabsContainer}>

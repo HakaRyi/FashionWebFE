@@ -16,23 +16,23 @@ export const useEventDetail = (id) => {
 
     const handleManualStart = async () => {
         const result = await MySwal.fire({
-            title: 'Bắt đầu sự kiện ngay?',
-            text: 'Sự kiện sẽ chuyển sang trạng thái Active và người dùng có thể nộp bài ngay lập tức.',
+            title: 'Start the event now?',
+            text: 'The event will become Active and users can submit their work immediately.',
             icon: 'info',
             showCancelButton: true,
-            confirmButtonText: 'Bắt đầu ngay',
-            cancelButtonText: 'Để sau',
+            confirmButtonText: 'Start Now',
+            cancelButtonText: 'Later',
         });
 
         if (result.isConfirmed) {
             setIsStarting(true);
             try {
                 await toast.promise(getEventApi.manualStartEvent(id), {
-                    pending: '⌛ Đang kích hoạt sự kiện...',
-                    success: 'Sự kiện đã bắt đầu! 🚀',
+                    pending: '⌛ Starting the event...',
+                    success: 'The event has begun!',
                     error: {
                         render({ data }) {
-                            return data?.response?.data?.message || 'Không thể bắt đầu sự kiện';
+                            return data?.response?.data?.message || 'Cannot start the event';
                         },
                     },
                 });
@@ -52,7 +52,7 @@ export const useEventDetail = (id) => {
             setEvent(detailRes.data);
             setPosts(postsRes.data);
         } catch (error) {
-            toast.error('Không thể tải thông tin sự kiện');
+            toast.error('Unable to load event information. Please try again later.');
         } finally {
             setLoading(false);
         }
@@ -64,25 +64,25 @@ export const useEventDetail = (id) => {
 
     const handleCancel = async () => {
         const result = await MySwal.fire({
-            title: 'Hủy sự kiện này?',
-            text: 'Tiền thưởng và phí dịch vụ sẽ được hoàn lại vào ví của bạn. Hành động này không thể hoàn tác!',
+            title: 'Cancel this event?',
+            text: 'Prizes and service fees will be refunded to your wallet. This action cannot be undone!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
             cancelButtonColor: '#64748b',
-            confirmButtonText: 'Xác nhận hủy',
-            cancelButtonText: 'Quay lại',
+            confirmButtonText: 'Confirm Cancel',
+            cancelButtonText: 'Go Back',
         });
 
         if (result.isConfirmed) {
             setIsCancelling(true);
             try {
                 await toast.promise(getEventApi.cancelEvent(id), {
-                    pending: '⌛ Đang xử lý hủy và hoàn tiền...',
-                    success: 'Sự kiện đã được hủy thành công! 💸',
+                    pending: '⌛ Processing cancellation and refund...',
+                    success: 'The event has been cancelled successfully!',
                     error: {
                         render({ data }) {
-                            return data?.response?.data?.message || 'Không thể hủy sự kiện';
+                            return data?.response?.data?.message || 'Unable to cancel the event';
                         },
                     },
                 });
@@ -97,25 +97,25 @@ export const useEventDetail = (id) => {
 
     const handleFinalize = async () => {
         const result = await MySwal.fire({
-            title: 'Xác nhận chốt sự kiện?',
-            text: 'Hệ thống sẽ thực hiện giải ngân tiền thưởng dựa trên bảng xếp hạng hiện tại. Hành động này không thể hoàn tác!',
+            title: 'Confirm event finalization?',
+            text: 'The system will process prize distribution based on the current leaderboard. This action cannot be undone!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#10b981',
             cancelButtonColor: '#64748b',
-            confirmButtonText: 'Xác nhận & Giải ngân',
-            cancelButtonText: 'Hủy',
+            confirmButtonText: 'Confirm & Distribute Prizes',
+            cancelButtonText: 'Cancel',
         });
 
         if (result.isConfirmed) {
             setIsFinalizing(true);
             try {
                 await toast.promise(getEventApi.finalizeEvent(id), {
-                    pending: '🚀 Đang xử lý giải ngân và chốt sự kiện...',
-                    success: 'Sự kiện đã kết thúc thành công! 🏆',
+                    pending: 'Processing prize distribution and finalizing the event...',
+                    success: 'The event has been finalized successfully! Prizes are on their way to the winners.',
                     error: {
                         render({ data }) {
-                            return data?.response?.data?.message || 'Lỗi khi chốt sự kiện';
+                            return data?.response?.data?.message || 'Error finalizing the event';
                         },
                     },
                 });
@@ -128,5 +128,15 @@ export const useEventDetail = (id) => {
         }
     };
 
-    return { event, posts, loading, isFinalizing, isStarting, isCancelling, handleFinalize, handleManualStart, handleCancel };
+    return {
+        event,
+        posts,
+        loading,
+        isFinalizing,
+        isStarting,
+        isCancelling,
+        handleFinalize,
+        handleManualStart,
+        handleCancel,
+    };
 };

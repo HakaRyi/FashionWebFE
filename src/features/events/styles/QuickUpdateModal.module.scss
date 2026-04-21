@@ -1,137 +1,222 @@
+@use 'sass:color';
+
+$primary-color: #3b82f6;
+$success-color: #10b981;
+$danger-color: #ef4444;
+$text-main: #111827;
+$text-muted: #6b7280;
+$border-color: #e5e7eb;
+$bg-faint: #f9fafb;
+$radius-lg: 16px;
+$radius-md: 8px;
+$shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// --- Mixins: Giúp code gọn hơn ---
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// --- Main Styles ---
 .modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6); // Làm tối nền
-  backdrop-filter: blur(4px); // Làm mờ hậu cảnh
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  animation: fadeIn 0.2s ease-out;
+    position: fixed;
+    inset: 0; // Thay cho top, left, width, height: 100%
+    background: rgba(15, 23, 42, 0.6); // Màu overlay hơi xanh sâu cho hiện đại
+    backdrop-filter: blur(8px); // Tăng độ mờ để nổi bật modal
+    @include flex-center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .modalContent {
-  background: #ffffff;
-  border-radius: 12px;
-  width: 90%;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-  animation: slideUp 0.3s ease-out;
+    background: #ffffff;
+    border-radius: $radius-lg;
+    width: 100%;
+    max-width: 500px; // Giới hạn chiều rộng để đẹp trên Desktop
+    box-shadow: $shadow-xl;
+    overflow: hidden;
+    position: relative;
+    animation: modalSpring 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); // Hiệu ứng đàn hồi (spring)
 }
 
 .modalHeader {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f9fafb;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
 
-  h2 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #111827;
-  }
-
-  .closeBtn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #6b7280;
-    cursor: pointer;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #ef4444;
+    h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $text-main;
+        letter-spacing: -0.025em;
     }
-  }
+
+    .closeBtn {
+        @include flex-center;
+        width: 32px;
+        height: 32px;
+        background: transparent;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.25rem;
+        color: $text-muted;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            background-color: #fee2e2;
+            color: $danger-color;
+            transform: rotate(90deg); // Hiệu ứng xoay nhẹ khi hover
+        }
+    }
 }
 
 .modalBody {
-  padding: 1.5rem;
+    padding: 1.5rem;
+    max-height: 70vh; // Chống tràn nội dung trên màn hình thấp
+    overflow-y: auto;
 
-  .formGroup {
-    margin-bottom: 1.25rem;
+    .formGroup {
+        margin-bottom: 1.5rem;
 
-    label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #374151;
-      margin-bottom: 0.5rem;
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid $border-color; // Viền dày hơn một chút cho rõ nét
+            border-radius: $radius-md;
+            font-size: 0.9375rem;
+            color: $text-main;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+
+            &::placeholder {
+                color: #9ca3af;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: $primary-color;
+                box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            }
+        }
     }
-
-    input {
-      width: 100%;
-      padding: 0.625rem 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-
-      &:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-      }
-    }
-  }
 }
 
 .modalFooter {
-  padding: 1.25rem 1.5rem;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  background-color: #f9fafb;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid $border-color;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    background-color: $bg-faint;
 
-  button {
-    padding: 0.625rem 1.25rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+    button {
+        padding: 0.625rem 1.25rem;
+        border-radius: $radius-md;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        user-select: none;
 
-  .btnApprove {
-    background-color: #10b981;
-    color: white;
-    border: none;
-
-    &:hover {
-      background-color: #059669;
+        &:active {
+            transform: scale(0.95); // Hiệu ứng lún xuống khi nhấn
+        }
     }
 
-    &:disabled {
-      background-color: #9ca3af;
-      cursor: not-allowed;
-    }
-  }
+    .btnApprove {
+        background-color: $success-color;
+        color: white;
+        border: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
-  .btnBack {
-    background-color: #ffffff;
-    color: #374151;
-    border: 1px solid #d1d5db;
+        &:hover {
+            background-color: color.adjust($success-color, $lightness: 5%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
 
-    &:hover {
-      background-color: #f3f4f6;
+        &:disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+        }
     }
-  }
+
+    .btnBack {
+        background-color: #ffffff;
+        color: #374151;
+        border: 1px solid $border-color;
+
+        &:hover {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+    }
 }
 
-// Animations
+// --- Keyframes: Mượt mà hơn ---
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes modalSpring {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+// --- Responsive: Tối ưu cho di động ---
+@media (max-width: 480px) {
+    .modalContent {
+        align-self: flex-end; // Modal trượt từ dưới lên kiểu Bottom Sheet trên mobile
+        border-radius: $radius-lg $radius-lg 0 0;
+        margin-bottom: -1rem; // Khít sát đáy
+        animation: slideUpMobile 0.4s ease-out;
+    }
+
+    .modalFooter {
+        flex-direction: column-reverse; // Nút chính lên trên cho dễ bấm bằng ngón cái
+        button {
+            width: 100%;
+        }
+    }
+}
+
+@keyframes slideUpMobile {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }

@@ -3,17 +3,17 @@ import { CheckCircle, Clock, XCircle, HelpCircle } from "lucide-react";
 
 export const EXPERT_STATUS_CONFIG = {
     Accepted: {
-        label: "Đã chấp nhận",
-        variant: "accepted", // Tương ứng với class trong SCSS
+        label: "Accepted",
+        variant: "accepted",
         icon: <CheckCircle size={12} />
     },
     Pending: {
-        label: "Đang chờ phản hồi",
+        label: "Waiting for a response.",
         variant: "pending",
         icon: <Clock size={12} />
     },
     Rejected: {
-        label: "Đã từ chối",
+        label: "Rejected",
         variant: "rejected",
         icon: <XCircle size={12} />
     }
@@ -24,7 +24,7 @@ export const EXPERT_STATUS_CONFIG = {
  */
 export const getExpertStatusInfo = (status) => {
     return EXPERT_STATUS_CONFIG[status] || {
-        label: status || "Không xác định",
+        label: status || "Unknown",
         variant: "default",
         icon: <HelpCircle size={12} />
     };

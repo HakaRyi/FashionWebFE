@@ -12,7 +12,7 @@ import RecentUsers from "@/features/Dashboard/components/RecentUsers";
 import ActivityList from "@/features/Dashboard/components/ActivityList";
 
 // Import Hook từ thư mục hooks
-import { useDashboardChart } from "@/features/Dashboard/hooks/useDashboardChart";
+import { useDashboardChart } from "@/features/dashboard/hooks/useDashboardChart";
 
 function Dashboard() {
   // Logic ngày tháng (giữ nguyên như trước)

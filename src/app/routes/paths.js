@@ -7,6 +7,12 @@ export const PATHS = {
     //user
     USER_FEED: '/home',
     PAYMENT_RESULT: '/payment-result',
+    USER_POLICY: '/policy',
+    SEARCH_RESULTS: '/search',
+    POST_DETAIL: '/post/:id',
+    USER_EVENTS: '/events',
+    EVENT_DETAIL: '/events/:id',
+    EVENT_SUMMARY: '/summary-event/:id',
 
     //expert
     EXPERT_APPLICATION: '/expert/registration',
@@ -20,12 +26,13 @@ export const PATHS = {
     EXPERT_EVENT_DETAIL: '/expert/events/:id',
     EXPERT_INVITATIONS: '/expert/invitation',
     EXPERT_SUMMARY_EVENT: '/expert/summary-event/:id',
+    EXPERT_REPUTATION: '/expert/reputation',
 
     //admin
     DASHBOARD: '/dashboard',
     USERS: '/users',
     EXPERTS: '/experts',
-    EVENTS: '/events',
+    EVENTS: '/admin/events',
     POSTS: '/posts',
     PRODUCTS: '/products',
     TRANSACTIONS: '/transactions',

@@ -1,7 +1,7 @@
 import { IoMdClose } from "react-icons/io";
-import { 
-  FaHistory, FaFileAlt, FaUserCircle, 
-  FaExternalLinkAlt, FaInfoCircle, FaCheckCircle, FaExclamationCircle 
+import {
+  FaHistory, FaFileAlt, FaUserCircle,
+  FaExternalLinkAlt, FaInfoCircle, FaCheckCircle, FaExclamationCircle
 } from "react-icons/fa";
 import styles from "../styles/ExpertModal.module.scss";
 
@@ -10,9 +10,9 @@ function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRe
 
   const latestRequest = expert.expertRequests?.[0];
   const historyRequests = expert.expertRequests?.slice(1) || [];
-  
-  const displayStatus = latestRequest 
-    ? latestRequest.status 
+
+  const displayStatus = latestRequest
+    ? latestRequest.status
     : (expert.verified ? "Approved" : "None");
 
   const evidenceUrl = latestRequest?.certificateUrl || latestRequest?.licenseUrl;
@@ -20,7 +20,7 @@ function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRe
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={`${styles.modalContent} ${styles.wideModal}`} onClick={(e) => e.stopPropagation()}>
-        
+
         {/* Header */}
         <div className={styles.modalHeader}>
           <div className={styles.titleGroup}>
@@ -28,7 +28,7 @@ function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRe
               {expert.userName?.charAt(0).toUpperCase() || "E"}
             </div>
             <div>
-              <h3>Hồ sơ Chuyên gia: {expert.userName}</h3>
+              <h3>Expert Profile: {expert.userName}</h3>
               <span className={styles.idBadge}>ID: #{expert.expertProfileId}</span>
             </div>
           </div>
@@ -36,14 +36,14 @@ function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRe
         </div>
 
         <div className={styles.twoColumnBody}>
-          
+
           {/* CỘT TRÁI: ĐƠN HIỆN TẠI & XÉT DUYỆT */}
           <div className={styles.mainColumn}>
             <section className={styles.section}>
-              <h4 className={styles.sectionTitle}><FaFileAlt /> Chi tiết đơn đăng ký hiện tại</h4>
-              
+              <h4 className={styles.sectionTitle}><FaFileAlt /> Current Registration Details</h4>
+
               <div className={styles.statusBanner}>
-                Trạng thái: 
+                Status:
                 <span className={`${styles.statusText} ${styles[displayStatus.toLowerCase()]}`}>
                   {displayStatus === "Approved" && <FaCheckCircle />}
                   {displayStatus === "Rejected" && <FaExclamationCircle />}
@@ -53,38 +53,38 @@ function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRe
 
               <div className={styles.infoGrid}>
                 <div className={styles.infoBox}>
-                  <label>Lĩnh vực chuyên môn</label>
+                  <label>Specialty</label>
                   <p>{latestRequest?.expertiseField || expert.expertiseField}</p>
                 </div>
                 <div className={styles.infoBox}>
-                  <label>Số năm kinh nghiệm</label>
-                  <p>{latestRequest?.yearsOfExperience || expert.yearsOfExperience} năm</p>
+                  <label>Years of Experience</label>
+                  <p>{latestRequest?.yearsOfExperience || expert.yearsOfExperience} years</p>
                 </div>
                 <div className={styles.infoBox}>
-                  <label>Phong cách thẩm mỹ</label>
+                  <label>Style of Aesthetic</label>
                   <p>{latestRequest?.styleAesthetic || expert.styleAesthetic}</p>
                 </div>
                 <div className={styles.infoBox}>
-                  <label>Ngày gửi đơn</label>
+                  <label>Submission Date</label>
                   <p>{latestRequest?.createdAt ? new Date(latestRequest.createdAt).toLocaleDateString("vi-VN") : "N/A"}</p>
                 </div>
               </div>
 
               <div className={styles.bioGroup}>
-                <label>Tiểu sử / Giới thiệu</label>
+                <label>Bio / Introduction</label>
                 <div className={styles.bioContent}>
-                  {latestRequest?.bio || expert.bio || "Không có tiểu sử cụ thể."}
+                  {latestRequest?.bio || expert.bio || "No detailed bio available."}
                 </div>
               </div>
 
               <div className={styles.evidenceSection}>
-                <label>Minh chứng năng lực (Chứng chỉ/Giấy phép)</label>
+                <label>Proof of Competency (Certificates/Licenses)</label>
                 {evidenceUrl ? (
                   <a href={evidenceUrl} target="_blank" rel="noreferrer" className={styles.evidenceBtn}>
-                    <FaExternalLinkAlt /> Xem tài liệu đính kèm
+                    <FaExternalLinkAlt /> View Attached Documents
                   </a>
                 ) : (
-                  <div className={styles.noEvidence}>⚠️ Chuyên gia chưa đính kèm minh chứng</div>
+                  <div className={styles.noEvidence}>Expert has not attached any evidence</div>
                 )}
               </div>
             </section>
@@ -93,16 +93,16 @@ function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRe
             {displayStatus === "Pending" && (
               <section className={styles.actionPanel}>
                 <div className={styles.divider}></div>
-                <label className={styles.inputLabel}>Lý do phản hồi (Bắt buộc nếu từ chối)</label>
+                <label className={styles.inputLabel}>Reason for feedback (Required if rejecting)</label>
                 <textarea
                   className={styles.rejectTextarea}
-                  placeholder="Ví dụ: Chứng chỉ không hợp lệ, Cần bổ sung thêm thông tin về kinh nghiệm làm việc..."
+                  placeholder="Example: Invalid certificate, Additional information regarding work experience is required..."
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value)}
                 />
                 <div className={styles.actionButtons}>
-                  <button className={styles.rejectBtn} onClick={() => onReject(expert)}>Từ chối hồ sơ</button>
-                  <button className={styles.approveBtn} onClick={() => onApprove(expert)}>Phê duyệt chuyên gia</button>
+                  <button className={styles.rejectBtn} onClick={() => onReject(expert)}>Reject Application</button>
+                  <button className={styles.approveBtn} onClick={() => onApprove(expert)}>Approve Expert</button>
                 </div>
               </section>
             )}
@@ -110,7 +110,7 @@ function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRe
 
           {/* CỘT PHẢI: LỊCH SỬ TRA CỨU (TIMELINE) */}
           <div className={styles.sideColumn}>
-            <h4 className={styles.sectionTitle}><FaHistory /> Lịch sử yêu cầu</h4>
+            <h4 className={styles.sectionTitle}><FaHistory /> History of Requests</h4>
             <div className={styles.timelineContainer}>
               {historyRequests.length > 0 ? (
                 historyRequests.map((req) => (
@@ -137,7 +137,7 @@ function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRe
                   </div>
                 ))
               ) : (
-                <div className={styles.emptyHistory}>Không có dữ liệu lịch sử cũ.</div>
+                <div className={styles.emptyHistory}>No previous request data available.</div>
               )}
             </div>
           </div>

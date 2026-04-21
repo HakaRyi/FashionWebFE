@@ -392,14 +392,14 @@ function ReportManagement() {
     <div className={styles.wrapper}>
       <div className={styles.header}>
         <div>
-          <h2>Quản lý báo cáo bài viết</h2>
-          <p>Kiểm tra, xem chi tiết và xử lý các báo cáo từ người dùng.</p>
+          <h2>Article reporting management</h2>
+          <p>Review, examine details, and process user reports.</p>
         </div>
 
         <div className={styles.reportCount}>
           <FaTriangleExclamation />
           <span>
-            Có <b>{pendingCount}</b> báo cáo chờ xử lý
+            There are <b>{pendingCount}</b> reports pending processing
           </span>
         </div>
       </div>
@@ -409,7 +409,7 @@ function ReportManagement() {
           <FaMagnifyingGlass />
           <input
             type="text"
-            placeholder="Tìm kiếm báo cáo..."
+            placeholder="Search reports..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -420,25 +420,25 @@ function ReportManagement() {
             className={statusFilter === 'Pending' ? styles.tabActive : ''}
             onClick={() => setStatusFilter('Pending')}
           >
-            Chờ xử lý
+            Awaiting processing
           </button>
           <button
             className={statusFilter === 'Resolved' ? styles.tabActive : ''}
             onClick={() => setStatusFilter('Resolved')}
           >
-            Đã xử lý
+            Processed
           </button>
           <button
             className={statusFilter === 'Rejected' ? styles.tabActive : ''}
             onClick={() => setStatusFilter('Rejected')}
           >
-            Đã bác bỏ
+            Rejected
           </button>
           <button
             className={statusFilter === 'All' ? styles.tabActive : ''}
             onClick={() => setStatusFilter('All')}
           >
-            Tất cả
+            All
           </button>
         </div>
       </div>
@@ -447,7 +447,7 @@ function ReportManagement() {
         <div className={styles.errorBox}>
           <span>{error}</span>
           <button onClick={() => fetchReports(pagination.page, statusFilter)}>
-            Thử lại
+            Retry
           </button>
         </div>
       ) : null}
@@ -457,13 +457,13 @@ function ReportManagement() {
           <thead>
             <tr>
               <th>Report ID</th>
-              <th>Người báo cáo</th>
-              <th>Chủ bài viết</th>
-              <th>Bài viết</th>
-              <th>Loại báo cáo</th>
-              <th>Lý do</th>
-              <th>Trạng thái</th>
-              <th style={{ textAlign: 'center' }}>Thao tác</th>
+              <th>Reported By</th>
+              <th>Post Owner</th>
+              <th>Post</th>
+              <th>Report Type</th>
+              <th>Reason</th>
+              <th>Status</th>
+              <th style={{ textAlign: 'center' }}>Actions</th>
             </tr>
           </thead>
 
@@ -471,13 +471,13 @@ function ReportManagement() {
             {loading ? (
               <tr>
                 <td colSpan="8" className={styles.emptyCell}>
-                  Đang tải dữ liệu...
+                  Loading data...
                 </td>
               </tr>
             ) : filteredReports.length === 0 ? (
               <tr>
                 <td colSpan="8" className={styles.emptyCell}>
-                  Không có báo cáo nào.
+                  No reports available.
                 </td>
               </tr>
             ) : (
@@ -530,7 +530,7 @@ function ReportManagement() {
                     <div className={styles.actions}>
                       <button
                         className={styles.btnView}
-                        title="Xem chi tiết"
+                        title="See details"
                         onClick={() => openDetail(report.userReportId)}
                         disabled={actionLoading}
                       >
@@ -539,7 +539,7 @@ function ReportManagement() {
 
                       <button
                         className={styles.btnDone}
-                        title="Xử lý hợp lệ"
+                        title="Valid processing"
                         onClick={() => handleQuickResolve(report.userReportId)}
                         disabled={actionLoading}
                       >
@@ -548,7 +548,7 @@ function ReportManagement() {
 
                       <button
                         className={styles.btnReject}
-                        title="Bác báo cáo"
+                        title="Reject report"
                         onClick={() => handleQuickReject(report.userReportId)}
                         disabled={actionLoading}
                       >
@@ -568,18 +568,18 @@ function ReportManagement() {
           disabled={pagination.page <= 1 || loading}
           onClick={() => fetchReports(pagination.page - 1, statusFilter)}
         >
-          Trang trước
+          Previous Page
         </button>
 
         <span>
-          Trang <b>{pagination.page}</b>
+          Page <b>{pagination.page}</b>
         </span>
 
         <button
           disabled={!pagination.hasMore || loading}
           onClick={() => fetchReports(pagination.page + 1, statusFilter)}
         >
-          Trang sau
+          Next page
         </button>
       </div>
 
@@ -588,8 +588,8 @@ function ReportManagement() {
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <div>
-                <h3>Chi tiết báo cáo #{selectedReportId}</h3>
-                <p>Xem nội dung và xử lý báo cáo.</p>
+                <h3>Report Details #{selectedReportId}</h3>
+                <p>View content and process the report.</p>
               </div>
 
               <button className={styles.iconButton} onClick={closeDetail}>
@@ -598,36 +598,36 @@ function ReportManagement() {
             </div>
 
             {detailLoading ? (
-              <div className={styles.modalLoading}>Đang tải chi tiết...</div>
+              <div className={styles.modalLoading}>Loading details...</div>
             ) : !detail ? (
-              <div className={styles.modalLoading}>Không có dữ liệu.</div>
+              <div className={styles.modalLoading}>No data available.</div>
             ) : (
               <>
                 <div className={styles.detailGrid}>
                   <div className={styles.detailCard}>
-                    <h4>Thông tin báo cáo</h4>
+                    <h4>Report Information</h4>
                     <p>
-                      <b>Người báo cáo:</b> {detail.reportedByUserName} (ID:{' '}
+                      <b>Reported By:</b> {detail.reportedByUserName} (ID:{' '}
                       {detail.reportedByAccountId})
                     </p>
                     <p>
-                      <b>Chủ bài viết:</b> {detail.postOwnerUserName} (ID:{' '}
+                      <b>Post Owner:</b> {detail.postOwnerUserName} (ID:{' '}
                       {detail.postOwnerAccountId})
                     </p>
                     <p>
-                      <b>Loại báo cáo:</b> {detail.reportTypeName}
+                      <b>Report Type:</b> {detail.reportTypeName}
                     </p>
                     <p>
-                      <b>Mô tả loại:</b> {detail.reportTypeDescription || '--'}
+                      <b>Report Type Description:</b> {detail.reportTypeDescription || '--'}
                     </p>
                     <p>
-                      <b>Lý do người dùng ghi:</b> {detail.reason || '--'}
+                      <b>User Reason:</b> {detail.reason || '--'}
                     </p>
                     <p>
-                      <b>Ngày tạo:</b> {formatDate(detail.createdAt)}
+                      <b>Created Date:</b> {formatDate(detail.createdAt)}
                     </p>
                     <p>
-                      <b>Trạng thái report:</b>{' '}
+                      <b>Report Status:</b>{' '}
                       <span
                         className={`${styles.statusBadge} ${getStatusClass(
                           detail.status,
@@ -648,15 +648,15 @@ function ReportManagement() {
                   </div>
 
                   <div className={styles.detailCard}>
-                    <h4>Thông tin bài viết</h4>
+                    <h4>Post Information</h4>
                     <p>
                       <b>Post ID:</b> {detail.postId}
                     </p>
                     <p>
-                      <b>Tiêu đề:</b> {detail.postTitle || '--'}
+                      <b>Title:</b> {detail.postTitle || '--'}
                     </p>
                     <p>
-                      <b>Nội dung:</b>
+                      <b>Content:</b>
                     </p>
                     <div className={styles.postPreview}>
                       {detail.postContent || '--'}
@@ -664,9 +664,9 @@ function ReportManagement() {
 
                     <div className={styles.mediaSection}>
                       <div className={styles.mediaHeader}>
-                        <span className={styles.mediaTitle}>Ảnh bài viết</span>
+                        <span className={styles.mediaTitle}>Image for the article</span>
                         <span className={styles.mediaCount}>
-                          {imageUrls.length} ảnh
+                          {imageUrls.length} images
                         </span>
                       </div>
 
@@ -679,7 +679,7 @@ function ReportManagement() {
                                 type="button"
                                 className={styles.stackCard}
                                 onClick={() => openPreview(index)}
-                                title={`Xem ảnh ${index + 1}`}
+                                title={`View image ${index + 1}`}
                               >
                                 <img src={url} alt={`post-${index}`} />
                                 {index === 3 && imageUrls.length > 4 ? (
@@ -698,7 +698,7 @@ function ReportManagement() {
                                 type="button"
                                 className={styles.imageThumb}
                                 onClick={() => openPreview(index)}
-                                title={`Xem ảnh ${index + 1}`}
+                                title={`View image ${index + 1}`}
                               >
                                 <img src={url} alt={`post-thumb-${index}`} />
                               </button>
@@ -706,7 +706,7 @@ function ReportManagement() {
                           </div>
                         </>
                       ) : (
-                        <p className={styles.noImage}>Không có ảnh</p>
+                        <p className={styles.noImage}>No images available</p>
                       )}
                     </div>
 
@@ -720,10 +720,10 @@ function ReportManagement() {
                 </div>
 
                 <div className={styles.reviewBox}>
-                  <h4>Xử lý báo cáo</h4>
+                  <h4>Handle Report</h4>
 
                   <div className={styles.formRow}>
-                    <label>Trạng thái mới</label>
+                    <label>New Status</label>
                     <select
                       value={reviewForm.newStatus}
                       onChange={(e) =>
@@ -740,7 +740,7 @@ function ReportManagement() {
                   </div>
 
                   <div className={styles.formRow}>
-                    <label>Ghi chú admin</label>
+                    <label>Admin Note</label>
                     <textarea
                       rows="4"
                       value={reviewForm.adminNote}
@@ -750,7 +750,7 @@ function ReportManagement() {
                           adminNote: e.target.value,
                         }))
                       }
-                      placeholder="Nhập ghi chú xử lý..."
+                      placeholder="Enter admin note..."
                       disabled={actionLoading}
                     />
                   </div>
@@ -771,12 +771,12 @@ function ReportManagement() {
                           disabled={actionLoading}
                         />
                         <label htmlFor="hidePostWhenResolved">
-                          Ẩn bài viết khi xử lý hợp lệ
+                          Hide posts when processed correctly.
                         </label>
                       </div>
 
                       <div className={styles.formRow}>
-                        <label>Post status áp dụng</label>
+                        <label>Post Status to Apply</label>
                         <select
                           value={reviewForm.postStatusToApply}
                           onChange={(e) =>
@@ -789,7 +789,7 @@ function ReportManagement() {
                         >
                           <option value="Rejected">Rejected</option>
                           <option value="Banned">Banned</option>
-                          <option value="">Không đổi</option>
+                          <option value="">No change</option>
                         </select>
                       </div>
                     </>
@@ -802,7 +802,7 @@ function ReportManagement() {
                       disabled={actionLoading}
                     >
                       <FaCircleCheck />
-                      {actionLoading ? 'Đang lưu...' : 'Lưu xử lý'}
+                      {actionLoading ? 'Saving...' : 'Save Handling'}
                     </button>
                   </div>
                 </div>
@@ -882,7 +882,7 @@ function ReportManagement() {
             type="button"
             className={styles.toastClose}
             onClick={closeToast}
-            aria-label="Đóng thông báo"
+            aria-label="Close notifications"
           >
             <FaXmark />
           </button>

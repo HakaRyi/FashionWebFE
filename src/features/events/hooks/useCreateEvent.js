@@ -29,13 +29,13 @@ export const useCreateEvent = () => {
     });
 
     const [criteria, setCriteria] = useState([
-        { id: Date.now(), name: 'Sáng tạo', description: 'Ý tưởng mới lạ, độc đáo', weightPercentage: 50 },
-        { id: Date.now() + 1, name: 'Thực tế', description: 'Khả năng áp dụng vào thực tế', weightPercentage: 50 },
+        { id: Date.now(), name: 'Creative', description: 'Novel and unique ideas', weightPercentage: 50 },
+        { id: Date.now() + 1, name: 'Reality', description: 'Practical applicability', weightPercentage: 50 },
     ]);
 
     const [prizes, setPrizes] = useState([
-        { label: 'Giải Nhất', amount: 300000 },
-        { label: 'Giải Nhì', amount: 150000 },
+        { id: crypto.randomUUID(), label: 'Prize 1', amount: 300000, error: '' },
+        { id: crypto.randomUUID(), label: 'Prize 2', amount: 150000, error: '' },
     ]);
 
     const [invitedExpertIds, setInvitedExpertIds] = useState([]);
@@ -91,8 +91,8 @@ export const useCreateEvent = () => {
                 };
             });
         } catch (err) {
-            console.error('Lỗi khởi tạo dữ liệu:', err);
-            setFetchError('Không thể tải cấu hình hệ thống hoặc số dư ví.');
+            console.error('Data initialization error:', err);
+            setFetchError('Cannot load system configuration or wallet balance.');
         } finally {
             setInitialLoading(false);
         }
@@ -137,7 +137,7 @@ export const useCreateEvent = () => {
     );
 
     const handleCreateEvent = async () => {
-        if (isOverBudget) throw new Error('Số dư không đủ để thanh toán tổng chi phí sự kiện!');
+        if (isOverBudget) throw new Error('Insufficient balance to cover the total event costs!');
 
         setLoading(true);
 
@@ -162,7 +162,8 @@ export const useCreateEvent = () => {
             return response;
         } catch (error) {
             setLoading(false);
-            const errorMsg = error.response?.data?.message || error.message || 'Lỗi khi tạo sự kiện.';
+            const errorMsg =
+                error.response?.data?.message || error.message || 'Error creating event. Please try again.';
             throw new Error(errorMsg);
         }
     };

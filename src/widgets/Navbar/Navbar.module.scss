@@ -177,6 +177,101 @@ $transition-main: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             }
         }
     }
+
+    .notifArea {
+        position: relative;
+
+        .notifDropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 350px;
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid $border-color;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            padding: 0;
+            z-index: 1001;
+            overflow: hidden;
+
+            .notifHeader {
+                padding: 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid $border-color;
+
+                h3 {
+                    margin: 0;
+                    font-size: 1rem;
+                    font-weight: 700;
+                }
+
+                .markAllBtn {
+                    background: none;
+                    border: none;
+                    color: $accent-pink;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+            .notifList {
+                max-height: 400px;
+                overflow-y: auto;
+
+                .notifItem {
+                    display: flex;
+                    gap: 12px;
+                    padding: 12px 16px;
+                    cursor: pointer;
+                    transition: 0.2s;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+
+                    &:hover {
+                        background: #f9f9f9;
+                    }
+                    &.unread {
+                        background: rgba($accent-pink, 0.03);
+                    }
+
+                    .notifContent {
+                        flex: 1;
+                        .notifTitle {
+                            font-weight: 600;
+                            font-size: 0.85rem;
+                            margin-bottom: 2px;
+                        }
+                        .notifText {
+                            font-size: 0.8rem;
+                            color: #666;
+                            margin: 0;
+                            line-height: 1.4;
+                        }
+                    }
+
+                    .unreadDot {
+                        width: 8px;
+                        height: 8px;
+                        background: $accent-pink;
+                        border-radius: 50%;
+                        align-self: center;
+                    }
+                }
+
+                .emptyNotif {
+                    padding: 40px 20px;
+                    text-align: center;
+                    color: #999;
+                    font-size: 0.85rem;
+                }
+            }
+        }
+    }
 }
 
 .profileArea {

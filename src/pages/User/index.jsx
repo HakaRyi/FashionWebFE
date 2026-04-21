@@ -23,7 +23,7 @@ function UserManagement() {
                 const response = await usertApi.getAllUser();
                 setUsers(response.data || []);
             } catch (error) {
-                console.error("Lỗi lấy danh sách người dùng:", error);
+                console.error("Error retrieving user list:", error);
             } finally {
                 setLoading(false);
             }
@@ -72,11 +72,11 @@ function UserManagement() {
         <div className={styles.wrapper}>
             <div className={styles.header}>
                 <div>
-                    <h2>Quản Lý Người Dùng</h2>
-                    <p>Quản lý thông tin, phân quyền và trạng thái thành viên</p>
+                    <h2>User Management</h2>
+                    <p>Manage user information, roles, and status</p>
                 </div>
                 <button className={styles.btnAdd}>
-                    <FaUserPlus /> Thêm thành viên
+                    <FaUserPlus /> Add User
                 </button>
             </div>
 
@@ -85,19 +85,19 @@ function UserManagement() {
                     <FaSearch />
                     <input 
                         type="text" 
-                        placeholder="Tìm theo username, email..." 
+                        placeholder="Search by username, email..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
                 <div className={styles.actions}>
-                    <button className={styles.btnFilter}><FaFilter /> Lọc</button>
+                    <button className={styles.btnFilter}><FaFilter /> Filter</button>
                     <select 
                         className={styles.selectRole}
                         value={roleFilter}
                         onChange={(e) => setRoleFilter(e.target.value)}
                     >
-                        <option value="">Tất cả vai trò</option>
+                        <option value="">All Roles</option>
                         {/* <option value="Admin">Admin</option> */}
                         <option value="Expert">Expert</option>
                         <option value="User">User</option>
@@ -109,16 +109,16 @@ function UserManagement() {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>Người dùng</th>
-                            <th>Vai trò</th>
-                            <th>Ngày tham gia</th>
-                            <th>Trạng thái</th>
-                            <th style={{ textAlign: 'center' }}>Thao tác</th>
+                            <th>User</th>
+                            <th>Role</th>
+                            <th>Join Date</th>
+                            <th>Status</th>
+                            <th style={{ textAlign: 'center' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '30px' }}>Đang tải...</td></tr>
+                            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '30px' }}>Loading...</td></tr>
                         ) : displayedUsers.length > 0 ? (
                             displayedUsers.map((user) => (
                                 <tr key={user.id}>
@@ -147,15 +147,15 @@ function UserManagement() {
                                     </td>
                                     <td>
                                         <div className={styles.rowActions}>
-                                            <button title="Chỉnh sửa"><FaUserEdit /></button>
-                                            <button title="Khóa tài khoản" className={styles.btnBan}><FaUserSlash /></button>
-                                            <button title="Khác"><FaEllipsisV /></button>
+                                            <button title="Edit"><FaUserEdit /></button>
+                                            <button title="Ban User" className={styles.btnBan}><FaUserSlash /></button>
+                                            <button title="More"><FaEllipsisV /></button>
                                         </div>
                                     </td>
                                 </tr>
                             ))
                         ) : (
-                            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '30px' }}>Không có dữ liệu.</td></tr>
+                            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '30px' }}>No data available.</td></tr>
                         )}
                     </tbody>
                 </table>
@@ -164,14 +164,14 @@ function UserManagement() {
             {/* --- PHẦN THÊM MỚI: Giao diện phân trang --- */}
             <div className={styles.pagination}>
                 <span>
-                    Hiển thị <b>{(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredUsers.length)}</b> trên <b>{filteredUsers.length}</b> người dùng
+                    Showing <b>{(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredUsers.length)}</b> of <b>{filteredUsers.length}</b> users
                 </span>
                 <div className={styles.pageBtns}>
                     <button 
                         disabled={currentPage === 1} 
                         onClick={() => setCurrentPage(prev => prev - 1)}
                     >
-                        <FaChevronLeft size={12} /> Trước
+                        <FaChevronLeft size={12} /> Previous
                     </button>
                     
                     {[...Array(totalPages)].map((_, index) => (
@@ -188,7 +188,7 @@ function UserManagement() {
                         disabled={currentPage === totalPages || totalPages === 0} 
                         onClick={() => setCurrentPage(prev => prev + 1)}
                     >
-                        Sau <FaChevronRight size={12} />
+                        Next <FaChevronRight size={12} />
                     </button>
                 </div>
             </div>

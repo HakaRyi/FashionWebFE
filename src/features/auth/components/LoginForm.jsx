@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import { validateAuthForm } from "../utils/validateAuthForm";
 import styles from "../styles/Authentication.module.scss";
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function LoginForm({ onSwitchMode }) {
-  const { handleLogin } = useLogin();
+  const { handleLogin, handleGoogleLogin } = useLogin();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +13,7 @@ export default function LoginForm({ onSwitchMode }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
     const validationErrors = validateAuthForm(formData, true);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -22,6 +24,10 @@ export default function LoginForm({ onSwitchMode }) {
     setIsLoading(true);
     try {
       await handleLogin(formData.email, formData.password);
+    } catch (error) {
+      setErrors({
+        server: error.response?.data?.message || "Incorrect email or password!"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -38,6 +44,7 @@ export default function LoginForm({ onSwitchMode }) {
             name="email"
             type="email"
             placeholder="Email Address"
+            autoComplete="email"
             className={errors.email ? styles["input-error"] : ""}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
@@ -49,6 +56,7 @@ export default function LoginForm({ onSwitchMode }) {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
+            autoComplete="current-password"
             className={errors.password ? styles["input-error"] : ""}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
@@ -62,10 +70,44 @@ export default function LoginForm({ onSwitchMode }) {
           {errors.password && <span className={styles["error-msg"]}>{errors.password}</span>}
         </div>
 
+        {errors.server && (
+          <div style={{
+            color: '#ff4d4f',
+            backgroundColor: '#fff2f0',
+            border: '1px solid #ffccc7',
+            padding: '8px 12px',
+            borderRadius: '4px',
+            marginBottom: '15px',
+            fontSize: '13px',
+            textAlign: 'center'
+          }}>
+            {errors.server}
+          </div>
+        )}
+
         <button type="submit" className={styles["btn-submit"]} disabled={isLoading}>
           {isLoading ? <div className={styles.spinner}></div> : "LOGIN TO ACCOUNT"}
         </button>
       </form>
+
+      <div className={styles["divider"]}>
+        <span>OR</span>
+      </div>
+
+      <div className={styles["social-login"]}>
+        <GoogleLogin
+          onSuccess={credentialResponse => {
+            handleGoogleLogin(credentialResponse.credential);
+          }}
+          onError={() => {
+            setErrors({ server: "Google Login Failed" });
+          }}
+          useOneTap
+          theme="filled_black"
+          shape="rect"
+          width="100%"
+        />
+      </div>
 
       <div className={styles["switch-mode"]}>
         Don't have an account? <button onClick={onSwitchMode}>Register</button>

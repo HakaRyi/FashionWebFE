@@ -1,124 +1,158 @@
-$accent: #ff3e00;
 $dark: #111;
 $muted: #888;
-$font-serif: 'Playfair Display', serif;
+$accent-light: #c1ff72;
 
 .feedPage {
-  background-color: #fff;
-  min-height: 100vh;
-  padding: 20px;
+    background-color: #fff;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 .feedContainer {
-  max-width: 650px;
-  margin: 0 auto;
+    max-width: 650px;
+    display: flex;
+    flex-direction: column;
 }
 
-.fashionCard {
-  margin-bottom: 120px;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 40px;
-
-  .cardHeader {
+// Loading & End State Styles
+.loaderWrapper {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
-
-    .userInfo {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
-      .userMeta {
-        display: flex; flex-direction: column;
-        .userName { font-weight: 700; font-size: 0.95rem; color: $dark; }
-        .userRole { font-size: 0.75rem; color: $muted; }
-      }
-    }
-    .moreBtn { background: none; border: none; cursor: pointer; color: $muted; }
-  }
-
-  .imageContainer {
-    position: relative;
-    aspect-ratio: 4 / 5;
-    background: #f9f9f9;
-    overflow: hidden;
-
-    img { width: 100%; height: 100%; object-fit: cover; }
-
-    .aiTag {
-      position: absolute; bottom: 20px; right: 20px;
-      background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
-      color: #fff; padding: 6px 14px; border-radius: 40px;
-      font-size: 10px; font-weight: 700; letter-spacing: 1px;
-      display: flex; align-items: center; gap: 6px;
-    }
-  }
-
-  .cardFooter {
-    margin-top: 24px;
-
-    .actionRow {
-      display: flex; justify-content: space-between; margin-bottom: 25px;
-      .leftActions { display: flex; gap: 24px; button { background: none; border: none; cursor: pointer; } }
-      .saveBtn { background: none; border: none; cursor: pointer; }
-    }
-
-    .captionArea {
-      .postTitle {
-        font-family: $font-serif;
-        font-size: 1.8rem;
-        font-weight: 400;
-        margin-bottom: 12px;
-        line-height: 1.1;
-      }
-      .description {
-        font-size: 0.95rem;
-        line-height: 1.6;
-        color: #444;
-        margin-bottom: 15px;
-      }
-      .tags { font-size: 0.85rem; color: $accent; font-weight: 600; margin-bottom: 12px; }
-      .timeAgo { font-size: 0.7rem; color: $muted; letter-spacing: 1px; font-weight: 700; }
-    }
-  }
+    gap: 12px;
+    padding: 40px 0;
+    color: $muted;
+    font-size: 0.9rem;
 }
 
-.leftActions {
-    display: flex;
-    gap: 1.5rem; // Khoảng cách giữa các cụm icon+số
-    align-items: center;
+.spinner {
+    width: 28px;
+    height: 28px;
+    border: 2px solid rgba($dark, 0.05);
+    border-top-color: $dark;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
 }
 
-.statAction {
+.endMessage {
     display: flex;
     align-items: center;
-    gap: 0.5rem; // Khoảng cách từ icon đến số
-    
-    button {
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        color: inherit;
-        transition: transform 0.2s ease;
+    justify-content: center;
+    gap: 20px;
+    padding: 60px 0 100px;
+    color: $muted;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 
-        &:hover {
-            opacity: 0.7;
-        }
+    .line {
+        flex: 1;
+        height: 1px;
+        background: #f0f0f0;
+        max-width: 100px;
+    }
+}
+
+.feedLayout {
+    display: grid;
+    grid-template-columns: 320px 650px 320px;
+    gap: 30px;
+    align-items: start;
+    justify-content: center;
+    width: 100%;
+}
+
+.sidebar {
+    position: sticky;
+    top: 20px;
+    min-width: 320px;
+}
+
+.showMoreBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background: transparent;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 8px;
+
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #000000d3;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: linear-gradient(135deg, #98448d 30%, #ff99cc 70%);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .statNumber {
-        font-size: 0.9rem;
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.loadingText,
+.emptyText {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.875rem;
+    color: #888;
+    font-style: italic;
+}
+
+.loaderWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 0;
+
+    .spinner {
+        width: 24px;
+        height: 24px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #1a1a1a;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    span {
+        font-size: 0.875rem;
+        color: #666;
         font-weight: 500;
-        color: var(--text-color); // Hoặc màu bạn muốn
     }
 }
 
-// Nếu post đã like thì đổi màu cụm đó
-.statAction.liked {
-    color: #ff3b3b;
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 1350px) {
+    .feedLayout {
+        grid-template-columns: 320px 650px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 1000px) {
+    .feedLayout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .sidebar {
+        position: static;
+        width: 100%;
+        max-width: 650px;
+    }
 }

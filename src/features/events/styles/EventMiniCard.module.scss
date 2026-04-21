@@ -1,0 +1,130 @@
+.card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+
+    &:hover {
+        background-color: #f9f9f9;
+        border-color: #efefef;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .thumbnailWrapper {
+        position: relative;
+        width: 70px;
+        height: 70px;
+        flex-shrink: 0;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            background-color: #eee;
+        }
+
+        .statusBadge {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #000;
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+            &.success {
+                background-color: #22c55e;
+            }
+            &.warning {
+                background-color: #f59e0b;
+            }
+            &.error {
+                background-color: #ef4444;
+            }
+            &.info {
+                background-color: #3b82f6;
+            }
+            &.secondary {
+                background-color: #a855f7;
+            }
+            &.default {
+                background-color: #6b7280;
+            }
+        }
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-grow: 1;
+        min-width: 0; // Để text-overflow hoạt động
+
+        h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin: 0;
+            color: #262626;
+            line-height: 1.2;
+
+            // Giới hạn 1 dòng title
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .prize {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #d4a373; // Tone màu gold fashion
+            margin: 4px 0;
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #8e8e8e;
+
+            span {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .joinedLabel {
+                background-color: #e8f5e9;
+                color: #2e7d32;
+                padding: 1px 6px;
+                border-radius: 4px;
+                font-weight: 600;
+                font-size: 0.7rem;
+            }
+        }
+    }
+}
+
+// Responsive nhẹ cho mobile nếu sidebar bị đẩy xuống dưới
+@media (max-width: 768px) {
+    .card {
+        padding: 10px;
+
+        .thumbnailWrapper {
+            width: 60px;
+            height: 60px;
+        }
+    }
+}

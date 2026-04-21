@@ -27,7 +27,11 @@ export const useEventSummary = (eventId) => {
                     postsData: postsRes.data || postsRes,
                 });
             } catch (err) {
-                setError(err.response?.data?.message || err.message || 'Không thể kết nối tới máy chủ.');
+                setError(
+                    err.response?.data?.message ||
+                        err.message ||
+                        'Unable to connect to the server. Please try again later.',
+                );
             } finally {
                 setIsLoading(false);
             }

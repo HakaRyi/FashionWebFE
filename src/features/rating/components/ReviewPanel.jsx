@@ -2,17 +2,22 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { X, CheckCircle, Loader2 } from 'lucide-react';
 import styles from '../styles/SubmissionsReview.module.scss';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
-const ReviewPanel = ({ 
-    submission, 
+const ReviewPanel = ({
+    submission,
     criteria,
     criterionScores,
     onScoreChange,
-    comment, 
-    setComment, 
-    onClose, 
-    onSubmit, 
-    isSubmitting 
+    comment,
+    setComment,
+    onClose,
+    onSubmit,
+    isSubmitting
 }) => {
     if (!submission) return null;
 
@@ -36,8 +41,8 @@ const ReviewPanel = ({
         >
             <div className={styles.panelHeader}>
                 <div>
-                    <h3>Chấm điểm bài thi</h3>
-                    <small>Mã số: #{submission.postId}</small>
+                    <h3>Grading the exam</h3>
+                    <small>Code number: #{submission.postId}</small>
                 </div>
                 <button className={styles.btnClose} onClick={onClose} disabled={isSubmitting}>
                     <X size={24} />
@@ -46,16 +51,43 @@ const ReviewPanel = ({
 
             <div className={styles.panelScroll}>
                 <div className={styles.previewSection}>
-                    {submission.imageUrls && submission.imageUrls.length > 0 && (
-                        <img src={submission.imageUrls[0]} alt="Preview" className={styles.mainImg} />
-                    )}
+                    <div className={styles.imageGallery}>
+                        {submission.imageUrls && submission.imageUrls.length > 0 ? (
+                            submission.imageUrls.length > 1 ? (
+                                <Swiper
+                                    modules={[Pagination, Navigation]}
+                                    pagination={{ clickable: true }}
+                                    navigation={true}
+                                    className={styles.reviewSwiper}
+                                >
+                                    {submission.imageUrls.map((url, idx) => (
+                                        <SwiperSlide key={idx}>
+                                            <img
+                                                src={url}
+                                                alt={`Slide ${idx}`}
+                                                className={styles.mainImg}
+                                            />
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                            ) : (
+                                <img
+                                    src={submission.imageUrls[0]}
+                                    alt="Preview"
+                                    className={styles.mainImg}
+                                />
+                            )
+                        ) : (
+                            <div className={styles.noImage}>No images available</div>
+                        )}
+                    </div>
                     <h4>{submission.title}</h4>
                     <p className={styles.contentDesc}>{submission.content}</p>
                 </div>
 
                 <div className={styles.formSection}>
                     <div className={styles.criteriaSection}>
-                        <h4 style={{ marginBottom: '12px' }}>Các tiêu chí đánh giá</h4>
+                        <h4 style={{ marginBottom: '12px' }}>Evaluation Criteria</h4>
                         {criteria && criteria.length > 0 ? (
                             criteria.map((c) => (
                                 <div className={styles.inputGroup} key={c.eventCriterionId}>
@@ -75,20 +107,20 @@ const ReviewPanel = ({
                                 </div>
                             ))
                         ) : (
-                            <p>Sự kiện này chưa có tiêu chí đánh giá.</p>
+                            <p>This event does not have any evaluation criteria yet.</p>
                         )}
-                        
+
                         {criteria && criteria.length > 0 && (
                             <div className={styles.totalScorePreview} style={{ marginTop: '10px', fontWeight: 'bold', color: '#4f46e5' }}>
-                                Điểm tổng dự kiến: {calculatePreviewTotal()}
+                                Preview Total Score: {calculatePreviewTotal()}
                             </div>
                         )}
                     </div>
 
                     <div className={styles.inputGroup}>
-                        <label>Nhận xét của chuyên gia</label>
+                        <label>Expert Comments</label>
                         <textarea
-                            placeholder="Ghi chú về kỹ thuật, bố cục..."
+                            placeholder="Notes about technique, composition..."
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             rows={5}
@@ -96,13 +128,13 @@ const ReviewPanel = ({
                         />
                     </div>
 
-                    <button 
-                        className={styles.submitBtn} 
+                    <button
+                        className={styles.submitBtn}
                         onClick={onSubmit}
                         disabled={isSubmitting || !criteria || criteria.length === 0}
                     >
                         {isSubmitting ? <Loader2 className={styles.spinner} size={18} /> : <CheckCircle size={18} />}
-                        {isSubmitting ? "Đang lưu..." : "Xác nhận điểm số"}
+                        {isSubmitting ? "Saving..." : "Confirm Scores"}
                     </button>
                 </div>
             </div>

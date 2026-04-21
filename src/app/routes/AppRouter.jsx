@@ -21,7 +21,7 @@ function AppRouter() {
         height: '100vh',
         fontFamily: 'sans-serif'
       }}>
-        <p>Đang kiểm tra quyền truy cập...</p>
+        <p>Check access permissions....</p>
       </div>
     );
   }

@@ -1,98 +1,166 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Heart, MessageCircle, Share2, Sparkles, Plus, MoreHorizontal } from 'lucide-react';
-import { useFeed } from '@/features/feed';
+import { useState } from 'react';
+import { useFeed, FashionCard, CreatePostModal } from '@/features/feed';
+import { EventMiniCard, EventQuickViewModal } from '@/features/events';
 import styles from './Feed.module.scss';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/app/routes/paths';
 
 const FashionFeed = () => {
-    const { posts, isLoading, hasMore, lastPostRef } = useFeed();
+
+    const { user: currentUser } = useAuth();
+    const navigate = useNavigate();
+
+    const {
+        posts,
+        isLoading,
+        hasMore,
+        lastPostRef,
+        commentsMap,
+        toggleComments,
+        addComment,
+        toggleLike,
+        events,
+        isEventsLoading,
+        refreshAll,
+    } = useFeed();
+
+    const [showAllEvents, setShowAllEvents] = useState(false);
+
+    const displayedEvents = showAllEvents ? events : events.slice(0, 2);
+
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+    const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
+
+    const handleOpenQuickView = (event) => {
+        setSelectedEvent(event);
+        setIsQuickViewOpen(true);
+    };
+
+    const handleJoinFromQuickView = (event) => {
+        setIsQuickViewOpen(false);
+        setIsCreatePostOpen(true);
+    };
 
     const formatTime = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        if (!dateString) return '';
+
+        const date = new Date(dateString.includes('Z') ? dateString : dateString + 'Z');
+        const now = new Date();
+
+
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 0) return 'minutes ago';
+        if (diffInSeconds < 60) return 'minutes ago';
+
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) return `${diffInHours} hours ago`;
+
+        return date.toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });
     };
 
     return (
-        <div className={styles.feedPage}>
-            <main className={styles.feedContainer}>
-                {posts.map((post, index) => (
-                    <motion.article
-                        key={`${post.postId}-${index}`}
-                        ref={index === posts.length - 1 ? lastPostRef : null}
-                        className={styles.fashionCard}
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-10%' }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                        {/* Header */}
-                        <div className={styles.cardHeader}>
-                            <div className={styles.userInfo}>
-                                <img 
-                                    src={post.avatarUrl || `https://ui-avatars.com/api/?name=${post.userName}&background=random`} 
-                                    alt="avatar" 
-                                />
-                                <div className={styles.userMeta}>
-                                    <span className={styles.userName}>@{post.userName}</span>
-                                    <span className={styles.userRole}>
-                                        {post.isEvent ? `Event: ${post.eventName}` : 'Contributor'}
-                                    </span>
-                                </div>
-                            </div>
-                            <button className={styles.moreBtn}><MoreHorizontal size={20} /></button>
-                        </div>
+        <>
+            <div className={styles.feedPage}>
+                <div className={styles.feedLayout}>
+                    {/* Sidebar: Quản lý Events */}
+                    <aside className={styles.sidebar}>
+                        <div className={styles.eventSection}>
+                            <h3 className={styles.sectionTitle}>Featured Events</h3>
 
-                        {/* Image Body */}
-                        <div className={styles.imageContainer}>
-                            <img src={post.images?.[0] || 'https://via.placeholder.com/1000'} alt={post.title} />
-                            {post.isEvent && (
-                                <div className={styles.aiTag}>
-                                    <Sparkles size={12} />
-                                    <span>EVENT POST</span>
-                                </div>
+                            {isEventsLoading && (
+                                <div className={styles.loadingText}>Loading events...</div>
+                            )}
+
+                            {!isEventsLoading && events.length === 0 && (
+                                <p className={styles.emptyText}>No events available</p>
+                            )}
+
+                            <div className={styles.eventList}>
+                                {displayedEvents.map(event => (
+                                    <EventMiniCard key={event.eventId} event={event} onOpenQuickView={handleOpenQuickView} />
+                                ))}
+                            </div>
+
+                            {events.length > 2 && (
+                                <button
+                                    className={styles.showMoreBtn}
+                                    onClick={() => navigate(PATHS.USER_EVENTS)}
+                                >
+                                    Explore All Events ({events.length})
+                                </button>
                             )}
                         </div>
+                    </aside>
 
-                        {/* Footer & Stats */}
-                        <div className={styles.cardFooter}>
-                            <div className={styles.actionRow}>
-                                <div className={styles.leftActions}>
-                                    <div className={styles.statAction}>
-                                        <motion.button whileTap={{ scale: 0.8 }}>
-                                            <Heart size={24} fill={post.isLiked ? "#ff3b3b" : "none"} stroke={post.isLiked ? "#ff3b3b" : "currentColor"} />
-                                        </motion.button>
-                                        <span className={styles.statNumber}>{post.likeCount?.toLocaleString()}</span>
-                                    </div>
-                                    <div className={styles.statAction}>
-                                        <motion.button whileTap={{ scale: 0.8 }}><MessageCircle size={24} /></motion.button>
-                                        <span className={styles.statNumber}>{post.commentCount?.toLocaleString()}</span>
-                                    </div>
-                                    <div className={styles.statAction}>
-                                        <motion.button whileTap={{ scale: 0.8 }}><Share2 size={24} /></motion.button>
-                                        <span className={styles.statNumber}>{post.shareCount?.toLocaleString()}</span>
-                                    </div>
-                                </div>
-                                <button className={styles.saveBtn}>
-                                    <Plus size={24} stroke={post.isSaved ? "#C1FF72" : "currentColor"} />
-                                </button>
+                    {/* Main: Danh sách bài viết (Infinite Scroll) */}
+                    <main className={styles.feedContainer}>
+                        {posts.map((post, index) => (
+                            <FashionCard
+                                key={post.postId}
+                                post={post}
+                                // Gán ref cho phần tử cuối cùng để kích hoạt observer
+                                lastPostRef={index === posts.length - 1 ? lastPostRef : null}
+                                commentsMap={commentsMap}
+                                toggleComments={toggleComments}
+                                addComment={addComment}
+                                formatTime={formatTime}
+                                toggleLike={toggleLike}
+                            />
+                        ))}
+
+                        {/* Loading state khi kéo xuống */}
+                        {isLoading && (
+                            <div className={styles.loaderWrapper}>
+                                <div className={styles.spinner}></div>
+                                <span>Loading new trends...</span>
                             </div>
+                        )}
 
-                            <div className={styles.captionArea}>
-                                <h2 className={styles.postTitle}>{post.title}</h2>
-                                <p className={styles.description}>{post.content}</p>
-                                <div className={styles.tags}>
-                                    {post.eventName ? `#${post.eventName.replace(/\s+/g, '')}` : '#Fashion'} #Wapo
-                                </div>
-                                <time className={styles.timeAgo}>{formatTime(post.createdAt)}</time>
+                        {/* Hết dữ liệu */}
+                        {!hasMore && posts.length > 0 && (
+                            <div className={styles.endMessage}>
+                                <div className={styles.line}></div>
+                                <span>You've seen all the trends for today</span>
+                                <div className={styles.line}></div>
                             </div>
-                        </div>
-                    </motion.article>
-                ))}
+                        )}
+                    </main>
+                </div>
+            </div>
 
-                {isLoading && <div className={styles.loader}>Loading...</div>}
-                {!hasMore && <div className={styles.endMessage}>Fin.</div>}
-            </main>
-        </div>
+            <EventQuickViewModal
+                isOpen={isQuickViewOpen}
+                onClose={() => setIsQuickViewOpen(false)}
+                event={selectedEvent}
+                onJoinClick={handleJoinFromQuickView}
+                user={currentUser}
+            />
+
+            <CreatePostModal
+                isOpen={isCreatePostOpen}
+                onClose={() => setIsCreatePostOpen(false)}
+                fixedEventId={selectedEvent?.eventId}
+                eventName={selectedEvent?.title}
+                user={currentUser}
+                onSuccess={() => {
+                    refreshAll();
+                    setIsCreatePostOpen(false);
+                }}
+            />
+        </>
     );
 };
 

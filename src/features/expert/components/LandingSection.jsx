@@ -20,7 +20,7 @@ const LandingSection = ({ onStart }) => (
         <header className={styles.hero}>
             <span className={styles.badge}>WAPO PROFESSIONAL</span>
             <h1 className={styles.title}>Turn Your Passion <span>Into Influence</span></h1>
-            <p className={styles.subtitle}>Gia nhập cộng đồng tinh hoa dành riêng cho chuyên gia thời trang hàng đầu.</p>
+            <p className={styles.subtitle}>Join an elite community exclusively for top fashion professionals.</p>
             <button className={styles.btnMain} onClick={onStart}>
                 Apply for Expert Role <ArrowRight size={20} />
             </button>
@@ -28,9 +28,9 @@ const LandingSection = ({ onStart }) => (
 
         <section className={styles.featuresSection}>
             <div className={styles.grid}>
-                <FeatureCard icon={<ShieldCheck />} title="Verified" desc="Nhận tích xanh định danh chuyên gia uy tín." />
-                <FeatureCard icon={<Zap />} title="Pro Tools" desc="Công cụ phân tích xu hướng và quản lý đặc quyền." />
-                <FeatureCard icon={<Globe />} title="Network" desc="Kết nối trực tiếp với các nhãn hàng xa xỉ toàn cầu." />
+                <FeatureCard icon={<ShieldCheck />} title="Verified" desc="Receive verified badge for trusted expert status." />
+                <FeatureCard icon={<Zap />} title="Pro Tools" desc="Advanced analytics tools and exclusive privileges." />
+                <FeatureCard icon={<Globe />} title="Network" desc="Direct connections with global luxury brands." />
             </div>
         </section>
     </motion.div>

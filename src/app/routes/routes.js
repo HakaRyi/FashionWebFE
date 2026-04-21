@@ -22,9 +22,14 @@ import Analytics from '../../pages/ExpertAnalytics';
 import ExpertWallet from '../../pages/ExpertWallet';
 import SubmissionsReview from '../../pages/ExpertSubmissionsReview';
 import EventSummary from '../../pages/EventSummary';
+import Policy from '../../pages/Policy';
+import ExpertReputation from '../../pages/ExpertReputation';
 
 import Home from '../../pages/Home';
 import FashionFeed from '../../pages/Feed';
+import SearchResultsPage from '../../pages/FeedSearch';
+import PostDetailPage from '../../pages/PostDetail';
+import EventsPage from '../../pages/Events';
 
 import DefaultLayout from '../../widgets/layouts/DefaultLayout';
 import HomeLayout from '../../widgets/layouts/HomeLayout';
@@ -54,11 +59,47 @@ export const routes = [
         component: Unauthorized,
         layout: null,
     },
+    {
+        path: PATHS.USER_POLICY,
+        component: Policy,
+        layout: HomeLayout,
+        // roles: ['user', 'expert'],
+    },
 
     // ===== USER =====
     {
         path: PATHS.USER_FEED,
         component: FashionFeed,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.SEARCH_RESULTS,
+        component: SearchResultsPage,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.POST_DETAIL,
+        component: PostDetailPage,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.USER_EVENTS,
+        component: EventsPage,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.EVENT_DETAIL,
+        component: EventDetailPage,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.EVENT_SUMMARY,
+        component: EventSummary,
         layout: HomeLayout,
         roles: ['user', 'expert'],
     },
@@ -127,6 +168,12 @@ export const routes = [
     {
         path: PATHS.EXPERT_SUMMARY_EVENT,
         component: EventSummary,
+        layout: ExpertLayout,
+        roles: ['expert'],
+    },
+    {
+        path: PATHS.EXPERT_REPUTATION,
+        component: ExpertReputation,
         layout: ExpertLayout,
         roles: ['expert'],
     },

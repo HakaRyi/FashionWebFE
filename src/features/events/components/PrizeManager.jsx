@@ -1,7 +1,8 @@
-import React, { memo, useCallback } from "react";
+import { memo, useCallback } from "react";
 import { Trophy, Coins, X, Plus } from "lucide-react";
 import styles from "../styles/PrizeManager.module.scss";
 
+//Class unused
 const PrizeManager = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
 
   const updatePrize = useCallback((index, field, value) => {
@@ -17,7 +18,7 @@ const PrizeManager = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
       ...prev,
       {
         id: crypto.randomUUID(),
-        label: "Giải mới",
+        label: "New Prize",
         amount: 0
       }
     ]);
@@ -29,17 +30,16 @@ const PrizeManager = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
 
   return (
     <div className={styles.configCard}>
-      
+
       <div className={styles.cardHeader}>
         <Trophy size={18} />
-        <h3>Cơ chế giải thưởng</h3>
+        <h3>Prize Configuration</h3>
 
         <div
-          className={`${styles.totalBadge} ${
-            isOverBudget ? styles.err : ""
-          }`}
+          className={`${styles.totalBadge} ${isOverBudget ? styles.err : ""
+            }`}
         >
-          Tổng: {totalBudget.toLocaleString()}
+          Total: {totalBudget.toLocaleString()}
         </div>
       </div>
 
@@ -52,7 +52,7 @@ const PrizeManager = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
               onChange={(e) =>
                 updatePrize(index, "label", e.target.value)
               }
-              placeholder="Tên giải"
+              placeholder="Prize Name"
             />
 
             <div className={styles.inputWrap}>
@@ -84,7 +84,7 @@ const PrizeManager = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
           onClick={addPrize}
         >
           <Plus size={16} />
-          Thêm hạng mục
+          Add Prize
         </button>
       </div>
 

@@ -1,60 +1,58 @@
-$gold-gradient: linear-gradient(135deg, #c5a059 0%, #edd4a1 50%, #c5a059 100%);
+@use "sass:color";
+@use 'sass:map';
 
-$black-deep: #0a0a0a;
-$black-hover: #222;
+// --- Color Palette ---
 
-$text-gray: #888;
-$error-red: #d93025;
+// Brand Colors
+$gold:       #c5a059;
+$gold-dark:  #d4af37;
+$gold-gradient: linear-gradient(135deg, $gold 0%, #edd4a1 50%, $gold 100%);
 
-$border-light: #e0e0e0;
+// Functional Colors (F-Series)
+$f-pink:     #ff2d55;
+$f-purple:   #7000ff;
+$f-cyan:     #00d4ff;
+$f-yellow:   #fff01f;
+$f-black:    #080808;
+$f-gray:     #6b6b75;
+$f-bg:       #fcfcfd;
+$f-border:   rgba($f-black, 0.1);
 
-$transition-luxury: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-
-$gold: #c5a059;
-$black: #111;
-$bg: #f4f5f7;
-$red: #ff4d4d;
-$gold-dark: #d4af37;
-$black-modal: #1a1a1a;
-
+// UI Colors
+$black-deep:    #0a0a0a;
+$black-hover:   #222;
+$black-modal:   #1a1a1a;
 $primary-black: #1a1a1a;
-$accent-pink: #ff008c;
-$bg-white: #ffffff;
-$border-color: #f0f0f0;
+$accent-pink:   #ff008c;
+$text-gray:     #888;
+$error-red:     #d93025;
+$red:           #ff4d4d;
+$bg:            #f4f5f7;
+$bg-white:      #ffffff;
+$border-light:  #e0e0e0;
+$border-color:  #f0f0f0;
 
+// --- Typography ---
 $font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 $font-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
 
-$f-pink: #ff2d55;
-$f-purple: #7000ff;
-$f-cyan: #00d4ff;
-$f-yellow: #fff01f;
-$f-bg: #fcfcfd; 
-$f-black: #080808;
-$f-gray: #6b6b75;
+// --- Animations ---
+$transition-luxury: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 
-// Mixins
-@mixin neon-shadow($color) {
-    box-shadow: 6px 6px 0px $f-black;
-    transition: all 0.3s ease;
-    &:hover {
-        box-shadow: 10px 10px 0px $color;
-        transform: translate(-4px, -4px);
-    }
-}
+// --- Mixins ---
 
-$f-pink: #ff2d55;
-$f-purple: #7000ff;
-$f-cyan: #00d4ff;
-$f-yellow: #fff01f;
-$f-bg: #fcfcfd; 
-$f-black: #080808;
-$f-gray: #6b6b75;
-$f-border: rgba($f-black, 0.1);
-
-// Mixins
 @mixin flex-center {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@mixin neon-shadow($color) {
+    box-shadow: 6px 6px 0px $f-black;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        box-shadow: 10px 10px 0px $color;
+        transform: translate(-4px, -4px);
+    }
 }

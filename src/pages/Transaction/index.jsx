@@ -24,7 +24,7 @@ function TransactionManagement() {
                 const response = await axiosClient.get('/transaction');
                 setTransactions(response.data);
             } catch (error) {
-                console.error("Lỗi lấy dữ liệu:", error);
+                console.error("Data retrieval error:", error);
             } finally {
                 setLoading(false);
             }
@@ -87,11 +87,11 @@ function TransactionManagement() {
         <div className={styles.wrapper}>
             <div className={styles.header}>
                 <div>
-                    <h2>Quản Lý Giao Dịch</h2>
-                    <p>Đang hiển thị {filteredTransactions.length} kết quả</p>
+                    <h2>Transaction Management</h2>
+                    <p>Showing {filteredTransactions.length} results</p>
                 </div>
                 <button className={styles.btnExport} onClick={exportToExcel}>
-                    <FaDownload /> Xuất Excel
+                    <FaDownload /> Export Excel
                 </button>
             </div>
 
@@ -100,7 +100,7 @@ function TransactionManagement() {
                     <FaMagnifyingGlass />
                     <input 
                         type="text" 
-                        placeholder="Tìm tên người dùng, mã giao dịch..." 
+                        placeholder="Search by user name or transaction ID..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -111,12 +111,12 @@ function TransactionManagement() {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>Mã GD</th>
-                            <th>Người dùng</th>
-                            <th>Loại</th>
-                            <th>Số tiền</th>
-                            <th>Thời gian</th>
-                            <th>Trạng thái</th>
+                            <th>Transaction ID</th>
+                            <th>User</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,7 +135,7 @@ function TransactionManagement() {
                                 <td className={styles.date}>{formatDateTime(trx.createdAt)}</td>
                                 <td>
                                     <div className={`${styles.statusBadge} ${styles[trx.status.toLowerCase()]}`}>
-                                        {trx.status === 'Success' ? 'Thành công' : 'Đang xử lý'}
+                                        {trx.status === 'Success' ? 'Success' : 'Processing'}
                                     </div>
                                 </td>
                             </tr>
@@ -147,7 +147,7 @@ function TransactionManagement() {
             {/* Pagination UI */}
             <div className={styles.pagination}>
                 <span className={styles.pageInfo}>
-                    Trang {currentPage} / {totalPages || 1}
+                    Page {currentPage} / {totalPages || 1}
                 </span>
                 <div className={styles.pageBtns}>
                     <button 

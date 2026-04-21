@@ -37,8 +37,8 @@ const ExpertApplicationPage = () => {
         return (
             <div className={styles.container}>
                 <div className={styles.infoState}>
-                    <h2>Bạn đã là Chuyên gia!</h2>
-                    <p>Hồ sơ của bạn đã được xác thực. Bạn có thể bắt đầu cung cấp dịch vụ ngay bây giờ.</p>
+                    <h2>You are now an Expert!</h2>
+                    <p>Your profile has been verified. You can start providing services now.</p>
                     <button className={styles.btnPrimary} onClick={() => navigate(PATHS.EXPERT_DASHBOARD)}>
                         Go to Expert Dashboard
                     </button>
@@ -52,10 +52,10 @@ const ExpertApplicationPage = () => {
             <div className={styles.container}>
                 <div className={styles.infoState}>
                     <div className={styles.pendingIcon}>⏳</div>
-                    <h2>Đơn đăng ký đang được xét duyệt</h2>
-                    <p>Hệ thống đang kiểm tra hồ sơ của bạn. Vui lòng đợi trong 24-48h.</p>
+                    <h2>The application is currently under review.</h2>
+                    <p>The system is reviewing your application. Please allow 24-48 hours for processing.</p>
                     <button className={styles.btnSecondary} onClick={() => navigate(PATHS.USER_FEED)}>
-                        Quay lại trang chủ
+                        Back to Home
                     </button>
                 </div>
             </div>
@@ -69,30 +69,30 @@ const ExpertApplicationPage = () => {
                     <div className={styles.iconCircle}>
                         <AlertCircle size={48} color="#ff4d4f" />
                     </div>
-                    <h2>Hồ sơ chưa được phê duyệt</h2>
+                    <h2>The application has not been approved.</h2>
 
                     <div className={styles.reasonBox}>
-                        <span className={styles.label}>Lý do từ chối:</span>
+                        <span className={styles.label}>Reason for rejection:</span>
                         <span className={styles.text}>"{applicationStatus.reason}"</span>
 
                         <div className={styles.dateInfo}>
                             <Calendar size={14} />
-                            <span>Xử lý ngày: {new Date(applicationStatus.processedAt).toLocaleDateString('vi-VN')}</span>
+                            <span>Processed on: {new Date(applicationStatus.processedAt).toLocaleDateString('vi-VN')}</span>
                         </div>
                     </div>
 
                     <div className={styles.buttonGrid}>
                         <button className={`${styles.actionBtn} ${styles.outline}`} onClick={() => setShowReview(true)}>
-                            <Eye size={18} /> Xem lại hồ sơ
+                            <Eye size={18} /> Review the records
                         </button>
 
                         <button className={`${styles.actionBtn} ${styles.primary}`} onClick={() => setShowForm(true)}>
-                            <RefreshCcw size={18} /> Cập nhật nộp lại
+                            <RefreshCcw size={18} /> Update and resubmit
                         </button>
                     </div>
 
                     <button className={`${styles.actionBtn} ${styles.ghost}`} onClick={() => navigate(PATHS.USER_FEED)}>
-                        Để sau
+                        To do later
                     </button>
                 </div>
 

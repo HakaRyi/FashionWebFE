@@ -1,0 +1,272 @@
+$fashion-white: #ffffff;
+$fashion-bg: #fcfaf8;
+$primary-pink: #f8e1e7;
+$accent-gold: #d4af37;
+$text-main: #2d2d2d;
+$text-light: #8e8e8e;
+$success-green: #6ab04c;
+$glass-effect: rgba(255, 255, 255, 0.8);
+$shadow-soft: 0 15px 35px rgba(212, 175, 55, 0.12);
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 245, 245, 0.7);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    padding: 20px;
+}
+
+.modalContainer {
+    background: $fashion-white;
+    width: 100%;
+    max-width: 520px;
+    border-radius: 32px; // Bo tròn lớn tạo cảm giác thân thiện, social
+    overflow: hidden;
+    position: relative;
+    box-shadow: $shadow-soft;
+    border: 1px solid rgba($accent-gold, 0.1);
+}
+
+.banner {
+    position: relative;
+    height: 260px;
+    width: 100%;
+    background: $fashion-bg;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    &:hover img {
+        transform: scale(1.05);
+    }
+
+    .closeBtn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: $fashion-white;
+        border: none;
+        color: $text-main;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: $primary-pink;
+            transform: rotate(90deg);
+        }
+    }
+
+    .statusBadge {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: $glass-effect;
+        backdrop-filter: blur(5px);
+        color: $accent-gold;
+        padding: 8px 18px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border: 1px solid rgba($accent-gold, 0.2);
+    }
+}
+
+.content {
+    padding: 32px;
+    background: linear-gradient(to bottom, $fashion-white, $fashion-bg);
+
+    .title {
+        font-family: 'Playfair Display', serif; // Font chữ có chân cho sự fashion
+        font-size: 1.75rem;
+        color: $text-main;
+        margin-bottom: 20px;
+        font-weight: 800;
+        line-height: 1.3;
+        letter-spacing: -0.5px;
+    }
+}
+
+.metaGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+
+    .metaItem {
+        background: $fashion-white;
+        padding: 12px 8px;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid rgba($primary-pink, 0.5);
+        transition: all 0.3s ease;
+
+        &:hover {
+            border-color: $accent-gold;
+            transform: translateY(-3px);
+        }
+
+        svg {
+            color: $accent-gold;
+        }
+
+        span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: $text-light;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    }
+}
+
+.description {
+    color: $text-light;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 32px;
+    font-weight: 400;
+    // Giới hạn dòng để modal gọn gàng
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.actions {
+    display: flex;
+    gap: 16px;
+
+    button {
+        flex: 1;
+        height: 56px;
+        border-radius: 18px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: none;
+    }
+
+    .detailBtn {
+        background: $fashion-white;
+        color: $text-main;
+        border: 1.5px solid $text-main;
+
+        &:hover {
+            background: $text-main;
+            color: $fashion-white;
+        }
+    }
+
+    .joinBtn {
+        background: linear-gradient(135deg, $accent-gold, #b8860b);
+        color: $fashion-white;
+        box-shadow: 0 10px 20px rgba($accent-gold, 0.2);
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 25px rgba($accent-gold, 0.3);
+        }
+
+        &:active {
+            transform: translateY(-1px);
+        }
+    }
+
+    .disabledBtn {
+        background-color: #f3f4f6;
+        color: #9ca3af;
+        border: 1px solid #e5e7eb;
+        cursor: not-allowed;
+        pointer-events: none;
+
+        svg {
+            opacity: 0.6;
+        }
+
+        box-shadow: none;
+        transform: none !important;
+    }
+
+    .alreadyJoinedBtn {
+        background: #f0fdf4;
+        color: $success-green;
+        border: 1px solid rgba($success-green, 0.2);
+        cursor: not-allowed;
+
+        svg {
+            color: $success-green;
+        }
+    }
+
+    .summaryBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: white;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            background: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// Hiệu ứng cho Mobile
+@media (max-width: 480px) {
+    .modalContainer {
+        max-width: 95%;
+        border-radius: 24px;
+    }
+
+    .title {
+        font-size: 1.4rem;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+
+        button {
+            width: 100%;
+        }
+    }
+}

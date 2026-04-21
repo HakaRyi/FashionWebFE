@@ -1,0 +1,292 @@
+// Variables
+$font-fashion: 'Playfair Display', serif;
+$font-sans: 'Inter', sans-serif;
+$primary-blue: #2563eb;
+$text-dark: #111827;
+$text-light: #6b7280;
+$bg-light: #fafafa;
+$white: #ffffff;
+$transition-base: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+@mixin glass-effect {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.searchContainer {
+  background-color: $bg-light;
+  font-family: $font-sans;
+  color: $text-dark;
+  max-width: 1152px; 
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+
+  // Global reset cho các thẻ link bên trong container
+  a {
+    text-decoration: none; // Loại bỏ gạch chân mặc định
+    color: inherit;
+    display: block;
+  }
+
+  // Header Section
+  .header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1.5rem;
+
+    h1 {
+      font-family: $font-fashion;
+      font-size: 1.875rem;
+      font-weight: 700;
+      font-style: italic;
+      margin: 0;
+
+      .queryHighlight {
+        color: $primary-blue;
+        position: relative;
+        display: inline-block;
+        text-decoration: none; // Đảm bảo không gạch chân highlight
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 2px;
+          left: 0;
+          width: 100%;
+          height: 6px;
+          background: rgba($primary-blue, 0.1);
+          z-index: -1;
+        }
+      }
+    }
+
+    .stats {
+      color: $text-light;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      letter-spacing: 0.025em;
+    }
+  }
+
+  // Layout Columns
+  .mainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+    }
+  }
+
+  // Generic Section Title
+  .sectionTitle {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    .dot {
+      height: 6px;
+      width: 6px;
+      border-radius: 9999px;
+      background-color: $primary-blue;
+      box-shadow: 0 0 8px rgba($primary-blue, 0.5);
+    }
+  }
+
+  // Left Column: People
+  .peopleColumn {
+    width: 100%;
+    @media (min-width: 1024px) { width: 33.333%; }
+
+    .userCard {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: $white;
+      border: 1px solid #f3f4f6;
+      border-radius: 1.25rem;
+      transition: $transition-base;
+      margin-bottom: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+        border-color: $primary-blue;
+      }
+
+      .avatar {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 9999px;
+        object-fit: cover; // Sửa lỗi object-cover thành object-fit
+        border: 2px solid transparent;
+        transition: $transition-base;
+      }
+
+      &:hover .avatar {
+        border-color: $primary-blue;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        
+        .userName {
+          font-weight: 700;
+          color: $text-dark;
+          text-decoration: none;
+        }
+
+        .expertise {
+          font-size: 0.75rem;
+          color: $text-light;
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  // Right Column: Posts
+  .postsColumn {
+    width: 100%;
+    @media (min-width: 1024px) { width: 66.666%; }
+
+    .postsGrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      @media (min-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .postCard {
+      background: $white;
+      border-radius: 2rem;
+      overflow: hidden;
+      border: 1px solid #f3f4f6;
+      transition: $transition-base;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: 0 30px 50px rgba(0, 0, 0, 0.1);
+      }
+
+      .imageWrapper {
+        position: relative;
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .expertBadge {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          @include glass-effect;
+          color: $text-dark;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 0.25rem 0.75rem;
+          border-radius: 9999px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          z-index: 2;
+        }
+      }
+
+      &:hover .imageWrapper img {
+        transform: scale(1.08);
+      }
+
+      .postContent {
+        padding: 1.25rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+          font-family: $font-fashion;
+          font-size: 1.125rem;
+          font-weight: 700;
+          margin-bottom: 0.25rem;
+          transition: color 0.3s;
+          text-decoration: none;
+        }
+
+        .author {
+          font-size: 0.875rem;
+          color: $text-light;
+          margin-bottom: 1rem;
+          span { font-weight: 600; color: $text-dark; }
+        }
+
+        .postFooter {
+          margin-top: auto;
+          padding-top: 1rem;
+          border-top: 1px solid #f9fafb;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .stats {
+            display: flex;
+            gap: 1rem;
+            color: $text-light;
+            font-size: 0.875rem;
+          }
+
+          .viewLink {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: $primary-blue;
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            text-decoration: none; // Đảm bảo viewLink không gạch chân
+          }
+        }
+      }
+
+      &:hover .viewLink {
+        opacity: 1;
+        transform: translateX(-5px);
+      }
+    }
+  }
+
+  // States: Empty & Loading
+  .emptyState {
+    text-align: center;
+    padding: 5rem 2rem;
+    border: 2px dashed #e5e7eb;
+    border-radius: 2rem;
+    color: $text-light;
+    
+    p { font-family: $font-fashion; font-size: 1.125rem; margin: 0; }
+  }
+
+  .loadingState {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    font-family: $font-fashion;
+    color: $text-light;
+    font-style: italic;
+  }
+}

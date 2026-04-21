@@ -23,7 +23,7 @@ export const useExpertRating = (eventId) => {
             setSubmissions(reviewsRes.data || []);
             setCriteria(criteriaRes.data || []);
         } catch (error) {
-            const msg = error.response?.data?.message || 'Không thể tải danh sách bài thi';
+            const msg = error.response?.data?.message || 'Unable to load the list of exam questions';
             toast.error(`Lỗi: ${msg}`);
         } finally {
             setIsLoading(false);

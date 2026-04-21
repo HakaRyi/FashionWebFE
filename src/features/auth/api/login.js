@@ -8,3 +8,10 @@ export const loginApi = async (email, password) => {
 
   return response.data;
 };
+
+export const googleLoginApi = async (idToken) => {
+  const response = await axiosClient.post("/auth/google-login", {
+    idToken: idToken
+  });
+  return response.data;
+};

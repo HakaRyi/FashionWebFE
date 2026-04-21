@@ -17,7 +17,7 @@ function CoinPackages(){
 
    <div className={styles.panelHeader}>
     <h3>
-     <FaCrown/> Top Gói Coin
+     <FaCrown/> Top Coin Packages
     </h3>
    </div>
 

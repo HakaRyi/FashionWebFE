@@ -7,11 +7,11 @@ const WalletHeader = ({ onDepositClick }) => {
     <header className={styles.header}>
       <div className={styles.title}>
         <h1>My Wallet</h1>
-        <p>Quản lý ngân sách và lịch sử dòng tiền của bạn.</p>
+        <p>Manage your budget and transaction history.</p>
       </div>
 
       <button className={styles.btnDeposit} onClick={onDepositClick}>
-        <Plus size={18} /> Nạp thêm VND
+        <Plus size={18} /> Add Money
       </button>
     </header>
   );
