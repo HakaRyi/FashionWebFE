@@ -10,8 +10,13 @@ export const useLogin = () => {
   const handleLogin = async (email, password) => {
     const data = await loginApi(email, password);
 
-    login(data.accessToken, data.refreshToken);
+    console.log("login response:", data);
 
+    if (!data?.accessToken || !data?.refreshToken) {
+      throw new Error("Invalid login response from server");
+    }
+
+    login(data.accessToken, data.refreshToken);
     navigate(PATHS.USER_FEED, { replace: true });
   };
 
