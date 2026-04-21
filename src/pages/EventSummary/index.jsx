@@ -34,7 +34,29 @@ const EventSummary = () => {
   };
 
   if (isLoading) return <div className={styles.loadingState}>Currently compiling fashion data....</div>;
-  if (error) return <div className={styles.errorState}>Error: {error}</div>;
+
+  const hasNoData = !leaderboardData || leaderboardData.length === 0;
+
+  if (error || hasNoData) {
+    return (
+      <div className={styles.emptyStateContainer}>
+        <div className={styles.emptyContent}>
+          <h2>Event Concluded</h2>
+          <p>
+            {error?.includes('404') || hasNoData
+              ? "This event has ended, but there were no participants to display in the summary."
+              : "Something went wrong while fetching the summary."}
+          </p>
+          <button
+            className={styles.backBtn}
+            onClick={() => window.history.back()}
+          >
+            Return to Events
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles['event-summary']}>

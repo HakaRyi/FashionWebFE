@@ -25,7 +25,7 @@ export const useCreateEvent = () => {
         isAutoStart: false,
         minExpertsRequired: 2,
         pointPerLike: 1,
-        pointPerShare: 3,
+        pointPerShare: 1,
     });
 
     const [criteria, setCriteria] = useState([

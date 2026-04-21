@@ -199,3 +199,91 @@
         }
     }
 }
+
+.emptyStateContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh; // Căn giữa theo chiều dọc màn hình
+    padding: 2rem;
+    background-color: #fafafa; // Màu nền nhẹ nhàng
+    border-radius: 16px;
+    margin: 2rem 0;
+}
+
+.emptyContent {
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    padding: 3rem 2rem;
+    background: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
+    // Hiệu ứng xuất hiện mượt mà
+    animation: fadeIn 0.5s ease-out;
+
+    h2 {
+        font-size: 1.8rem;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    p {
+        font-size: 1rem;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+    }
+}
+
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 2rem;
+    background-color: #000; // Tone màu đen sang trọng cho fashion
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Animation cho phần nội dung
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Responsive cho Mobile
+@media (max-width: 480px) {
+    .emptyContent {
+        padding: 2rem 1.5rem;
+
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+}
