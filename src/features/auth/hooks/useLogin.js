@@ -12,10 +12,15 @@ export const useLogin = () => {
         try {
             const data = await loginApi(email, password);
 
-    login(data.accessToken, data.refreshToken);
+            login(data.accessToken, data.refreshToken);
+            navigate(PATHS.USER_FEED, { replace: true });
 
-    navigate(PATHS.USER_FEED, { replace: true });
-  };
+            return data;
+        } catch (error) {
+            console.error('Login failed:', error);
+            throw error;
+        }
+    };
 
-  return { handleLogin };
+    return { handleLogin };
 };
