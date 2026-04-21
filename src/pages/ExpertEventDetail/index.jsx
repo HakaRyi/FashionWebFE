@@ -155,7 +155,7 @@ const EventDetailPage = () => {
                         <div className={styles.weightItem}>
                             <div className={styles.weightLabel}>
                                 <span>Expert</span>
-                                <span>{event.expertWeight * 100}%</span>
+                                <span>{Math.round(event.expertWeight * 100)}%</span>
                             </div>
                             <div className={styles.weightBar}>
                                 <div style={{ width: `${event.expertWeight * 100}%`, background: '#3b82f6' }}></div>
@@ -164,7 +164,7 @@ const EventDetailPage = () => {
                         <div className={styles.weightItem}>
                             <div className={styles.weightLabel}>
                                 <span>Community</span>
-                                <span>{event.userWeight * 100}%</span>
+                                <span>{Math.round(event.userWeight * 100)}%</span>
                             </div>
                             <div className={styles.weightBar}>
                                 <div style={{ width: `${event.userWeight * 100}%`, background: '#10b981' }}></div>
