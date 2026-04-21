@@ -3,16 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Image as ImageIcon, Loader2, Plus, AlertCircle, Calendar } from 'lucide-react';
 import styles from '../styles/CreatePostModal.module.scss';
 import { feedApi } from '@/features/feed/api/feed';
+import { useEventStore } from '@/features/events';
 
-const CreatePostModal = ({ 
-    isOpen, 
-    onClose, 
-    onSuccess, 
-    user, 
+const CreatePostModal = ({
+    isOpen,
+    onClose,
+    onSuccess,
+    user,
     // Nếu có fixedEventId -> Chế độ tham gia Event
     // Nếu không có -> Chế độ post bình thường
-    fixedEventId = null, 
-    eventName = "", // Tên event để hiển thị UI cho đẹp
+    fixedEventId = null,
+    eventName = "",
 }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -21,8 +22,8 @@ const CreatePostModal = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const fileInputRef = useRef(null);
+    const fetchEvents = useEventStore(state => state.fetchEvents);
 
-    // Reset form khi đóng/mở
     useEffect(() => {
         if (!isOpen) {
             setTitle('');
@@ -62,11 +63,16 @@ const CreatePostModal = ({
         if (title) formData.append('Title', title);
         if (content) formData.append('Content', content);
         if (fixedEventId) formData.append('EventId', fixedEventId);
-        
+
         images.forEach(file => formData.append('Images', file));
 
         try {
             await feedApi.createPost(formData);
+
+            if (fixedEventId) {
+                await fetchEvents(true);
+            }
+
             onSuccess?.();
             onClose();
         } catch (err) {
@@ -80,7 +86,7 @@ const CreatePostModal = ({
         <AnimatePresence>
             {isOpen && (
                 <div className={styles.modalOverlay} onClick={onClose}>
-                    <motion.div 
+                    <motion.div
                         className={styles.modalContainer}
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -97,7 +103,7 @@ const CreatePostModal = ({
                                 <img src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.username}`} alt="avatar" />
                                 <div className={styles.userMeta}>
                                     <span className={styles.name}>{user?.username || 'User'}</span>
-                                    
+
                                     {fixedEventId && (
                                         <div className={styles.eventBadge}>
                                             <Calendar size={12} />
@@ -107,15 +113,15 @@ const CreatePostModal = ({
                                 </div>
                             </div>
 
-                            <input 
-                                type="text" 
-                                placeholder="Give your post a title..." 
+                            <input
+                                type="text"
+                                placeholder="Give your post a title..."
                                 className={styles.titleInput}
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
 
-                            <textarea 
+                            <textarea
                                 placeholder={fixedEventId ? "Tell us about your event entry..." : "Share your fashion thoughts..."}
                                 className={styles.textarea}
                                 value={content}
@@ -137,11 +143,11 @@ const CreatePostModal = ({
                                 </div>
                             )}
 
-                            {error && <div className={styles.errorMsg}><AlertCircle size={16}/> {error}</div>}
+                            {error && <div className={styles.errorMsg}><AlertCircle size={16} /> {error}</div>}
 
                             <div className={styles.footer}>
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     className={styles.addImgBtn}
                                     onClick={() => fileInputRef.current.click()}
                                     disabled={isSubmitting}
@@ -151,8 +157,8 @@ const CreatePostModal = ({
                                 </button>
                                 <input type="file" hidden multiple ref={fileInputRef} onChange={handleImageChange} accept="image/*" />
 
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     className={styles.submitBtn}
                                     disabled={isSubmitting || (!content && images.length === 0)}
                                 >

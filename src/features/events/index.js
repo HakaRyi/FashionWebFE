@@ -32,3 +32,6 @@ export { default as RatingModal } from '@/features/events/components/RatingModal
 
 export { useEventSummary } from '@/features/events/hooks/useEventSummary';
 export { formatVND, formatDate } from '@/features/events/utils/formatValue';
+
+export { usePublicEvents } from '@/features/events/hooks/usePublicEvents';
+export { useEventStore } from '@/features/events/store/useEventStore';

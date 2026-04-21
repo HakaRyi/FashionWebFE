@@ -32,7 +32,7 @@ function ActivityList() {
     if (interval >= 1) return interval + " giờ trước";
     interval = Math.floor(seconds / 60);
     if (interval >= 1) return interval + " phút trước";
-    return "Vừa xong";
+    return "minutes ago";
   };
 
   const totalPages = Math.ceil(data.totalCount / pageSize);

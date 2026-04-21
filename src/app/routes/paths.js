@@ -10,6 +10,7 @@ export const PATHS = {
     USER_POLICY: '/policy',
     SEARCH_RESULTS: '/search',
     POST_DETAIL: '/post/:id',
+    USER_EVENTS: '/events',
     EVENT_DETAIL: '/events/:id',
     EVENT_SUMMARY: '/summary-event/:id',
 
@@ -31,7 +32,7 @@ export const PATHS = {
     DASHBOARD: '/dashboard',
     USERS: '/users',
     EXPERTS: '/experts',
-    EVENTS: '/events',
+    EVENTS: '/admin/events',
     POSTS: '/posts',
     PRODUCTS: '/products',
     TRANSACTIONS: '/transactions',

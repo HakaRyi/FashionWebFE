@@ -1,39 +1,35 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { feedApi } from '../api/feed';
-import { getEventApi } from '@/features/events';
+import { useEventStore } from '@/features/events';
 
 export const useFeed = () => {
     const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const [page, setPage] = useState(1);
     const [commentsMap, setCommentsMap] = useState({});
-    const [events, setEvents] = useState([]);
-    const [isEventsLoading, setIsEventsLoading] = useState(false);
+
+    const { events, isLoading: isEventsLoading, fetchEvents } = useEventStore();
 
     const observer = useRef();
     const isFetchingRef = useRef(false);
 
-    const fetchEvents = useCallback(async () => {
-        setIsEventsLoading(true);
-        try {
-            const response = await getEventApi.getAllPublicEvents();
-            setEvents(response.data || response || []);
-        } catch (error) {
-            console.error('Failed to fetch events:', error);
-        } finally {
-            setIsEventsLoading(false);
-        }
-    }, []);
-
-    const fetchPosts = useCallback(async (pageNum, isRefresh = false) => {
+    // 1. Hàm fetch dữ liệu chính
+    const fetchPosts = useCallback(async (currentCursor = null, isRefresh = false) => {
+        // Chống gọi trùng lặp (Double fetching)
         if (isFetchingRef.current && !isRefresh) return;
 
         isFetchingRef.current = true;
         setIsLoading(true);
 
         try {
-            const newPosts = await feedApi.getFeed(pageNum, 10);
+            const newPosts = await feedApi.getFeed(currentCursor, 10);
+
+            // Nếu không có dữ liệu trả về hoặc mảng rỗng
+            if (!newPosts || newPosts.length === 0) {
+                setHasMore(false);
+                if (isRefresh) setPosts([]);
+                return;
+            }
 
             if (isRefresh) {
                 setPosts(newPosts);
@@ -42,34 +38,44 @@ export const useFeed = () => {
                 setPosts((prev) => {
                     const existingIds = new Set(prev.map((p) => p.postId));
                     const uniquePosts = newPosts.filter((p) => !existingIds.has(p.postId));
+
+                    // Nếu số lượng nhận được ít hơn pageSize (10), tức là đã hết dữ liệu
                     if (newPosts.length < 10) setHasMore(false);
+
                     return [...prev, ...uniquePosts];
                 });
             }
         } catch (error) {
-            console.error('Hook useFeed error:', error);
+            console.error('Hook useFeed -> fetchPosts error:', error);
+            // Có thể thêm thông báo Toast ở đây
         } finally {
             setIsLoading(false);
             isFetchingRef.current = false;
         }
     }, []);
 
+    // 2. Logic Infinite Scroll (Observer)
     const lastPostRef = useCallback(
         (node) => {
             if (isLoading || !hasMore) return;
+
+            // Cleanup observer cũ
             if (observer.current) observer.current.disconnect();
 
             observer.current = new IntersectionObserver(
                 (entries) => {
                     if (entries[0].isIntersecting && !isFetchingRef.current) {
-                        setPage((prev) => {
-                            const nextPage = prev + 1;
-                            fetchPosts(nextPage);
-                            return nextPage;
+                        // Kỹ thuật lấy state mới nhất mà không cần dependency 'posts'
+                        setPosts((currentPosts) => {
+                            const lastPost = currentPosts[currentPosts.length - 1];
+                            if (lastPost?.createdAt) {
+                                fetchPosts(lastPost.createdAt);
+                            }
+                            return currentPosts;
                         });
                     }
                 },
-                { threshold: 0.5 },
+                { threshold: 0.5 }, // Kích hoạt khi thấy 50% phần tử cuối
             );
 
             if (node) observer.current.observe(node);
@@ -77,8 +83,10 @@ export const useFeed = () => {
         [isLoading, hasMore, fetchPosts],
     );
 
+    // 3. Like bài viết (Optimistic Update)
     const toggleLike = useCallback(async (postId) => {
         let originalPost = null;
+
         setPosts((prev) =>
             prev.map((p) => {
                 if (p.postId === postId) {
@@ -95,27 +103,30 @@ export const useFeed = () => {
 
         try {
             const result = await feedApi.toggleLikePost(postId);
+            // Đồng bộ lại với kết quả chính xác từ server
             setPosts((prev) =>
                 prev.map((p) =>
                     p.postId === postId ? { ...p, isLiked: result.isLiked, likeCount: result.likeCount } : p,
                 ),
             );
         } catch (error) {
+            // Revert nếu lỗi
             if (originalPost) {
                 setPosts((prev) => prev.map((p) => (p.postId === postId ? originalPost : p)));
             }
         }
     }, []);
 
+    // 4. Quản lý Comments
     const toggleComments = useCallback((postId) => {
         setCommentsMap((prev) => {
-            const newMap = { ...prev };
-
-            if (newMap[postId]) {
+            if (prev[postId]) {
+                const newMap = { ...prev };
                 delete newMap[postId];
                 return newMap;
             }
 
+            // Tải comment lần đầu
             feedApi
                 .getComments(postId)
                 .then((data) => {
@@ -125,7 +136,7 @@ export const useFeed = () => {
                     setCommentsMap((current) => ({ ...current, [postId]: [] }));
                 });
 
-            return { ...prev, [postId]: [] };
+            return { ...prev, [postId]: [] }; // Trạng thái loading tạm thời
         });
     }, []);
 
@@ -145,20 +156,22 @@ export const useFeed = () => {
         }
     };
 
+    // 5. Khởi tạo và Refresh
     const refreshAll = useCallback(() => {
-        setPage(1);
         setHasMore(true);
-        fetchPosts(1, true);
-        fetchEvents();
+        fetchPosts(null, true); // Reset về đầu
+        fetchEvents?.();
     }, [fetchPosts, fetchEvents]);
 
     useEffect(() => {
         refreshAll();
     }, [refreshAll]);
 
+    // Lắng nghe sự kiện reload từ các component khác
     useEffect(() => {
-        window.addEventListener('reloadFeed', refreshAll);
-        return () => window.removeEventListener('reloadFeed', refreshAll);
+        const handleReload = () => refreshAll();
+        window.addEventListener('reloadFeed', handleReload);
+        return () => window.removeEventListener('reloadFeed', handleReload);
     }, [refreshAll]);
 
     return {

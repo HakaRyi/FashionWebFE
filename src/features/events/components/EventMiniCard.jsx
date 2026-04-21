@@ -1,10 +1,16 @@
 import styles from '../styles/EventMiniCard.module.scss';
+import { useMemo } from 'react';
 import { PATHS } from "@/app/routes/paths";
 import { useNavigate } from 'react-router-dom';
+import { getEventStatusInfo } from '@/features/events/utils/eventStatus';
 
 const EventMiniCard = ({ event, onOpenQuickView }) => {
 
     const navigate = useNavigate();
+
+    const statusInfo = useMemo(() => {
+        return getEventStatusInfo(event?.status);
+    }, [event?.status]);
 
     const handleCardClick = () => {
         navigate(PATHS.EVENT_DETAIL.replace(':id', event.eventId));
@@ -14,7 +20,9 @@ const EventMiniCard = ({ event, onOpenQuickView }) => {
         <div className={styles.card} onClick={() => onOpenQuickView(event)} role="button" tabIndex={0}>
             <div className={styles.thumbnailWrapper}>
                 <img src={event.thumbnailUrl} alt={event.title} />
-                <div className={styles.statusBadge}>{event.status}</div>
+                <div className={`${styles.statusBadge} ${styles[statusInfo.variant]}`}>
+                    {statusInfo.label}
+                </div>
             </div>
 
             <div className={styles.info}>

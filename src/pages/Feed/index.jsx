@@ -3,10 +3,13 @@ import { useFeed, FashionCard, CreatePostModal } from '@/features/feed';
 import { EventMiniCard, EventQuickViewModal } from '@/features/events';
 import styles from './Feed.module.scss';
 import { useAuth } from '@/app/providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/app/routes/paths';
 
 const FashionFeed = () => {
 
     const { user: currentUser } = useAuth();
+    const navigate = useNavigate();
 
     const {
         posts,
@@ -49,8 +52,8 @@ const FashionFeed = () => {
 
         const diffInSeconds = Math.floor((now - date) / 1000);
 
-        if (diffInSeconds < 0) return 'Vừa xong';
-        if (diffInSeconds < 60) return 'Vừa xong';
+        if (diffInSeconds < 0) return 'minutes ago';
+        if (diffInSeconds < 60) return 'minutes ago';
 
         const diffInMinutes = Math.floor(diffInSeconds / 60);
         if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
@@ -94,9 +97,9 @@ const FashionFeed = () => {
                             {events.length > 2 && (
                                 <button
                                     className={styles.showMoreBtn}
-                                    onClick={() => setShowAllEvents(!showAllEvents)}
+                                    onClick={() => navigate(PATHS.USER_EVENTS)}
                                 >
-                                    {showAllEvents ? 'Show Less' : `View All (${events.length})`}
+                                    Explore All Events ({events.length})
                                 </button>
                             )}
                         </div>

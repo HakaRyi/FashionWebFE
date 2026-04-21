@@ -1,11 +1,11 @@
 import axiosClient from '@/shared/lib/axios';
 
 class FeedApi {
-    async getFeed(pageNumber = 1, pageSize = 10) {
+    async getFeed(cursor = null, pageSize = 10) {
         try {
             const response = await axiosClient.get('/post/feed', {
                 params: {
-                    pageNumber,
+                    cursor,
                     pageSize,
                 },
             });

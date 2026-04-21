@@ -29,6 +29,7 @@ import Home from '../../pages/Home';
 import FashionFeed from '../../pages/Feed';
 import SearchResultsPage from '../../pages/FeedSearch';
 import PostDetailPage from '../../pages/PostDetail';
+import EventsPage from '../../pages/Events';
 
 import DefaultLayout from '../../widgets/layouts/DefaultLayout';
 import HomeLayout from '../../widgets/layouts/HomeLayout';
@@ -81,6 +82,12 @@ export const routes = [
     {
         path: PATHS.POST_DETAIL,
         component: PostDetailPage,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.USER_EVENTS,
+        component: EventsPage,
         layout: HomeLayout,
         roles: ['user', 'expert'],
     },

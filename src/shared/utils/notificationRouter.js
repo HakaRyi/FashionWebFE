@@ -1,7 +1,8 @@
 import { PATHS } from '@/app/routes/paths';
 
-export const getNotificationLink = (notification) => {
+export const getNotificationLink = (notification, userRole) => {
     const { type, relatedId } = notification;
+    const isExpert = userRole === 'expert';
 
     switch (type) {
         // --- REPUTATION & PENALTY ---
@@ -28,10 +29,10 @@ export const getNotificationLink = (notification) => {
             return PATHS.EXPERTS;
 
         case 'Expert_Application_Approved':
-            return PATHS.EXPERT_DASHBOARD;
+            return PATHS.EXPERT_EVENTS;
 
         case 'Expert_Application_Rejected':
-            return PATHS.EXPERT_APPLICATION;
+            return isExpert ? PATHS.EXPERT_EVENTS : PATHS.EXPERT_APPLICATION;
 
         // --- EVENT PROCESS (Dành cho Creator/Admin) ---
         case 'Event_Rejected':

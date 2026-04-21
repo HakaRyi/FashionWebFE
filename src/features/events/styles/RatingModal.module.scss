@@ -188,12 +188,13 @@ $rank-3-text: #9a3412;
 
         .contentScroll {
             .postTitle {
-                font-size: 1.25rem; // Chỉnh nhỏ lại
+                font-size: 1.25rem;
                 font-weight: 700;
                 margin-bottom: 8px;
-                background: $primary-gradient; // Dùng gradient dịu ở trên
+                background: black;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
+                background-clip: text;
             }
 
             .postDescription {

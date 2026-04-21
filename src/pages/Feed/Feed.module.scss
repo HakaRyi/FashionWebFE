@@ -68,6 +68,69 @@ $accent-light: #c1ff72;
     min-width: 320px;
 }
 
+.showMoreBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background: transparent;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 8px;
+
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #000000d3;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: linear-gradient(135deg, #98448d 30%, #ff99cc 70%);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.loadingText,
+.emptyText {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.875rem;
+    color: #888;
+    font-style: italic;
+}
+
+.loaderWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 0;
+
+    .spinner {
+        width: 24px;
+        height: 24px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #1a1a1a;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    span {
+        font-size: 0.875rem;
+        color: #666;
+        font-weight: 500;
+    }
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);

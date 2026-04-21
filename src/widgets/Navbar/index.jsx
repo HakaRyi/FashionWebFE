@@ -61,7 +61,7 @@ const Navbar = () => {
         const notifId = notification.id || notification.notificationId;
         if (!notifId) return;
 
-        const link = getNotificationLink(notification);
+        const link = getNotificationLink(notification, user?.role);
         setShowNotifMenu(false);
         navigate(link);
 

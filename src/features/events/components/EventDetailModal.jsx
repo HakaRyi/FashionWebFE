@@ -72,11 +72,11 @@ const EventDetailModal = ({ event, onClose, onApprove, onReject }) => {
 
                             {event.status === 'Pending_Review' && (
                                 <div className={styles.modalFooter}>
-                                    <button onClick={() => onApprove(event.eventId)} className={styles.btnApprove}>
-                                        <CheckCircle size={18} /> Approve now!
-                                    </button>
                                     <button onClick={() => setView('reject')} className={styles.btnReject}>
                                         <XCircle size={18} /> Reject & Refund
+                                    </button>
+                                    <button onClick={() => onApprove(event.eventId)} className={styles.btnApprove}>
+                                        <CheckCircle size={18} /> Approve now!
                                     </button>
                                 </div>
                             )}

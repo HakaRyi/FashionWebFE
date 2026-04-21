@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Share2, Send, MoreHorizontal } from 'lucide-react';
@@ -109,7 +109,7 @@ const PostDetailPage = () => {
                     <div className={styles.userInfo}>
                         <img src={getAvatarUrl(post)} alt={post.userName} className={styles.authorAvatar} />
                         <div className={styles.userMeta}>
-                            <span className={styles.userName}>@{post.userName}</span>
+                            <span className={styles.userName}>{post.userName}</span>
                             <span className={styles.userRole}>
                                 {post.isExpertPost ? 'Expert Choice' : 'Contributor'}
                             </span>
@@ -143,7 +143,7 @@ const PostDetailPage = () => {
                             </div>
                             <div className={styles.statAction}>
                                 <motion.button whileTap={{ scale: 0.8 }} onClick={handleToggleComments}>
-                                    <MessageCircle size={24} stroke={showComments ? "#C1FF72" : "currentColor"} />
+                                    <MessageCircle size={24} stroke={showComments ? "#b23191" : "currentColor"} />
                                 </motion.button>
                                 <span className={styles.statNumber}>{post.commentCount?.toLocaleString()}</span>
                             </div>
