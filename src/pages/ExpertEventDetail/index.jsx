@@ -1,232 +1,373 @@
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-    ChevronLeft, Calendar, ShieldCheck, Info, User, Star, Landmark, PlayCircle, XCircle
+    ChevronLeft, Landmark, PlayCircle, XCircle, Clock, ShieldCheck, Info
 } from "lucide-react";
 import {
     useEventDetail, PrizeSection, PostTable, getEventStatusInfo,
     getExpertStatusInfo, PostDetailModal
 } from "@/features/events";
-import styles from "@/features/events/styles/EventDetail.module.scss";
+import { motion, AnimatePresence } from "motion/react";
+import styles from "./EventDetail.module.scss";
 
 const EventDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { event, posts, loading, isFinalizing, handleFinalize, isStarting, handleManualStart, isCancelling, handleCancel } = useEventDetail(id);
-    const [selectedPost, setSelectedPost] = React.useState(null);
+    const {
+        event, posts, loading, isFinalizing, handleFinalize,
+        isStarting, handleManualStart, isCancelling, handleCancel
+    } = useEventDetail(id);
 
-    if (loading) return <div className={styles.loadingContainer}>Loading event information...</div>;
-    if (!event) return <div className={styles.container}>Event not found.</div>;
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [timeLeft, setTimeLeft] = useState(null);
+
+    // Logic Countdown
+    useEffect(() => {
+        if (!event?.submissionDeadline || event.status !== "Active") return;
+
+        const timer = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = new Date(event.submissionDeadline).getTime() - now;
+
+            if (distance < 0) {
+                clearInterval(timer);
+                setTimeLeft(null);
+            } else {
+                setTimeLeft({
+                    d: Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0'),
+                    h: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0'),
+                    m: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0'),
+                    s: Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0'),
+                });
+            }
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [event?.submissionDeadline, event?.status]);
+
+    // Tính toán phần trăm tiến độ
+    const progressPercent = useMemo(() => {
+        if (!event) return 0;
+        const start = new Date(event.startTime).getTime();
+        const end = new Date(event.endTime).getTime();
+        const now = new Date().getTime();
+        if (now < start) return 0;
+        if (now > end) return 100;
+        return ((now - start) / (end - start)) * 100;
+    }, [event]);
+
+    const expertsList = useMemo(() => {
+        if (!event) return [];
+
+        // 2. Sử dụng optional chaining để an toàn tuyệt đối
+        const filteredExperts = (event.experts || [])
+            .filter(ex => {
+                const isAccepted = event.isCreator ? true : ex.status === "Accepted";
+
+                const isNotCreator = ex.expertId !== event.creatorId;
+
+                return isAccepted && isNotCreator;
+            })
+            .map(ex => ({
+                ...ex,
+                displayAvatar: ex.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(ex.fullName)}&background=random&color=fff`
+            }));
+
+        const creatorCard = {
+            isCreator: true,
+            id: 'creator',
+            name: event.creatorName,
+            displayAvatar: event.creatorAvatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(event.creatorName)}&background=random&color=fff`,
+            role: "Lead Organizer",
+            expertise: "Organizer"
+        };
+
+        const midIndex = Math.floor(filteredExperts.length / 2);
+        const combined = [...filteredExperts];
+        combined.splice(midIndex, 0, creatorCard);
+
+        return combined;
+    }, [event]);
+
+    if (loading) return (
+        <div className={styles.loadingScreen}>
+            <div className={styles.spinnerWrapper}>
+                <div className={styles.spinner} />
+                <p>Initializing Environment</p>
+            </div>
+        </div>
+    );
+
+    if (!event) return (
+        <div className={styles.errorScreen}>
+            <h1>Transmission Lost</h1>
+            <button onClick={() => navigate('/')}>Relocate</button>
+        </div>
+    );
 
     const eventStatus = getEventStatusInfo(event.status);
 
     return (
-        <div className={styles.container}>
-            <div className={styles.actionHeader}>
-                <button className={styles.backBtn} onClick={() => navigate(-1)}>
-                    <ChevronLeft size={20} /> Back
+        <div className={styles.pageContainer}>
+            {/* --- STICKY NAV --- */}
+            <nav className={styles.stickyNav}>
+                <button className={styles.btnBack} onClick={() => navigate(-1)}>
+                    <ChevronLeft size={20} /> <span>Back</span>
                 </button>
 
-                <div className={styles.rightActions}>
+                <div className={styles.navActions}>
                     {(event.status === "Inviting" || event.status === "Pending_Review") && (
-                        <div className={styles.buttonGroup}>
-
-                            {/* NÚT BẮT ĐẦU*/}
-                            {event.status === "Inviting" && event.isCreator === true && (
-                                <div className={styles.actionItem}>
-                                    <button
-                                        className={styles.startBtn}
-                                        onClick={handleManualStart}
-                                        disabled={isStarting || event.isAutoStart || !event.canManualStart}
-                                    >
-                                        <PlayCircle size={18} />
-                                        {isStarting ? "Processing..." : "Start Now"}
-                                    </button>
-
-                                    {event.isAutoStart ? (
-                                        <span className={`${styles.hintText} ${styles.autoStart}`}>
-                                            <Calendar size={12} /> Auto Start
-                                        </span>
-                                    ) : (
-                                        !event.canManualStart && (
-                                            <span className={styles.hintText}>
-                                                <Info size={10} /> {event.reasonManualStart}
-                                            </span>
-                                        )
-                                    )}
-                                </div>
-                            )}
-
-                            {/* NÚT HỦY: Luôn hiện theo logic cũ của bạn */}
-                            <div className={styles.actionItem}>
+                        <>
+                            {event.status === "Inviting" && event.isCreator && (
                                 <button
-                                    className={styles.cancelBtn}
-                                    onClick={handleCancel}
-                                    disabled={isCancelling}
+                                    className={styles.btnStart}
+                                    onClick={handleManualStart}
+                                    disabled={isStarting || event.isAutoStart || !event.canManualStart}
                                 >
-                                    <XCircle size={18} />
-                                    {isCancelling ? "Processing..." : "Cancel Event"}
+                                    <PlayCircle size={18} />
+                                    {isStarting ? "Processing" : "Start Now"}
                                 </button>
-                            </div>
-
-                        </div>
+                            )}
+                            <button
+                                className={styles.btnCancel}
+                                onClick={handleCancel}
+                                disabled={isCancelling}
+                            >
+                                <XCircle size={18} /> {isCancelling ? "..." : "Cancel"}
+                            </button>
+                        </>
                     )}
-
-                    {/* NÚT CHỐT GIẢI (Giữ nguyên logic cũ) */}
-                    {event.status != "Completed" && event.canFinalize && (
+                    {event.status !== "Completed" && event.canFinalize && (
                         <button
-                            className={styles.finalizeBtn}
+                            className={styles.btnFinalize}
                             onClick={handleFinalize}
                             disabled={isFinalizing}
                         >
-                            <Landmark size={18} /> {isFinalizing ? "Processing..." : "Finalize & Disburse"}
+                            <Landmark size={18} /> {isFinalizing ? "..." : "Finalize & Disburse"}
                         </button>
                     )}
                 </div>
-            </div>
+            </nav>
 
-            <div className={styles.eventHero}>
-                <div className={styles.imageWrapper}>
-                    <img
-                        src={event.thumbnailUrl || 'https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Hiro.Big-Hero-6.webp'}
-                        alt={event.title}
-                        className={styles.eventBanner}
-                    />
-                    <div className={styles.imageOverlay}>
-                        {/* <span className={`${styles.statusBadge} ${styles[event.status.toLowerCase()]}`}>
-                            {event.status}
-                        </span> */}
-                    </div>
-                </div>
-            </div>
+            {/* --- HERO --- */}
+            <header className={styles.hero}>
+                <div
+                    className={styles.heroBg}
+                    style={{ backgroundImage: `url(${event.thumbnailUrl})` }}
+                />
+                <div className={styles.heroContent}>
+                    <div className={styles.heroMeta}>
+                        <div className={styles.metaLeft}>
+                            <span className={`${styles.statusBadge} ${styles[eventStatus.variant]}`}>
+                                {eventStatus.label}
+                            </span>
 
-            <div className={styles.mainLayout}>
-                <div className={styles.contentSection}>
-                    <div className={styles.eventHeader}>
-                        <span className={`${styles.statusBadge} ${styles[eventStatus.variant]}`}>
-                            {eventStatus.label}
-                        </span>
-                        <h1>{event.title}</h1>
-                        <div className={styles.creatorInfo}>
-                            <User size={16} /> Created by: <strong>{event.creatorName}</strong>
-                        </div>
-                    </div>
-
-                    {event.status === "Rejected" && event.isCreator && (
-                        <div className={styles.rejectReasonBox}>
-                            <div className={styles.rejectHeader}>
-                                <XCircle size={18} color="#ef4444" />
-                                <strong>Reason for rejection:</strong>
+                            <div className={`${styles.feeInfo} ${event.entryFee === 0 ? styles.isFree : styles.isPaid}`}>
+                                {event.entryFee > 0 ? (
+                                    <>
+                                        <span className={styles.feeLabel}>Entry Fee</span>
+                                        <span className={styles.feeValue}>
+                                            {event.entryFee.toLocaleString('vi-VN')} <small>VND</small>
+                                        </span>
+                                    </>
+                                ) : (
+                                    <span className={styles.freeText}>Complimentary</span>
+                                )}
                             </div>
+                        </div>
+
+                        {event.status === "Active" && timeLeft && (
+                            <div className={styles.countdownWrapper}>
+                                <span className={styles.countdownLabel}>
+                                    {new Date() < new Date(event.submissionDeadline)
+                                        ? "Time to Join"
+                                        : "Event Closing"}
+                                </span>
+                                <div className={styles.countdown}>
+                                    {[
+                                        { val: timeLeft.d, label: 'Day' },
+                                        { val: timeLeft.h, label: 'Hour' },
+                                        { val: timeLeft.m, label: 'Min' },
+                                        { val: timeLeft.s, label: 'Sec' }
+                                    ].map((unit, i) => (
+                                        <React.Fragment key={unit.label}>
+                                            <div className={styles.timeUnit}>
+                                                <span className={styles.timeVal}>{unit.val}</span>
+                                                <span className={styles.timeLabel}>{unit.label}</span>
+                                            </div>
+                                            {i < 3 && <div className={styles.timeDivider}>:</div>}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <h1 className={styles.heroTitle}>{event.title}</h1>
+                </div>
+            </header>
+
+            <main className={styles.mainWrapper}>
+                {/* REJECTED ALERT */}
+                {event.status === "Rejected" && event.isCreator && (
+                    <div className={styles.rejectAlert}>
+                        <XCircle size={24} />
+                        <div>
+                            <strong>Event Rejected</strong>
                             <p>{event.reasonRejectEvent || "No specific reason provided."}</p>
                         </div>
-                    )}
-
-                    <div className={styles.card}>
-                        <h3><Info size={18} /> Event Description</h3>
-                        <p className={styles.description}>{event.description}</p>
                     </div>
+                )}
 
-                    <PrizeSection prizes={event.prizes} />
-
-                    <PostTable posts={posts}
-                        onPostClick={(post) => setSelectedPost(post)} />
-                </div>
-
-                <div className={styles.sideSection}>
-                    <div className={styles.card}>
-                        <h3><Calendar size={18} /> Time</h3>
-                        <div className={styles.sideRow}>
-                            <span>Start:</span>
-                            <strong>{new Date(event.startTime).toLocaleString('vi-VN')}</strong>
+                {/* ROADMAP & SCORING GRID */}
+                <div className={styles.statsGrid}>
+                    {/* ROADMAP */}
+                    <section className={styles.statsCard}>
+                        <div className={styles.cardHeader}>
+                            <Clock size={16} /> Roadmap Timeline
                         </div>
-                        <div className={styles.sideRow}>
-                            <span>Submission Deadline:</span>
-                            <strong>{new Date(event.submissionDeadline).toLocaleString('vi-VN')}</strong>
-                        </div>
-                        <div className={styles.sideRow}>
-                            <span>End:</span>
-                            <strong>{new Date(event.endTime).toLocaleString('vi-VN')}</strong>
-                        </div>
-                    </div>
-
-                    <div className={styles.card}>
-                        <h3><ShieldCheck size={18} /> Weightage</h3>
-                        <div className={styles.weightItem}>
-                            <div className={styles.weightLabel}>
-                                <span>Expert</span>
-                                <span>{Math.round(event.expertWeight * 100)}%</span>
-                            </div>
-                            <div className={styles.weightBar}>
-                                <div style={{ width: `${event.expertWeight * 100}%`, background: '#3b82f6' }}></div>
-                            </div>
-                        </div>
-                        <div className={styles.weightItem}>
-                            <div className={styles.weightLabel}>
-                                <span>Community</span>
-                                <span>{Math.round(event.userWeight * 100)}%</span>
-                            </div>
-                            <div className={styles.weightBar}>
-                                <div style={{ width: `${event.userWeight * 100}%`, background: '#10b981' }}></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.card}>
-                        <h3><Star size={18} color="#f59e0b" /> Expert Panel</h3>
-                        <div className={styles.expertList}>
-                            {event.experts
-                                ?.filter((ex) => {
-                                    return event.isCreator ? true : ex.status === "Accepted";
-                                })
-                                .map((ex) => {
-                                    const expertStatus = getExpertStatusInfo(ex.status);
-
+                        <div className={styles.timelineVisual}>
+                            <div className={styles.baseLine} />
+                            <motion.div
+                                className={styles.progressLine}
+                                initial={{ width: 0 }}
+                                animate={{ width: `${progressPercent}%` }}
+                                transition={{ duration: 1 }}
+                            />
+                            <div className={styles.milestones}>
+                                {[
+                                    { label: "Begin", date: event.startTime },
+                                    { label: "Deadline", date: event.submissionDeadline },
+                                    { label: "End", date: event.endTime }
+                                ].map((m, idx) => {
+                                    const isReached = new Date() >= new Date(m.date);
                                     return (
-                                        <div key={ex.expertId} className={styles.expertItem}>
-                                            <div className={styles.expertAvatar}>
-                                                {ex.avatarUrl ? (
-                                                    <img src={ex.avatarUrl} alt={ex.fullName} />
-                                                ) : (
-                                                    ex.fullName?.charAt(0)
-                                                )}
-                                            </div>
-
-                                            <div className={styles.expertInfo}>
-                                                <div className={styles.expertNameRow}>
-                                                    <p className={styles.expertName}>{ex.fullName}</p>
-
-                                                    <span className={`${styles.expertStatus} ${styles[expertStatus.variant]}`}>
-                                                        {expertStatus.icon} {expertStatus.label}
-                                                    </span>
-                                                </div>
-                                                <p className={styles.expertField}>
-                                                    {ex.expertiseField || "Professional Reviewer"}
-                                                </p>
+                                        <div key={idx} className={`${styles.milestone} ${isReached ? styles.reached : ''}`}>
+                                            <div className={styles.dot} />
+                                            <div className={styles.msLabel}>{m.label}</div>
+                                            <div className={styles.msDate}>
+                                                {new Date(m.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}
                                             </div>
                                         </div>
                                     );
                                 })}
+                            </div>
+                        </div>
+                    </section>
 
-                            {/* Empty State */}
-                            {(!event.experts ||
-                                (!event.isCreator && event.experts.filter(ex => ex.status === "Accepted").length === 0)) && (
-                                    <div className={styles.emptyExpert}>
-                                        <p className={styles.emptyText}>
-                                            {event.isCreator ? "No experts invited yet." : "Experts are being updated..."}
-                                        </p>
+                    {/* SCORING CHART */}
+                    <section className={styles.statsCard}>
+                        <div className={styles.cardHeader}>
+                            <ShieldCheck size={16} /> Scoring Weightage
+                        </div>
+                        <div className={styles.scoringBody}>
+                            <div className={styles.chartArea}>
+                                <svg viewBox="0 0 36 36" className={styles.svgCircle}>
+                                    <circle cx="18" cy="18" r="15.9" className={styles.circleBg} />
+                                    <motion.circle
+                                        cx="18" cy="18" r="15.9"
+                                        className={styles.circleActive}
+                                        initial={{ strokeDasharray: "0 100" }}
+                                        animate={{ strokeDasharray: `${event.expertWeight * 100} 100` }}
+                                        transition={{ duration: 1.5 }}
+                                    />
+                                </svg>
+                                <div className={styles.chartText}>
+                                    <span className={styles.ratioNum}>{Math.round(event.expertWeight * 100)}/{Math.round(event.userWeight * 100)}</span>
+                                    <span className={styles.ratioSub}>Ratio</span>
+                                </div>
+                            </div>
+                            <div className={styles.chartLegend}>
+                                <div className={styles.legendItem}>
+                                    <i className={styles.dotExpert} />
+                                    <div>
+                                        <strong>Expert ({Math.round(event.expertWeight * 100)}%)</strong>
+                                        <p>Technical & creative</p>
                                     </div>
-                                )}
+                                </div>
+                                <div className={styles.legendItem}>
+                                    <i className={styles.dotUser} />
+                                    <div>
+                                        <strong>Community ({Math.round(event.userWeight * 100)}%)</strong>
+                                        <p>Public voting</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                {/* DESCRIPTION */}
+                <section className={styles.contentSection}>
+                    <h3 className={styles.sectionTitle}>About this event</h3>
+                    <p className={styles.description}>{event.description}</p>
+                </section>
+
+                {/* EXPERTS PANEL */}
+                <section className={styles.contentSection}>
+                    <h3 className={styles.sectionTitle}>The Evaluation Panel</h3>
+                    <div className={styles.expertScrollContainer}>
+                        <div className={styles.expertFlexWrapper}>
+                            {expertsList.map((person) => {
+                                if (person.isCreator) {
+                                    return (
+                                        <div key="creator" className={`${styles.personCard} ${styles.creatorCard}`}>
+                                            <div className={styles.imageBox}>
+                                                <img
+                                                    src={person.displayAvatar}
+                                                    alt={person.name}
+                                                    className={styles.expertAvatar}
+                                                />
+                                                <span className={styles.organizerBadge}>Organizer</span>
+                                            </div>
+                                            <div className={styles.personInfo}>
+                                                <h4>{person.name}</h4>
+                                                <p>{person.role}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+
+                                const status = getExpertStatusInfo(person.status);
+                                return (
+                                    <div key={person.expertId} className={styles.personCard}>
+                                        <div className={styles.imageBox}>
+                                            <img
+                                                src={person.displayAvatar}
+                                                alt={person.fullName}
+                                                className={styles.expertAvatar}
+                                            />
+                                        </div>
+                                        <div className={styles.personInfo}>
+                                            <h4>{person.fullName}</h4>
+                                            <p>{person.expertiseField}</p>
+                                            <span className={`${styles.statusLabel} ${styles[status.variant]}`}>
+                                                {status.label}
+                                            </span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
-                </div>
-            </div>
-            {selectedPost && (
-                <PostDetailModal
-                    post={selectedPost}
-                    onClose={() => setSelectedPost(null)}
-                />
-            )}
+                </section>
+
+                {/* PRIZES */}
+                <section className={styles.contentSection}>
+                    <h3 className={styles.sectionTitle}>Bounty Allocation</h3>
+                    <PrizeSection prizes={event.prizes} />
+                </section>
+
+                {/* SUBMISSIONS */}
+                <section className={styles.contentSection}>
+                    <h3 className={styles.sectionTitle}>Intelligence Output Logs</h3>
+                    <PostTable posts={posts} onPostClick={setSelectedPost} />
+                </section>
+            </main>
+
+            <AnimatePresence>
+                {selectedPost && (
+                    <PostDetailModal post={selectedPost} onClose={() => setSelectedPost(null)} />
+                )}
+            </AnimatePresence>
         </div>
     );
 };

@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
-import { Trophy, Coins, X, Plus } from "lucide-react";
+import { useCallback, useState } from "react";
+import { Trophy, Coins, X, Plus, Ticket, Check } from "lucide-react";
 import styles from "../../styles/StepPrizes.module.scss";
 
-const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
+const StepPrizes = ({ form, setForm, prizes, setPrizes, totalBudget, isOverBudget }) => {
 
     const validatePrizes = (updatedPrizes) => {
         return updatedPrizes.map((prize, i, arr) => {
@@ -23,6 +23,24 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
 
             return { ...prize, error };
         });
+    };
+
+    const [isFeeEnabled, setIsFeeEnabled] = useState((form.entryFee || 0) > 0);
+    const firstPrizeAmount = prizes[0]?.amount || 0;
+    const isFeeHigherThanFirstPrize = form.entryFee > firstPrizeAmount && firstPrizeAmount > 0;
+
+    const handleToggleFee = () => {
+        const newState = !isFeeEnabled;
+        setIsFeeEnabled(newState);
+        if (!newState) {
+            setForm(prev => ({ ...prev, entryFee: 0 }));
+        }
+    };
+
+    const handleEntryFeeChange = (e) => {
+        const val = e.target.value === "" ? 0 : Number(e.target.value);
+        if (val < 0) return;
+        setForm(prev => ({ ...prev, entryFee: val }));
     };
 
     const updatePrize = useCallback((index, field, value) => {
@@ -70,6 +88,51 @@ const StepPrizes = ({ prizes, setPrizes, totalBudget, isOverBudget }) => {
                 <h2 className={styles.sectionTitle}>Prize structure</h2>
                 <p className={styles.sectionSub}>Set up reward categories for the winners</p>
             </header>
+
+            <div className={styles.feeCard}>
+                <div className={styles.feeHeader} onClick={handleToggleFee}>
+                    <div className={styles.feeInfo}>
+                        <div className={styles.iconBox}>
+                            <Ticket size={20} />
+                        </div>
+                        <div className={styles.texts}>
+                            <h3>Participation Fee</h3>
+                            <p>Charge a small fee for users to join this event</p>
+                        </div>
+                    </div>
+                    <div className={`${styles.toggleSwitch} ${isFeeEnabled ? styles.active : ""}`}>
+                        <div className={styles.switchHandle}>
+                            {isFeeEnabled && <Check size={12} />}
+                        </div>
+                    </div>
+                </div>
+
+                {isFeeEnabled && (
+                    <div className={styles.feeInputExpanded}>
+                        <div className={styles.inputContainer}>
+                            <div className={styles.inputWrap}>
+                                <input
+                                    type="number"
+                                    value={form.entryFee || ""}
+                                    onChange={handleEntryFeeChange}
+                                    placeholder="Enter amount..."
+                                    min={0}
+                                    autoFocus
+                                />
+                                <span className={styles.currency}>VND</span>
+                            </div>
+                            {isFeeHigherThanFirstPrize && (
+                                <p className={styles.warningText}>
+                                    ⚠️ Participation fee is higher than the First Prize ({firstPrizeAmount.toLocaleString()} VND).
+                                </p>
+                            )}
+                            <p className={styles.note}>
+                                * This revenue will be collected and sent to your wallet after the event ends.
+                            </p>
+                        </div>
+                    </div>
+                )}
+            </div>
 
             <div className={styles.configCard}>
                 <div className={styles.cardHeader}>

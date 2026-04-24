@@ -4,7 +4,7 @@
 .studioContainer {
     display: flex;
     // height: 100vh; <-- XÓA DÒNG NÀY
-    height: 100%;    // Đổi thành 100% để ăn theo .workspace
+    height: 100%; // Đổi thành 100% để ăn theo .workspace
     background-color: #f8f9fc;
     overflow: hidden;
 }
@@ -14,7 +14,7 @@
     display: flex;
     flex-direction: column;
     // height: 100vh; <-- XÓA DÒNG NÀY
-    height: 100%;    // Đổi thành 100%
+    height: 100%; // Đổi thành 100%
     overflow: hidden;
     position: relative;
 }
@@ -136,11 +136,11 @@
     &.danger {
         background: #fef2f2;
         border-color: #fecaca;
-        
+
         .walletIcon {
             color: #ef4444;
         }
-        
+
         .walletInfo strong {
             color: #ef4444;
         }
@@ -150,15 +150,15 @@
 /* --- CONTENT AREA --- */
 .contentScroll {
     flex: 1;
-    min-height: 0; 
-    overflow-y: auto; 
+    min-height: 0;
+    overflow-y: auto;
     padding: 24px 0;
-    
+
     // Đảm bảo không bị dính sát đáy khi scroll hết
     &::after {
         content: '';
         display: block;
-        height: 40px; 
+        height: 40px;
     }
 }
 
@@ -277,7 +277,7 @@
 }
 
 .dropzone {
-    height: 120px;
+    height: 270px;
     border: 2px dashed #e2e8f0;
     border-radius: 12px;
     display: flex;

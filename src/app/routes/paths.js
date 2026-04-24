@@ -13,6 +13,7 @@ export const PATHS = {
     USER_EVENTS: '/events',
     EVENT_DETAIL: '/events/:id',
     EVENT_SUMMARY: '/summary-event/:id',
+    EVENT_SUMMARY_FULL_ARCHIVE: '/summary-event/:id/full-archive',
 
     //expert
     EXPERT_APPLICATION: '/expert/registration',

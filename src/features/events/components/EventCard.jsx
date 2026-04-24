@@ -57,7 +57,7 @@ const EventCard = ({ event, index, onClick }) => {
             </div>
 
             <div className={styles.cardFooter}>
-                <button className={styles.btnEdit}>Manage</button>
+                {/* <button className={styles.btnEdit}>Manage</button> */}
 
                 {/* <button
                     className={styles.btnMore}

@@ -1,5 +1,5 @@
-@use "../../../shared/styles/abstracts/variables" as *;
-@use "../../../shared/styles/abstracts/animations";
+@use '../../../shared/styles/abstracts/variables' as *;
+@use '../../../shared/styles/abstracts/animations';
 
 .emptyState {
     display: flex;
@@ -16,7 +16,7 @@
     .emptyIcon {
         width: 100px;
         height: 100px;
-        background: $bg-white;
+        background: $white;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -28,7 +28,7 @@
 
     h2 {
         font-size: 1.5rem;
-        color: $primary-black;
+        color: $black-deep;
         font-weight: 700;
         margin-bottom: 0.5rem;
     }
@@ -40,7 +40,7 @@
     }
 
     .btnCreateLarge {
-        background: $primary-black;
+        background: $black-deep;
         color: #fff;
         padding: 14px 32px;
         border-radius: 12px;
@@ -51,7 +51,7 @@
         transition: all 0.3s ease;
 
         &:hover {
-            background: $accent-pink;
+            background: $f-pink;
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(255, 0, 140, 0.2);
         }
@@ -66,14 +66,18 @@
     justify-content: center;
     padding: 100px;
     gap: 1rem;
-    color: $accent-pink;
-    
+    color: $f-pink;
+
     svg {
         animation: spin 1s linear infinite;
     }
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

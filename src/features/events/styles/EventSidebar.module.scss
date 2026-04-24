@@ -1,0 +1,197 @@
+@use '../../../shared/styles/abstracts/variables' as *;
+
+.sidebar {
+    width: 280px;
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; // Giảm gap
+}
+
+// Tiêu đề Section
+.sectionHeader {
+    .sectionTitle {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem; // Thu nhỏ từ 1.25rem
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 6px;
+    }
+    .titleLine {
+        width: 40px; // Thu nhỏ từ 50px
+        height: 2px; // Thu nhỏ từ 3px
+        background: #000;
+    }
+}
+
+// Cấu trúc Card
+.eventCard {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px; // Giảm từ 16px
+    padding: 16px; // Giảm từ 20px
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 12px;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+}
+
+// Badge trạng thái
+.statusBadge {
+    font-size: 9px; // Thu nhỏ từ 10px
+    font-weight: 800;
+    padding: 3px 8px; // Nhỏ lại
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &.warning {
+        background: #fff3e0; // Cam nhạt
+        color: #ef6c00;
+    }
+
+    // Màu cho trạng thái Hoạt động / Thành công (Active)
+    &.success {
+        background: #e8f5e9; // Xanh lá nhạt
+        color: #2e7d32;
+    }
+
+    // Màu cho các trạng thái Lỗi / Hủy (Rejected, Cancelled)
+    &.error {
+        background: #ffebee; // Đỏ nhạt
+        color: #c62828;
+    }
+
+    // Màu cho trạng thái Đang mời Expert / Thông tin (Inviting)
+    &.info {
+        background: #e1f5fe; // Xanh dương nhạt
+        color: #0277bd;
+    }
+
+    // Màu cho trạng thái Đang chấm thi (Judging)
+    &.secondary {
+        background: #f3e5f5; // Tím nhạt
+        color: #7b1fa2;
+    }
+
+    // Màu mặc định / Đã kết thúc (Completed, Default)
+    &.default {
+        background: #eeeeee; // Xám nhạt
+        color: #616161;
+    }
+}
+
+// Thông tin Expert
+.expertInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0; // Giảm margin
+
+    .expertAvatar {
+        width: 24px; // Thu nhỏ từ 28px
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .expertName {
+        font-size: 12px; // Thu nhỏ từ 13px
+        font-weight: 600;
+        color: #333;
+    }
+}
+
+// Nội dung chính
+.cardBody {
+    .eventTitle {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem; // Thu nhỏ từ 1.1rem
+        line-height: 1.2;
+        margin-bottom: 6px;
+        color: #111;
+    }
+    .description {
+        font-size: 12px; // Thu nhỏ từ 13px
+        color: #666;
+        line-height: 1.4;
+        margin-bottom: 12px;
+    }
+    .imageWrapper {
+        width: 100%;
+        height: 120px; // Thu nhỏ từ 140px
+        border-radius: 8px;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+// Footer
+.cardFooter {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+
+    .prizeBox {
+        .label {
+            font-size: 8px;
+            color: #999;
+            font-weight: 700;
+        }
+        .value {
+            font-size: 12px;
+            font-weight: 800;
+            color: #999;
+        }
+    }
+
+    .statsBox {
+        .count {
+            font-size: 14px;
+            font-weight: 900;
+            color: #999;
+        }
+        .sub {
+            font-size: 8px;
+            color: #999;
+        }
+    }
+}
+
+// Nút Show All
+.showAllBtn {
+    width: 100%;
+    padding: 12px;
+    background: #fbfbfb;
+    color: #000000;
+    border: none;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover {
+        background: #ffe5ae;
+    }
+}
+
+.statusBox {
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+}

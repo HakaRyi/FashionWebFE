@@ -30,7 +30,7 @@ export const EVENT_STATUS_CONFIG = {
     },
     Completed: {
         label: 'Completed',
-        variant: 'default',
+        variant: 'completed',
         description: 'The event has completed the judging process and awards have been distributed.',
     },
     Cancelled_NotEnoughExperts: {

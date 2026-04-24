@@ -8,7 +8,6 @@ const StepPublish = ({
     invitedExpertIds = [],
     totalBudget,
     platformFee,
-    feePercentage,
     totalRequired,
     isOverBudget,
     expertBalance,
@@ -22,7 +21,6 @@ const StepPublish = ({
     const systemMinRequired = metadata?.expertRules?.minRequired || 2;
     const maxExperts = Math.max(0, invitedExpertIds.length);
     const currentMinExperts = form.minExpertsRequired || systemMinRequired;
-    const isMinFeeApplied = platformFee > (totalBudget * (feePercentage / 100));
     const minLimit = metadata?.expertRules?.minRequired || 2;
     const maxLimit = invitedExpertIds.length;
 
@@ -137,28 +135,37 @@ const StepPublish = ({
 
                 <div className={styles.billingTable}>
                     <div className={styles.billingRow}>
+                        <div className={styles.labelWithIcon}>
+                            <span>Entry Fee (per participant)</span>
+                        </div>
+                        <span className={form.entryFee > 0 ? styles.textPrimary : ''}>
+                            {form.entryFee > 0
+                                ? `${Number(form.entryFee).toLocaleString()} VND`
+                                : "Free Entry"}
+                        </span>
+                    </div>
+
+                    <div className={styles.billingDivider}></div>
+
+                    <div className={styles.billingRow}>
                         <span>Total Prizes</span>
                         <span>{(totalBudget || 0).toLocaleString()} VND</span>
                     </div>
 
                     <div className={styles.billingRow}>
                         <div className={styles.feeLabelGroup}>
-                            <span>Platform Fee</span>
-                            <span className={styles.feeBadge}>
-                                {isMinFeeApplied ? "Minimum fee applied" : `${feePercentage}%`}
-                            </span>
+                            <span>Platform Service Fee</span>
+                            {/* <span className={styles.feeBadge}>Fixed Fee</span> */}
                         </div>
                         <div className={styles.feeValueGroup}>
                             <span>{(platformFee || 0).toLocaleString()} VND</span>
-                            {isMinFeeApplied && (
-                                <small className={styles.feeNote}>
-                                    (Because the total prize pool is lower than the minimum entry fee.)
-                                </small>
-                            )}
+                            <small className={styles.feeNote}>
+                                (Standard processing fee for all events)
+                            </small>
                         </div>
                     </div>
 
-                    <div className={styles.billingDivider}></div>
+                    {/* <div className={styles.billingDivider}></div> */}
 
                     <div className={`${styles.billingRow} ${styles.totalRow}`}>
                         <strong>Total Payment</strong>

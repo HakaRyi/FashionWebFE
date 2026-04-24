@@ -7,7 +7,7 @@ import styles from './EventsPage.module.scss';
 
 const EventsPage = () => {
     const { user: currentUser } = useAuth();
-    
+
     // Sử dụng đầy đủ các tính năng từ Hook đã nâng cấp
     const {
         events,
@@ -62,7 +62,7 @@ const EventsPage = () => {
             <header className={styles.header}>
                 <div className={styles.headerTitle}>
                     <h1>Fashion Events</h1>
-                    <button 
+                    <button
                         className={`${styles.refreshIconBtn} ${isLoading ? styles.spinning : ''}`}
                         onClick={refreshEvents}
                         disabled={isLoading}
@@ -114,7 +114,7 @@ const EventsPage = () => {
 
                     {/* Sort Selector */}
                     <div className={styles.sortWrapper}>
-                        <select 
+                        <select
                             className={styles.sortSelect}
                             value={sortOrder}
                             onChange={(e) => setSortOrder(e.target.value)}
@@ -200,13 +200,17 @@ const EventsPage = () => {
 
             <CreatePostModal
                 isOpen={isCreatePostOpen}
-                onClose={() => setIsCreatePostOpen(false)}
+                onClose={() => {
+                    setIsCreatePostOpen(false);
+                    setSelectedEvent(null);
+                }}
                 fixedEventId={selectedEvent?.eventId}
                 eventName={selectedEvent?.title}
+                entryFee={selectedEvent?.entryFee || 0}
                 user={currentUser}
-                onSuccess={() => { 
-                    refreshEvents(); 
-                    setIsCreatePostOpen(false); 
+                onSuccess={() => {
+                    refreshEvents();
+                    setIsCreatePostOpen(false);
                 }}
             />
         </div>

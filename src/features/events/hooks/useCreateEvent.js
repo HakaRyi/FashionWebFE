@@ -25,7 +25,8 @@ export const useCreateEvent = () => {
         isAutoStart: false,
         minExpertsRequired: 2,
         pointPerLike: 1,
-        pointPerShare: 1,
+        pointPerShare: 0,
+        entryFee: 0,
     });
 
     const [criteria, setCriteria] = useState([
@@ -60,11 +61,8 @@ export const useCreateEvent = () => {
 
     // Tính phí nền tảng dựa trên Metadata thực tế từ Server
     const platformFee = useMemo(() => {
-        const { feePercentage, minFee } = metadata.financialRules;
-        const calculated = totalBudget * (feePercentage / 100);
-        // Công thức: Max giữa % ngân sách và phí tối thiểu hệ thống
-        return Math.max(calculated, minFee);
-    }, [totalBudget, metadata]);
+        return metadata.financialRules.minFee;
+    }, [metadata]);
 
     const totalRequired = useMemo(() => totalBudget + platformFee, [totalBudget, platformFee]);
     const isOverBudget = useMemo(() => totalRequired > expertBalance, [totalRequired, expertBalance]);
@@ -155,6 +153,8 @@ export const useCreateEvent = () => {
                 endDate,
                 prizes,
                 invitedExpertIds,
+                pointPerLike: Number(form.pointPerLike || 0),
+                pointPerShare: Number(form.pointPerShare || 0),
                 criteria: formattedCriteria,
             };
 
@@ -193,7 +193,6 @@ export const useCreateEvent = () => {
         // Tài chính (Đã format/tính toán)
         expertBalance,
         totalBudget,
-        feePercentage: metadata.financialRules.feePercentage,
         platformFee,
         totalRequired,
         isOverBudget,

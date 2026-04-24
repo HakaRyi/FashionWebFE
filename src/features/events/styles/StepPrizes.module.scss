@@ -100,7 +100,8 @@ $border-color: #eef2f6;
         transition: all 0.2s;
 
         &.rowError {
-            // Có thể thêm hiệu ứng nhẹ cho dòng bị lỗi nếu muốn
+            background-color: rgba(255, 0, 0, 0.05);
+            border-left: 3px solid #ff4d4f;
         }
 
         .inputWrap {
@@ -223,6 +224,157 @@ $border-color: #eef2f6;
             color: $blue;
             background: #eff6ff;
         }
+    }
+}
+
+.feeCard {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: rgba(var(--primary-rgb), 0.3);
+    }
+}
+
+.feeHeader {
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+
+    .feeInfo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .iconBox {
+            width: 40px;
+            height: 40px;
+            background: rgba(var(--primary-rgb), 0.08);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .texts {
+            h3 {
+                margin: 0;
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--text-main);
+            }
+            p {
+                margin: 2px 0 0;
+                font-size: 0.85rem;
+                color: var(--text-muted);
+            }
+        }
+    }
+}
+
+/* Toggle Switch Style */
+.toggleSwitch {
+    width: 48px;
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .switchHandle {
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &.active {
+        background: var(--primary-color);
+        .switchHandle {
+            left: calc(100% - 22px);
+        }
+    }
+}
+
+.feeInputExpanded {
+    padding: 0 1.25rem 1.25rem;
+    animation: slideDown 0.3s ease-out;
+
+    .inputContainer {
+        padding-top: 1rem;
+        border-top: 1px dashed var(--border-color);
+
+        .inputWrap {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            max-width: 300px;
+
+            input {
+                border: none;
+                background: transparent;
+                outline: none;
+                width: 100%;
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--primary-color);
+
+                &::placeholder {
+                    font-weight: 400;
+                    color: #94a3b8;
+                }
+            }
+
+            .currency {
+                font-weight: 700;
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+            }
+
+            &:focus-within {
+                border-color: var(--primary-color);
+                background: #fff;
+                box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+            }
+        }
+
+        .note {
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: #64748b;
+            font-style: italic;
+        }
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

@@ -1,10 +1,17 @@
 import { create } from 'zustand';
 import { getEventApi } from '@/features/events';
 
-export const useEventStore = create((set, get) => ({
+const initialState = {
     events: [],
+    currentEvent: null,
     isLoading: false,
     lastFetched: null,
+};
+
+export const useEventStore = create((set, get) => ({
+    ...initialState,
+
+    reset: () => set(initialState),
 
     fetchEvents: async (forceRefresh = false) => {
         const { events, isLoading, lastFetched } = get();
@@ -30,4 +37,30 @@ export const useEventStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
+
+    fetchEventDetail: async (eventId, forceRefresh = false) => {
+        const { currentEvent } = get();
+
+        if (!forceRefresh && currentEvent?.eventId === eventId) return;
+
+        const existingEvent = get().events.find((e) => e.eventId === eventId);
+        if (existingEvent) {
+            set({ currentEvent: existingEvent });
+        }
+
+        set({ isLoading: true });
+        try {
+            const response = await getEventApi.getEventDetail(eventId);
+            const data = response?.data || response;
+            set({
+                currentEvent: data,
+                isLoading: false,
+            });
+        } catch (error) {
+            console.error('Fetch Detail Error:', error);
+            set({ isLoading: false });
+        }
+    },
+
+    clearCurrentEvent: () => set({ currentEvent: null }),
 }));

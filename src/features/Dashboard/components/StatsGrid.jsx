@@ -1,23 +1,23 @@
 //src/features/Dashboard/components/StatsGrid.jsx
-import {  } from "react";
+import { } from "react";
 import styles from "../styles/Dashboard.module.scss";
-import { FaUsers, FaUserTie, FaNewspaper, FaShirt,FaMoneyBillTrendUp } from "react-icons/fa6";
+import { FaUsers, FaUserTie, FaNewspaper, FaShirt, FaMoneyBillTrendUp } from "react-icons/fa6";
 
 function StatsGrid({ data }) {
-  if (!data) return <div className={styles.statsGrid}>Đang tải...</div>;
+  if (!data) return <div className={styles.statsGrid}>Loading...</div>;
   //const [setActiveTab] = useState("users")
 
   const stats = [
     {
-    id: 1, // Thêm ô doanh thu lên đầu hoặc tùy vị trí bạn muốn
-    title: "Total Revenue",
-    value: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.totalRevenue), // Sau này map từ api /admin/dashboard-information
-    type: "revenue",
-    icon: <FaMoneyBillTrendUp />,
-    trend: "+15%",
-    isUp: true,
-    color: "#10b981"
-  },  
+      id: 1, // Thêm ô doanh thu lên đầu hoặc tùy vị trí bạn muốn
+      title: "Total Revenue",
+      value: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.totalRevenue), // Sau này map từ api /admin/dashboard-information
+      type: "revenue",
+      icon: <FaMoneyBillTrendUp />,
+      trend: "+15%",
+      isUp: true,
+      color: "#10b981"
+    },
     {
       id: 2,
       title: "Total Users",
@@ -66,7 +66,7 @@ function StatsGrid({ data }) {
         <div
           key={stat.id}
           className={`${styles.statCard} ${styles[stat.type]}`}
-          //onClick={()=>setActiveTab(stat.type)}
+        //onClick={()=>setActiveTab(stat.type)}
         >
           <div className={styles.statHeader}>
             <span className={styles.statTitle}>{stat.title}</span>

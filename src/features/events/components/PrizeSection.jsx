@@ -15,10 +15,10 @@ const PrizeSection = ({ prizes }) => {
 
     return (
         <div className={styles.prizeSection}>
-            <div className={styles.sectionHeader}>
+            {/* <div className={styles.sectionHeader}>
                 <Trophy className={styles.mainIcon} />
                 <h3>Prize structure</h3>
-            </div>
+            </div> */}
 
             <div className={styles.prizeGrid}>
                 {prizes?.sort((a, b) => a.ranked - b.ranked).map((prize) => {
