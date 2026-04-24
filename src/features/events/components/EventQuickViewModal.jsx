@@ -1,12 +1,24 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Users, Trophy, Calendar, ArrowRight, CheckCircle, Clock } from 'lucide-react';
+import { X, Users, Trophy, Calendar, ArrowRight, CheckCircle, Clock, Ticket } from 'lucide-react';
 import styles from '../styles/EventQuickViewModal.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from "@/app/routes/paths";
 
 const EventQuickViewModal = ({ isOpen, onClose, event, onJoinClick, user }) => {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isOpen) {
+
+            const originalStyle = window.getComputedStyle(document.body).overflow;
+            document.body.style.overflow = 'hidden';
+
+            return () => {
+                document.body.style.overflow = originalStyle;
+            };
+        }
+    }, [isOpen]);
 
     const eventStatus = useMemo(() => {
         if (!event) return null;
@@ -64,6 +76,14 @@ const EventQuickViewModal = ({ isOpen, onClose, event, onJoinClick, user }) => {
                             <h2 className={styles.title}>{event.title}</h2>
 
                             <div className={styles.metaGrid}>
+                                <div className={`${styles.metaItem} ${event.entryFee > 0 ? styles.feePaid : styles.feeFree}`}>
+                                    <Ticket size={18} />
+                                    <span>
+                                        {event.entryFee > 0
+                                            ? `${event.entryFee.toLocaleString('vi-VN')} VND`
+                                            : 'Free Entry'}
+                                    </span>
+                                </div>
                                 <div className={styles.metaItem}>
                                     <Users size={18} />
                                     <span>{event.participantCount} Participants</span>

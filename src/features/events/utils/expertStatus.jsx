@@ -16,6 +16,11 @@ export const EXPERT_STATUS_CONFIG = {
         label: "Rejected",
         variant: "rejected",
         icon: <XCircle size={12} />
+    },
+    Closed_InvitationExpired: {
+        label: "Invitation Expired",
+        variant: "expired",
+        icon: <XCircle size={12} />
     }
 };
 

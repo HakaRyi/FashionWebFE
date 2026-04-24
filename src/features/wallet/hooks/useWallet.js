@@ -8,7 +8,7 @@ const ICON_MAP = {
     ArrowUpRight: ArrowUpRight,
 };
 
-export const useWallet = (itemsPerPage = 5) => {
+export const useWallet = (itemsPerPage = 5, enabled = true) => {
     const [stats, setStats] = useState([]);
     const [transactions, setTransactions] = useState([]);
     const [filter, setFilter] = useState('all');
@@ -17,6 +17,9 @@ export const useWallet = (itemsPerPage = 5) => {
     const [error, setError] = useState(null);
 
     const fetchWalletData = useCallback(async () => {
+        const token = localStorage.getItem('token');
+        if (!token || !enabled) return;
+
         try {
             setLoading(true);
             setError(null);
@@ -39,11 +42,11 @@ export const useWallet = (itemsPerPage = 5) => {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [enabled]);
 
     useEffect(() => {
         fetchWalletData();
-    }, [fetchWalletData]);
+    }, [fetchWalletData, enabled]);
 
     // Lọc dữ liệu theo filter (all, deposit, expense)
     const allFilteredTransactions = useMemo(() => {

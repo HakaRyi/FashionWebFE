@@ -13,6 +13,7 @@ import { useNotifications } from '@/shared/hooks/useNotifications';
 import { useNavbarLogic } from '@/shared/hooks/useNavbarLogic';
 import { getNotificationLink } from '@/shared/utils/notificationRouter';
 import { CreatePostModal } from '@/features/feed';
+import { useEventStore } from '@/features/events';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -20,6 +21,7 @@ const Navbar = () => {
     const location = useLocation();
     const [searchQuery, setSearchQuery] = useState('');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const resetEventStore = useEventStore(state => state.reset);
 
     // 1. Hooks logic riêng biệt
     const {
@@ -91,6 +93,12 @@ const Navbar = () => {
         } else {
             navigate(PATHS.HOME);
         }
+    };
+
+    const handleLogoutClick = () => {
+        resetEventStore();
+        logout();
+        navigate(PATHS.HOME);
     };
 
     // 4. Framer Motion Variants
@@ -239,7 +247,7 @@ const Navbar = () => {
 
                                                 <div className={styles.dropdownDivider} />
 
-                                                <button className={`${styles.dropdownItem} ${styles.logout}`} onClick={() => { logout(); navigate(PATHS.HOME); }}>
+                                                <button className={`${styles.dropdownItem} ${styles.logout}`} onClick={handleLogoutClick}>
                                                     <LogOut size={18} /> <span>Sign Out</span>
                                                 </button>
                                             </motion.div>

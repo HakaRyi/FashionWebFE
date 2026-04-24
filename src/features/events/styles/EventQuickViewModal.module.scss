@@ -1,3 +1,6 @@
+@use '../../../shared/styles/abstracts/variables' as *;
+@use '../../../shared/styles/abstracts/mixins' as *;
+
 $fashion-white: #ffffff;
 $fashion-bg: #fcfaf8;
 $primary-pink: #f8e1e7;
@@ -17,18 +20,26 @@ $shadow-soft: 0 15px 35px rgba(212, 175, 55, 0.12);
     align-items: center;
     justify-content: center;
     z-index: 1100;
-    padding: 20px;
+    padding: 40px 20px;
 }
 
 .modalContainer {
     background: $fashion-white;
     width: 100%;
-    max-width: 520px;
+    max-width: 700px;
+    max-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
     border-radius: 32px; // Bo tròn lớn tạo cảm giác thân thiện, social
     overflow: hidden;
     position: relative;
     box-shadow: $shadow-soft;
     border: 1px solid rgba($accent-gold, 0.1);
+
+    @media (max-width: 768px) {
+        max-width: 95%;
+        border-radius: 24px;
+    }
 }
 
 .banner {
@@ -91,6 +102,8 @@ $shadow-soft: 0 15px 35px rgba(212, 175, 55, 0.12);
 .content {
     padding: 32px;
     background: linear-gradient(to bottom, $fashion-white, $fashion-bg);
+    overflow-y: auto;
+    @include custom-scrollbar;
 
     .title {
         font-family: 'Playfair Display', serif; // Font chữ có chân cho sự fashion
@@ -105,7 +118,7 @@ $shadow-soft: 0 15px 35px rgba(212, 175, 55, 0.12);
 
 .metaGrid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
     margin-bottom: 28px;
 
@@ -138,6 +151,10 @@ $shadow-soft: 0 15px 35px rgba(212, 175, 55, 0.12);
             letter-spacing: 0.5px;
         }
     }
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 .description {
@@ -146,10 +163,11 @@ $shadow-soft: 0 15px 35px rgba(212, 175, 55, 0.12);
     line-height: 1.7;
     margin-bottom: 32px;
     font-weight: 400;
-    // Giới hạn dòng để modal gọn gàng
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+
+    line-clamp: 3;
     overflow: hidden;
 }
 

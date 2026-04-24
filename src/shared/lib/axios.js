@@ -1,8 +1,10 @@
-// src\shared\lib\axios.js
 import axios from 'axios';
 
+export const BASE_URL = 'http://localhost:5196';
+export const API_URL = `${BASE_URL}/api`;
+
 const axiosClient = axios.create({
-    baseURL: 'http://localhost:5196/api',
+    baseURL: API_URL,
     headers: { 'Content-Type': 'application/json' },
 });
 
@@ -21,7 +23,9 @@ const processQueue = (error, token = null) => {
 axiosClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        if (token) config.headers.Authorization = `Bearer ${token}`;
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     },
     (error) => Promise.reject(error),
@@ -37,10 +41,14 @@ axiosClient.interceptors.response.use(
             return Promise.reject(error);
         }
 
-        // Check if 401 Unauthorized and not retried yet
         if (error.response?.status === 401 && !originalRequest._retry) {
+            if (originalRequest.url.includes('/auth/refresh')) {
+                localStorage.clear();
+                window.dispatchEvent(new Event('auth-logout'));
+                return Promise.reject(error);
+            }
+
             if (isRefreshing) {
-                // Wait for existing refresh process
                 return new Promise((resolve, reject) => {
                     failedQueue.push({ resolve, reject });
                 })
@@ -54,41 +62,48 @@ axiosClient.interceptors.response.use(
             originalRequest._retry = true;
             isRefreshing = true;
 
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const storedRefreshToken = localStorage.getItem('refreshToken');
+            const storedRefreshToken = localStorage.getItem('refreshToken');
 
-                    // Use plain axios to avoid interceptor loop
-                    const res = await axios.post(`${axiosClient.defaults.baseURL}/auth/refresh`, {
+            if (!storedRefreshToken) {
+                isRefreshing = false;
+                localStorage.clear();
+                window.dispatchEvent(new Event('auth-logout'));
+                return Promise.reject(error);
+            }
+
+            return new Promise((resolve, reject) => {
+                axios
+                    .post(`${axiosClient.defaults.baseURL}/auth/refresh`, {
                         refreshToken: storedRefreshToken,
+                    })
+                    .then(({ data }) => {
+                        const { accessToken, refreshToken } = data;
+
+                        localStorage.setItem('token', accessToken);
+                        localStorage.setItem('refreshToken', refreshToken);
+
+                        axiosClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
+                        window.dispatchEvent(
+                            new CustomEvent('auth-refreshed', {
+                                detail: { accessToken, refreshToken },
+                            }),
+                        );
+
+                        processQueue(null, accessToken);
+
+                        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                        resolve(axiosClient(originalRequest));
+                    })
+                    .catch((err) => {
+                        processQueue(err, null);
+                        localStorage.clear();
+                        window.dispatchEvent(new Event('auth-logout'));
+                        reject(err);
+                    })
+                    .finally(() => {
+                        isRefreshing = false;
                     });
-
-                    const { accessToken, refreshToken } = res.data;
-
-                    // Update local storage
-                    localStorage.setItem('token', accessToken);
-                    localStorage.setItem('refreshToken', refreshToken);
-
-                    // Update default header
-                    axiosClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-
-                    processQueue(null, accessToken);
-
-                    // Reset refreshing state
-                    isRefreshing = false;
-
-                    // Retry original request
-                    originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-                    resolve(axiosClient(originalRequest));
-                } catch (refreshError) {
-                    processQueue(refreshError, null);
-                    isRefreshing = false;
-
-                    // Handle total expiration
-                    localStorage.clear();
-                    window.location.href = '/';
-                    reject(refreshError);
-                }
             });
         }
 

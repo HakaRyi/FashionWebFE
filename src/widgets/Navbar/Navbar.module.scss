@@ -1,4 +1,6 @@
-// VARIABLES
+@use '../../shared/styles/abstracts/variables' as *;
+@use '../../shared/styles/abstracts/mixins' as *;
+
 $primary-black: #0a0a0a;
 $accent-pink: #ff008c;
 $bg-light: rgba(255, 255, 255, 0.8);
@@ -223,6 +225,7 @@ $transition-main: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             .notifList {
                 max-height: 400px;
                 overflow-y: auto;
+                @include custom-scrollbar;
 
                 .notifItem {
                     display: flex;
