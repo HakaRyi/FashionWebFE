@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
                 email: decoded.email,
                 username: decoded.Username,
                 role: role?.toLowerCase(),
+                hasCompletedOnboarding: decoded.HasCompletedOnboarding === "true",
                 exp: decoded.exp,
             };
         } catch (error) {
@@ -85,7 +86,7 @@ export const AuthProvider = ({ children }) => {
             try {
                 const response = await axiosClient.get(`/profile/${decoded.id}`);
                 const fullUser = response.data;
-                setUser({ ...fullUser, role: fullUser.role?.toLowerCase() });
+                setUser({ ...decoded, ...fullUser, role: fullUser.role?.toLowerCase() });
             } catch (error) {
                 setUser(decoded);
             }

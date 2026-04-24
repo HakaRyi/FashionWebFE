@@ -7,8 +7,14 @@ const PublicRoute = () => {
     const location = useLocation();
 
     if (user && (location.pathname === PATHS.LOGIN || location.pathname === PATHS.HOME)) {
-        const redirectPath = user.role === 'admin' ? PATHS.DASHBOARD : PATHS.USER_FEED;
-        return <Navigate to={redirectPath} replace />;
+        // Nếu admin -> Dashboard
+        if (user.role === 'admin') return <Navigate to={PATHS.DASHBOARD} replace />;
+
+        // Nếu user chưa onboarding -> trang onboarding
+        if (!user.hasCompletedOnboarding) return <Navigate to={PATHS.ONBOARDING} replace />;
+
+        // Ngược lại -> Feed
+        return <Navigate to={PATHS.USER_FEED} replace />;
     }
 
     return <Outlet />;

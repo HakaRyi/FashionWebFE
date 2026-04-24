@@ -65,6 +65,11 @@
         color: #2e7d32;
     }
 
+    &.completed {
+        // background: #e8f5e9; // Xanh lá nhạt
+        color: #bb9c11;
+    }
+
     // Màu cho các trạng thái Lỗi / Hủy (Rejected, Cancelled)
     &.error {
         background: #ffebee; // Đỏ nhạt

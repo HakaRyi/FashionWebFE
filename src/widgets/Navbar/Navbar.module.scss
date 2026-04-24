@@ -19,9 +19,9 @@ $transition-main: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     &.scrolled,
     &.authMode {
         padding: 12px 0;
-        background: $bg-light;
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid $border-color;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(25px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 }
 
@@ -69,7 +69,7 @@ $transition-main: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         transition: $transition-main;
 
         &.active {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.5);
             color: $primary-black;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
@@ -131,9 +131,9 @@ $transition-main: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         transition: $transition-main;
 
         &:hover {
-            background: $accent-pink;
+            background: #2c6182;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 0, 140, 0.3);
+            box-shadow: 0 6px 20px rgba(119, 0, 255, 0.3);
         }
     }
 }

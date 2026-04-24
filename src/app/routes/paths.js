@@ -3,8 +3,9 @@ export const PATHS = {
     HOME: '/',
     LOGIN: '/login',
     UNAUTHORIZED: '/unauthorized',
-
+    
     //user
+    ONBOARDING: '/onboarding',
     USER_FEED: '/home',
     PAYMENT_RESULT: '/payment-result',
     USER_POLICY: '/policy',

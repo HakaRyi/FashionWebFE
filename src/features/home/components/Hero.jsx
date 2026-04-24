@@ -17,10 +17,10 @@ const Hero = () => {
                     transition={{ duration: 1, ease: 'easeOut' }}
                     className={styles.heroLeft}
                 >
-                    <div className={styles.badge}>
+                    {/* <div className={styles.badge}>
                         <span className={styles.dot}></span>
                         NEW ERA OF FASHION
-                    </div>
+                    </div> */}
                     <h1 className={styles.mainTitle}>
                         STYLING <br />
                         <span className={styles.italic}>Future</span> <br />
@@ -52,7 +52,7 @@ const Hero = () => {
                         transition={{ duration: 1.2, delay: 0.3 }}
                         className={styles.imageCard}
                     >
-                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000" alt="Fashion" />
+                        <img src="https://cdn.mos.cms.futurecdn.net/upLMiPtbgff8VhXtuHaFZM-1024-80.jpg.webp" alt="Fashion" />
                         {/* <motion.div
                             animate={{ y: [0, -15, 0] }}
                             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}

@@ -5,11 +5,13 @@ import "@/shared/styles/index.scss";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {CinematicBackground} from "@/features/background";
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <CinematicBackground />
         <AppRouter />
         <ToastContainer 
           position="top-right"
