@@ -1,0 +1,94 @@
+// Khai báo bảng màu xám Cinematic
+:root {
+  --bg-base: #e5e7eb;
+  --blob-dark: #94a3b8;
+  --blob-mid: #cbd5e1;
+  --blob-light: #f1f5f9;
+  --glass-effect: rgba(255, 255, 255, 0.3);
+}
+
+.masterContainer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--bg-base);
+  overflow: hidden;
+  filter: url("#liquid-master") contrast(1.2); // Tăng tương phản để uốn lượn rõ hơn
+
+  // Lớp hạt nhiễu (Grain) - Bí quyết của sự sang trọng
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 10;
+  }
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, border-radius;
+  opacity: 0.8;
+}
+
+// Khối màu 1: To nhất, di chuyển chậm nhất làm nền
+.blob1 {
+  width: 90vw;
+  height: 90vw;
+  background: var(--blob-mid);
+  top: -30%;
+  left: -20%;
+  animation: masterMorph 30s infinite alternate ease-in-out;
+}
+
+// Khối màu 2: Màu đậm hơn để tạo điểm nhấn uốn lượn
+.blob2 {
+  width: 70vw;
+  height: 70vw;
+  background: var(--blob-dark);
+  bottom: -20%;
+  right: -10%;
+  animation: masterMorph 22s infinite alternate-reverse ease-in-out;
+  animation-delay: -7s;
+}
+
+// Khối màu 3: Nhỏ, màu sáng, trôi nổi linh hoạt
+.blob3 {
+  width: 50vw;
+  height: 50vw;
+  background: var(--blob-light);
+  top: 20%;
+  left: 30%;
+  animation: masterMorph 15s infinite linear;
+}
+
+@keyframes masterMorph {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    border-radius: 40% 60% 70% 30% / 40% 40% 60% 60%;
+  }
+  33% {
+    transform: translate(15vw, 10vh) scale(1.1) rotate(120deg);
+    border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
+  }
+  66% {
+    transform: translate(-10vw, 20vh) scale(0.9) rotate(240deg);
+    border-radius: 30% 70% 70% 30% / 50% 50% 50% 50%;
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(360deg);
+    border-radius: 40% 60% 70% 30% / 40% 40% 60% 60%;
+  }
+}
+
+// Lớp phủ mờ (Vignette) để tập trung ánh sáng vào giữa
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.05) 100%);
+  z-index: 5;
+  pointer-events: none;
+}

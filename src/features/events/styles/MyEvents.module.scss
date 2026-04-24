@@ -77,7 +77,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: $white;
+    // background: $white;
     padding: 12px;
     border-radius: 14px;
     border: 1px solid $border-color;
@@ -164,7 +164,7 @@
 }
 
 .eventCard {
-    background: $white;
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid rgba($color-primary, 0.1);

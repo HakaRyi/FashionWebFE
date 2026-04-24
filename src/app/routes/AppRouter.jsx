@@ -6,6 +6,7 @@ import GlobalStyle from "../../shared/styles/GlobalStyle/GlobalStyle";
 
 import PublicRoute from "./guards/PublicRoute";
 import ProtectedRoute from "./guards/ProtectedRoute";
+import OnboardingRoute from "./guards/OnboardingRoute";
 import { useAuth } from "../providers/AuthProvider";
 
 function AppRouter() {
@@ -14,10 +15,10 @@ function AppRouter() {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '100vh',
         fontFamily: 'sans-serif'
       }}>
@@ -41,6 +42,20 @@ function AppRouter() {
         <Route key={index} element={<PublicRoute />}>
           <Route path={route.path} element={element} />
         </Route>
+      );
+    }
+
+    if (route.isOnboardingRoute) {
+      return (
+        <Route
+          key={index}
+          path={route.path}
+          element={
+            <OnboardingRoute>
+              {element}
+            </OnboardingRoute>
+          }
+        />
       );
     }
 
