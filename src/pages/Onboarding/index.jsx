@@ -52,9 +52,9 @@ const Onboarding = () => {
                                 <label>Gender <span>*</span></label>
                                 <select name="gender" value={formData.gender || ""} onChange={handleChange}>
                                     <option value="">Select Gender</option>
-                                    <option value="0">Male</option>
-                                    <option value="1">Female</option>
-                                    <option value="2">Other</option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                    <option value="3">Other</option>
                                 </select>
                             </div>
 
