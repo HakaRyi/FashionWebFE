@@ -29,7 +29,7 @@ export const useEventDetail = (id) => {
             try {
                 await toast.promise(getEventApi.manualStartEvent(id), {
                     pending: '⌛ Starting the event...',
-                    success: 'The event has begun!',
+                    success: 'The event has begin!',
                     error: {
                         render({ data }) {
                             return data?.response?.data?.message || 'Cannot start the event';

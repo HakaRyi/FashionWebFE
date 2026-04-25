@@ -1,0 +1,772 @@
+@use '../../shared/styles/abstracts/variables' as *;
+@use '../../shared/styles/abstracts/mixins' as *;
+@use 'sass:color';
+
+$bg-primary: #f2f4f9;
+$text-dark: #0f172a;
+$text-slate-400: #94a3b8;
+$text-slate-500: #64748b;
+$blue-600: #2563eb;
+$slate-900: #0f172a;
+$white: #ffffff;
+$radius-32: 32px;
+$radius-20: 20px;
+
+.pageContainer {
+    background-color: $bg-primary;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: $text-dark;
+    position: relative;
+    padding-bottom: 6rem;
+    scroll-behavior: smooth;
+    height: 100%;
+    min-height: 100%;
+    overflow-y: visible;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba($text-slate-400, 0.3);
+        border-radius: 10px;
+        &:hover {
+            background: rgba($text-slate-400, 0.5);
+        }
+    }
+}
+
+// --- LOADING & ERROR SCREENS ---
+.loadingScreen,
+.errorScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+}
+
+.spinnerWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    .spinner {
+        width: 2.5rem;
+        height: 2.5rem;
+        border: 4px solid $blue-600;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    p {
+        font-weight: 900;
+        color: $text-slate-400;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.errorScreen {
+    text-align: center;
+    h1 {
+        font-size: 2.25rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+    }
+    button {
+        padding: 0.5rem 1.5rem;
+        background: $slate-900;
+        color: $white;
+        border-radius: 0.75rem;
+        font-weight: 700;
+    }
+}
+
+// --- STICKY NAV ---
+.stickyNav {
+    position: sticky;
+    top: 1rem;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-bottom: -50px;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    // background: rgba($slate-900, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+
+    .btnBack {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        border: none;
+        outline: none;
+        padding: 0;
+        cursor: pointer;
+
+        color: rgba(0, 0, 0, 0.8);
+        font-weight: 600;
+        transition: all 0.2s ease;
+        &:hover {
+            color: rgb(24, 90, 164);
+            transform: translateX(-2px);
+        }
+
+        @media (max-width: 640px) {
+            .backText {
+                display: none;
+            }
+        }
+    }
+
+    .navActions {
+        display: flex;
+        gap: 0.75rem;
+        flex-shrink: 1;
+
+        button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            &:active {
+                transform: scale(0.95);
+            }
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+
+        .btnStart {
+            background: #31497d;
+            color: white;
+            box-shadow: 0 4px 12px rgba($blue-600, 0.2);
+
+            &:hover:not(:disabled) {
+                background: color.scale($blue-600, $lightness: -15%);
+                box-shadow: 0 6px 15px rgba($blue-600, 0.3);
+                transform: translateY(-1px);
+            }
+        }
+
+        .btnCancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            &:hover:not(:disabled) {
+                background: rgba(132, 14, 40, 0.8);
+                border-color: #dd677b;
+                transform: translateY(-1px);
+            }
+        }
+
+        .btnFinalize {
+            background: $white;
+            color: $slate-900;
+            font-weight: 900;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+            &:hover:not(:disabled) {
+                background: #f8fafc;
+                color: $gold-dark;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                transform: translateY(-1px);
+            }
+        }
+    }
+}
+
+// --- HERO ---
+.hero {
+    position: relative;
+    height: 320px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+
+    .heroBg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, $bg-primary 5%, rgba($bg-primary, 0.8) 30%, transparent 100%);
+        }
+    }
+
+    .heroContent {
+        position: relative;
+        z-index: 10;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 5% 2rem;
+        box-sizing: border-box;
+    }
+
+    .heroMeta {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        flex-wrap: wrap; // Cho phép các phần tử nhảy xuống dòng nếu Sidebar quá rộng
+        width: 100%;
+
+        @media (max-width: 1024px) {
+            // Hoặc mức độ rộng mà Sidebar bắt đầu lấn át
+            align-items: flex-start; // Khi xuống dòng thì căn lề trên sẽ đẹp hơn
+            flex-direction: column; // Ép thành hàng dọc khi không gian quá hẹp
+            gap: 1rem;
+        }
+    }
+
+    .metaLeft {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+        flex-shrink: 1;
+    }
+
+    .feeInfo {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+
+        padding: 4px 10px;
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+
+        margin-left: 0;
+        height: fit-content;
+        min-width: 80px;
+
+        .feeLabel {
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .feeValue {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85rem; // Giảm size chữ xuống
+            font-weight: 700;
+            color: #372b06;
+            line-height: 1;
+        }
+
+        // Khi sự kiện Free - làm nó nhỏ hơn nữa
+        &.isFree {
+            padding: 6px 12px;
+            .freeText {
+                font-size: 0.8rem;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                color: #201f1f;
+                line-height: 1;
+            }
+        }
+    }
+}
+
+.heroTitle {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: $slate-900;
+}
+
+// --- STATUS BADGES ---
+.statusBadge {
+    padding: 0.25rem 1rem;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(4px);
+    border: 1px solid currentColor;
+
+    // Dynamic variants from getEventStatusInfo
+    &.active {
+        background: rgba($blue-600, 0.1);
+        color: $blue-600;
+    }
+    &.completed {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+}
+
+// --- COUNTDOWN ---
+.countdownWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+
+    @media (max-width: 1024px) {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .countdownLabel {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: rgba(0, 0, 0, 0.6);
+        font-weight: 600;
+        &::after {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: #d4af37;
+            border-radius: 50%;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .countdownWrapper {
+        align-items: flex-start;
+        width: 100%;
+        margin-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 15px;
+    }
+}
+
+.countdown {
+    display: flex;
+    gap: 0.5rem;
+
+    .timeUnit {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        padding: 0;
+
+        .timeVal {
+            font-size: 1.125rem;
+            font-weight: 900;
+            color: $slate-900;
+            line-height: 1;
+        }
+        .timeLabel {
+            font-size: 8px;
+            font-weight: 700;
+            color: $text-slate-400;
+            text-transform: uppercase;
+        }
+    }
+    .timeDivider {
+        align-self: center;
+        color: $text-slate-400;
+        font-weight: 700;
+        font-size: 1.25rem;
+        padding-bottom: 0;
+        line-height: 50px;
+    }
+}
+
+// --- MAIN CONTENT ---
+.mainWrapper {
+    max-width: 1200px;
+    margin: 1rem auto 0;
+    padding: 0 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.rejectAlert {
+    background: #fff1f2;
+    border: 1px solid #fda4af;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    gap: 1rem;
+    color: #9f1239;
+    align-items: center;
+    strong {
+        display: block;
+        font-weight: 800;
+    }
+    p {
+        font-size: 0.875rem;
+    }
+}
+
+// --- STATS GRID & CARDS ---
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.statsCard {
+    background: white;
+    border-radius: $radius-32;
+    padding: 2rem;
+    border: 1px solid #f1f5f9;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .cardHeader {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $text-slate-400;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        .iconBlue {
+            color: $blue-600;
+        }
+    }
+}
+
+// Timeline Visual
+.timelineVisual {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+    margin-top: 2rem;
+
+    .baseLine {
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        right: 8px;
+        height: 2px;
+        background: #f1f5f9;
+    }
+    .progressLine {
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        height: 2px;
+        background: $blue-600;
+    }
+
+    .milestones {
+        display: contents;
+    }
+    .milestone {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0.5;
+        &.reached {
+            opacity: 1;
+            .dot {
+                background: $blue-600;
+                box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+            }
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        .msInfo {
+            text-align: center;
+        }
+        .msLabel {
+            font-size: 8px;
+            color: $text-slate-400;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .msDate {
+            font-size: 11px;
+            font-weight: 900;
+            color: #1e293b;
+        }
+    }
+}
+
+// Scoring Chart
+.scoringBody {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.chartArea {
+    position: relative;
+    width: 112px;
+    height: 112px;
+    flex-shrink: 0;
+
+    .svgCircle {
+        transform: rotate(-90deg);
+        width: 100%;
+        height: 100%;
+    }
+    .circleBg {
+        fill: none;
+        stroke: #f1f5f9;
+        stroke-width: 4;
+    }
+    .circleActive {
+        fill: none;
+        stroke: $blue-600;
+        stroke-width: 4;
+        stroke-linecap: round;
+    }
+
+    .chartText {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .ratioNum {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: $slate-900;
+        }
+        .ratioSub {
+            font-size: 8px;
+            font-weight: 900;
+            color: $text-slate-400;
+            text-transform: uppercase;
+        }
+    }
+}
+
+.chartLegend {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .legendItem {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+
+        i {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            margin-top: 2px;
+        }
+        .dotExpert {
+            background: $blue-600;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+        }
+        .dotUser {
+            background: #e2e8f0;
+        }
+
+        strong {
+            display: block;
+            font-size: 10px;
+            font-weight: 900;
+            color: $slate-900;
+        }
+        p {
+            font-size: 9px;
+            color: $text-slate-500;
+        }
+    }
+}
+
+// --- EXPERTS SECTION ---
+.contentSection {
+    .sectionTitle {
+        color: $text-slate-400;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+    }
+    .description {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: rgba(0, 0, 0, 0.85);
+        white-space: pre-line;
+        text-align: justify;
+        text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+}
+
+.expertScrollContainer {
+    width: 100%;
+    overflow-x: auto; // Cho phép kéo ngang
+    padding: 1rem 0 2rem;
+    cursor: grab; // Hiển thị icon bàn tay để kéo
+
+    // Ẩn thanh scrollbar để trông chuyên nghiệp hơn (tùy chọn)
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.expertFlexWrapper {
+    display: inline-flex; // Quan trọng để các item nằm trên 1 hàng
+    justify-content: center; // Căn giữa nếu ít item
+    min-width: 100%; // Đảm bảo căn giữa hoạt động
+    gap: 1.5rem;
+    padding: 0 1rem; // Padding 2 đầu để không bị sát mép khi scroll
+}
+
+.personCard {
+    flex: 0 0 240px;
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
+    transition: transform 0.3s;
+
+    &.creatorCard {
+        border: 2px solid $blue-600;
+        transform: scale(1.05);
+        z-index: 2;
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        .imageBox img {
+            transform: scale(1.05);
+        }
+    }
+
+    .imageBox {
+        height: 160px;
+        position: relative;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .organizerBadge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+    }
+
+    .personInfo {
+        padding: 1rem;
+        text-align: center;
+        h4 {
+            font-size: 0.875rem;
+            font-weight: 900;
+            color: $slate-900;
+            margin-bottom: 0.25rem;
+        }
+        p {
+            font-size: 10px;
+            color: $text-slate-500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .expertStatus {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid currentColor;
+            font-size: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+
+            // Expert specific variants
+            &.accepted {
+                color: #10b981;
+                border-color: rgba(16, 185, 129, 0.2);
+            }
+            &.pending {
+                color: #f59e0b;
+                border-color: rgba(245, 158, 11, 0.2);
+            }
+        }
+    }
+}

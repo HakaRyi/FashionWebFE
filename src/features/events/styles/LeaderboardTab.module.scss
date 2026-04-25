@@ -1,317 +1,437 @@
 @use '../../../shared/styles/abstracts/variables' as vars;
 @use 'sass:color';
 
+// Variables - Tông màu Vogue / Editorial
+$color-paper: #f8f5f0;
+$color-ink: #1a1a1a;
+$color-gold-card: #fdf6e3;
+$color-silver-card: #f1f5f9;
+$color-bronze-card: #fdf2f0;
+$color-gold-accent: #b45309;
+
 .leaderboardContainer {
-  position: relative;
-  padding: 100px 5% 80px;
-  background: #ffffff; 
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  overflow: hidden;
-  color: #1a1a1a;
+    background-color: $color-paper;
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    font-family: 'Inter', sans-serif;
+    color: $color-ink;
+    overflow: hidden;
 }
 
-// Chữ nền chạy mờ tạo cảm giác Fashion Exhibition
-.ambientGlow {
-  position: absolute;
-  top: -100px;
-  right: -5%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
-  filter: blur(80px);
-  z-index: 0;
-  pointer-events: none;
-}
-
+// Reusable Header
 .sectionHeader {
-  text-align: center;
-  margin-bottom: 80px;
-  position: relative;
-  z-index: 1;
+    display: flex;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto 4rem;
+    padding: 0 1rem;
 
-  .preTitle {
-    font-size: 11px;
-    letter-spacing: 0.5em;
-    text-transform: uppercase;
-    color: #888;
-    font-weight: 700;
-    display: block;
-    margin-bottom: 12px;
-  }
+    .sectionTitle {
+        font-family: serif;
+        font-style: italic;
+        font-size: 1.875rem;
+        white-space: nowrap;
+    }
 
-  .sectionTitle {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 700;
-    color: #1a1a1a;
-    letter-spacing: -0.01em;
-  }
-
-  .titleUnderline {
-    width: 50px;
-    height: 1.5px;
-    background: #d4af37; // Màu gold chủ đạo
-    margin: 20px auto 0;
-  }
+    .headerLine {
+        height: 1px;
+        background: rgba(0, 0, 0, 0.1);
+        flex: 1;
+        margin-left: 2.5rem;
+    }
 }
 
+// Winners Grid
 .winnersGrid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-  z-index: 2;
-  position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1280px;
+    margin: 0 auto 8rem;
+    padding: 0 1rem;
 }
 
 .winnerCard {
-  position: relative;
-  width: 350px;
-  padding: 60px 35px 40px;
-  border-radius: 20px;
-  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+    position: relative;
+    border-radius: 2rem;
+    padding: 2rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
 
-  &:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
-  }
-
-  .rankNumber {
-    position: absolute;
-    top: 25px;
-    left: 35px;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    font-style: italic;
-    opacity: 0.6;
-  }
-
-  // --- Áp dụng màu sắc từ file Prize của bạn ---
-  &.rank1 {
-    background: linear-gradient(135deg, #fff9e6 0%, #ffecb3 100%);
-    border: 1px solid #ffe082;
-    .rankNumber, .userHandle { color: #b45309; }
-    .viewBtn { background: #1a1a1a; color: #fff; }
-    .statsBox { border-color: rgba(180, 83, 9, 0.1); }
-  }
-
-  &.rank2 {
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-    border: 1px solid #d1d5db;
-    .rankNumber, .userHandle { color: #374151; }
-    .viewBtn { background: #374151; color: #fff; }
-    .statsBox { border-color: rgba(55, 65, 81, 0.1); }
-  }
-
-  &.rank3 {
-    background: linear-gradient(135deg, #fff5f0 0%, #fed7aa 100%);
-    border: 1px solid #ffedd5;
-    .rankNumber, .userHandle { color: #9a3412; }
-    .viewBtn { background: #9a3412; color: #fff; }
-    .statsBox { border-color: rgba(154, 52, 18, 0.1); }
-  }
-}
-
-.userMeta {
-  margin-bottom: 30px;
-  .userHandle {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    display: block;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-  }
-  .displayName {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: #1a1a1a;
-    line-height: 1.2;
-  }
-}
-
-.statsBox {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
-  border-top: 1px solid rgba(0,0,0,0.05);
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  margin-bottom: 35px;
-
-  .statItem {
-    .label {
-      font-size: 9px;
-      letter-spacing: 0.1em;
-      font-weight: 700;
-      opacity: 0.6;
-      display: block;
-      margin-bottom: 5px;
-    }
-    .value {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a1a1a;
-    }
-  }
-  .statDivider { width: 1px; height: 25px; background: rgba(0,0,0,0.08); }
-}
-
-.viewBtn {
-  width: 100%;
-  padding: 18px;
-  border: none;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: 0.3s ease;
-  text-transform: uppercase;
-
-  &:hover {
-    transform: scale(1.02);
-    filter: brightness(1.1);
-  }
-}
-
-/* TABLE SECTION - HONORABLE MENTIONS */
-.othersSection {
-  max-width: 1000px;
-  margin: 120px auto 0;
-}
-
-.listHeader {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  margin-bottom: 40px;
-  .listTitle {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-style: italic;
-    white-space: nowrap;
-    color: #1a1a1a;
-  }
-  .hairline { height: 1px; background: #eee; width: 100%; }
-}
-
-.elegantTable {
-  background: #fff;
-  border-radius: 20px;
-  overflow: hidden;
-
-  .tableRow {
-    display: grid;
-    grid-template-columns: 80px 1fr 140px 200px 100px;
-    align-items: center;
-    padding: 25px 20px;
-    border-bottom: 1px solid #f8f8f8;
-    transition: 0.3s;
-    
     &:hover {
-      background: #fafafa;
-      .colRank { color: #d4af37; transform: translateX(5px); }
+        transform: translateY(-10px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+        img {
+            filter: grayscale(0);
+            transform: scale(1.05);
+        }
     }
 
-    .colRank {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      font-size: 18px;
-      color: #999;
-      transition: 0.3s;
+    // Rank specific styles
+    &.rank1 {
+        background-color: $color-gold-card;
+        border-color: #fde68a;
+        color: #451a03;
+    }
+    &.rank2 {
+        background-color: $color-silver-card;
+        border-color: #e2e8f0;
+        color: #0f172a;
+    }
+    &.rank3 {
+        background-color: $color-bronze-card;
+        border-color: #fed7aa;
+        color: #431407;
     }
 
-    .name { 
-      font-weight: 600; 
-      font-size: 15px; 
-      color: #1a1a1a;
+    .bgRankNumber {
+        position: absolute;
+        right: -0.5rem;
+        top: -1rem;
+        font-size: 7rem;
+        font-weight: 900;
+        opacity: 0.05;
+        user-select: none;
+        pointer-events: none;
     }
 
-    .colScore {
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-      strong { font-size: 16px; font-weight: 700; color: #1a1a1a; }
-      span { font-size: 10px; font-weight: 600; opacity: 0.4; }
+    .imageWrapper {
+        aspect-ratio: 1;
+        border-radius: 1rem;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        background: rgba(0, 0, 0, 0.05);
+        position: relative;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.3);
+            transition: all 0.7s ease;
+        }
+
+        .imageOverlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent);
+        }
     }
 
-    .colStatus {
-      font-size: 11px;
-      color: #888;
-      font-weight: 500;
+    .rankLabel {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+        opacity: 0.6;
     }
 
-    .colAction button {
-      background: #f3f4f6;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      transition: 0.2s;
-
-      &:hover {
-        background: #1a1a1a;
-        color: #fff;
-      }
+    .displayName {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin-bottom: 2rem;
     }
-  }
+
+    .cardFooter {
+        margin-top: auto;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        .scoreBox {
+            .label {
+                font-size: 9px;
+                font-weight: 700;
+                text-transform: uppercase;
+                opacity: 0.4;
+                display: block;
+            }
+            .value {
+                font-size: 1.5rem;
+                font-weight: 900;
+            }
+        }
+
+        .viewBtn {
+            padding: 0.6rem 1rem;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            background: $color-ink;
+            color: white;
+            transition: opacity 0.3s;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+    }
 }
 
-.pagination {
-  margin-top: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25px 0;
-  border-top: 1px solid #eee;
+// Honorable Mentions Section
+.othersSection {
+    max-width: 896px;
+    margin: 5rem auto;
+    padding: 0 1rem;
 
-  button {
-    background: none;
-    border: 1px solid #eee;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    transition: 0.3s;
-    
-    &:disabled { opacity: 0.3; cursor: not-allowed; }
-    &:hover:not(:disabled) { 
-      background: #1a1a1a; 
-      color: #fff;
-      border-color: #1a1a1a;
+    .listHeader {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+
+        .listTitle {
+            font-family: serif;
+            font-style: italic;
+            font-size: 1.5rem;
+        }
+        .hairline {
+            height: 1px;
+            background: rgba(0, 0, 0, 0.05);
+            flex: 1;
+        }
     }
-  }
+}
 
-  .pageInfo {
+.mentionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+}
+
+.mentionItem {
+    position: relative;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 2rem;
     display: flex;
     align-items: center;
-    font-weight: 700;
-    font-size: 13px;
-    .current { color: #1a1a1a; }
-    .sep { margin: 0 12px; opacity: 0.2; }
-    .total { color: #999; }
-  }
+    gap: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        .avatar {
+            filter: grayscale(0);
+            transform: scale(1.05);
+        }
+        h4 {
+            color: $color-gold-accent;
+        }
+    }
+
+    .miniRank {
+        position: absolute;
+        left: -0.5rem;
+        top: -0.5rem;
+        width: 2rem;
+        height: 2rem;
+        background: $color-ink;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+    }
+
+    .avatar {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 1rem;
+        object-fit: cover;
+        filter: grayscale(0.2);
+        transition: 0.3s;
+    }
+
+    .info {
+        flex: 1;
+        h4 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            transition: 0.3s;
+        }
+        .meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+
+            span {
+                &:first-child {
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                    font-size: 10px;
+                    opacity: 0.5;
+                }
+            }
+
+            .dot {
+                width: 4px;
+                height: 4px;
+                background: rgba(0, 0, 0, 0.1);
+                border-radius: 50%;
+            }
+
+            .verified {
+                font-size: 9px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                opacity: 0.3;
+            }
+        }
+    }
+
+    .detailsBtn {
+        font-size: 10px;
+        font-weight: 700;
+        background: none;
+        border: none;
+        opacity: 0.3;
+        cursor: pointer;
+        &:hover {
+            opacity: 1;
+            color: $color-gold-accent;
+        }
+    }
 }
 
-// Mobile Responsive
-@media (max-width: 768px) {
-  .leaderboardContainer { padding: 60px 20px; }
-  .winnerCard { width: 100%; }
-  .elegantTable .tableRow {
-    grid-template-columns: 50px 1fr 100px;
-    .colStatus, .colScore { display: none; }
-  }
+// Pagination
+.archiveAction {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+
+    .showAllBtn {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background-color: $color-ink;
+        color: $color-paper; // Chữ màu giấy
+        padding: 1.25rem 2.5rem;
+        border-radius: 1rem;
+        border: none;
+
+        // Typography chốt hạ
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4em;
+
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+
+        .arrowIcon {
+            transition: transform 0.3s ease;
+        }
+
+        &:hover {
+            background-color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+
+            .arrowIcon {
+                transform: translateX(8px);
+            }
+        }
+    }
+}
+
+// Insight Section
+.insightSection {
+    max-width: 896px;
+    margin: 8rem auto 4rem;
+    padding: 0 1rem;
+}
+
+.insightCard {
+    background: $color-ink;
+    color: $color-paper;
+    padding: 2.5rem;
+    border-radius: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+    .bgIcon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 8rem;
+        height: 8rem;
+        opacity: 0.1;
+        transform: rotate(12deg) translate(20%, -20%);
+    }
+
+    .insightContent {
+        position: relative;
+        z-index: 10;
+        max-width: 600px;
+
+        .insightTitle {
+            font-family: serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .insightText {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            opacity: 0.7;
+            font-style: italic;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .insightFooter {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .tag {
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.3em;
+                margin-bottom: 0.25rem;
+            }
+            .subTag {
+                font-size: 9px;
+                opacity: 0.3;
+                text-transform: uppercase;
+            }
+
+            .seal {
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .innerDot {
+                    width: 6px;
+                    height: 6px;
+                    background: $color-paper;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
 }

@@ -3,8 +3,9 @@ export const PATHS = {
     HOME: '/',
     LOGIN: '/login',
     UNAUTHORIZED: '/unauthorized',
-
+    
     //user
+    ONBOARDING: '/onboarding',
     USER_FEED: '/home',
     PAYMENT_RESULT: '/payment-result',
     USER_POLICY: '/policy',
@@ -13,6 +14,7 @@ export const PATHS = {
     USER_EVENTS: '/events',
     EVENT_DETAIL: '/events/:id',
     EVENT_SUMMARY: '/summary-event/:id',
+    EVENT_SUMMARY_FULL_ARCHIVE: '/summary-event/:id/full-archive',
 
     //expert
     EXPERT_APPLICATION: '/expert/registration',

@@ -24,7 +24,7 @@ const ExpertWalletPage = () => {
     loading,
     error,
     refreshData
-  } = useWallet(5);
+  } = useWallet({ itemsPerPage: 5 });
 
   // 1. Trạng thái Loading
   if (loading) {

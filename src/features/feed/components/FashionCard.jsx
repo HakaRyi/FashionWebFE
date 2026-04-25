@@ -98,7 +98,7 @@ const FashionCard = ({ post, lastPostRef, commentsMap, toggleComments, addCommen
                             >
                                 <MessageCircle
                                     size={24}
-                                    stroke={commentsMap[post.postId] ? "#C1FF72" : "currentColor"}
+                                    stroke={commentsMap[post.postId] ? "#b95bb9" : "currentColor"}
                                 />
                             </motion.button>
                             <span className={styles.statNumber}>{post.commentCount?.toLocaleString()}</span>

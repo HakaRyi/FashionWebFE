@@ -1,8 +1,15 @@
-@use "sass:color";
-@use '../../../shared/styles/abstracts/variables' as vars;
+@use 'sass:color';
+@use '../../../shared/styles/abstracts/variables' as *;
+@use '../../../shared/styles/abstracts/mixins' as *;
 
 .posts-grid {
-    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family:
+        'Be Vietnam Pro',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     display: grid;
@@ -13,22 +20,22 @@
     .post-card {
         background: #fff;
         border-radius: 16px; // Bo góc mềm mại hơn
-        border: 2px solid vars.$f-black;
+        border: 2px solid $black-deep;
         overflow: hidden;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         cursor: pointer;
         position: relative;
 
         &:hover {
-            border-color: vars.$f-purple;
+            border-color: $f-purple;
             transform: translateY(-8px);
-            @include vars.neon-shadow(vars.$f-purple); // Thêm shadow cho đồng bộ
+            @include neon-shadow($f-purple); // Thêm shadow cho đồng bộ
 
             .imageWrapper {
                 .feedImage {
                     transform: scale(1.08);
                 }
-                
+
                 // Hiện nút điều hướng Swiper khi hover
                 :global(.swiper-button-next),
                 :global(.swiper-button-prev) {
@@ -63,7 +70,7 @@
                 left: 15px;
                 z-index: 10;
                 background: #fff;
-                border: 2px solid vars.$f-black;
+                border: 2px solid $black-deep;
                 padding: 5px 12px;
                 font-weight: 900;
                 font-size: 0.85rem;
@@ -71,7 +78,7 @@
                 display: flex;
                 align-items: center;
                 gap: 4px;
-                box-shadow: 4px 4px 0 vars.$f-black; // Đổ bóng cứng cá tính
+                box-shadow: 4px 4px 0 $black-deep; // Đổ bóng cứng cá tính
             }
         }
 
@@ -81,22 +88,22 @@
             .swiper-button-prev {
                 color: #fff;
                 transform: scale(0.4);
-                background: color.adjust(vars.$f-black, $alpha: -0.4);
+                background: color.adjust($black-deep, $alpha: -0.4);
                 padding: 30px;
                 border-radius: 50%;
                 opacity: 0; // Mặc định ẩn
                 transition: all 0.3s ease;
-                
+
                 &::after {
                     font-weight: 900;
                 }
             }
-            
+
             .swiper-pagination-bullet {
                 background: #fff;
                 opacity: 0.7;
                 &-active {
-                    background: vars.$f-purple;
+                    background: $f-purple;
                     opacity: 1;
                     width: 15px;
                     border-radius: 4px;
@@ -114,7 +121,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                color: vars.$f-black;
+                color: $black-deep;
                 letter-spacing: -0.5px;
             }
 
@@ -126,7 +133,7 @@
                 span {
                     font-size: 0.8rem;
                     font-weight: 800;
-                    color: vars.$f-purple;
+                    color: $f-purple;
                     text-transform: lowercase; // Style username kiểu @instagram
                 }
 
@@ -134,11 +141,11 @@
                     display: flex;
                     justify-content: space-between; // Đẩy 2 cụm Like/Comment ra 2 bên
                     align-items: center;
-                    border-top: 2px solid color.adjust(vars.$f-black, $alpha: -0.95);
+                    border-top: 2px solid color.adjust($black-deep, $alpha: -0.95);
                     padding-top: 12px;
                     font-size: 0.85rem;
                     font-weight: 700;
-                    color: vars.$f-gray;
+                    color: $gray-muted;
 
                     div {
                         display: flex;

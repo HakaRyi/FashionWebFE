@@ -1,4 +1,5 @@
 import { IoMdClose } from "react-icons/io";
+import { useEffect } from "react";
 import {
   FaHistory, FaFileAlt, FaUserCircle,
   FaExternalLinkAlt, FaInfoCircle, FaCheckCircle, FaExclamationCircle
@@ -6,6 +7,17 @@ import {
 import styles from "../styles/ExpertModal.module.scss";
 
 function ExpertModal({ expert, onClose, onApprove, onReject, rejectReason, setRejectReason }) {
+
+  useEffect(() => {
+    if (expert) {
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [expert]);
+
   if (!expert) return null;
 
   const latestRequest = expert.expertRequests?.[0];

@@ -5,6 +5,7 @@ import { Search, ArrowUpDown, AlertCircle, ChevronLeft, Loader2, Award } from 'l
 import { ToastContainer, toast } from 'react-toastify';
 
 import { useExpertRating, expertRatingApi, SubmissionCard, ReviewPanel } from '@/features/rating';
+import { useEventStore } from '@/features/events';
 
 import styles from '@/features/rating/styles/SubmissionsReview.module.scss';
 
@@ -12,11 +13,11 @@ const SubmissionsReview = () => {
     const { eventId } = useParams();
     const navigate = useNavigate();
 
-    // Custom Hook quản lý dữ liệu
+    const { currentEvent, fetchEventDetail, clearCurrentEvent, isLoading: isEventLoading } = useEventStore();
+
     const { submissions, criteria, isLoading, fetchMyReviews, updateLocalScore } = useExpertRating(eventId);
 
     // --- State local cho UI ---
-    const [eventInfo, setEventInfo] = useState({ name: "Đang tải...", id: eventId });
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState('newest');
     const [selectedSubmission, setSelectedSubmission] = useState(null);
@@ -28,15 +29,12 @@ const SubmissionsReview = () => {
 
     // Tải dữ liệu khi mount
     useEffect(() => {
+        fetchEventDetail(eventId);
         fetchMyReviews();
-    }, [fetchMyReviews]);
-
-    // Cập nhật tên sự kiện từ dữ liệu trả về
-    useEffect(() => {
-        if (submissions.length > 0) {
-            setEventInfo({ name: submissions[0].eventName, id: eventId });
-        }
-    }, [submissions, eventId]);
+        return () => {
+            if (clearCurrentEvent) clearCurrentEvent();
+        };
+    }, [eventId, fetchEventDetail, fetchMyReviews, clearCurrentEvent]);
 
     // Đồng bộ form khi chọn bài thi
     useEffect(() => {
@@ -46,7 +44,7 @@ const SubmissionsReview = () => {
             // Map điểm cũ vào form nếu đã từng chấm
             const initialScores = {};
             if (selectedSubmission.criterionRatings) {
-                selectedSubmission.criterionRatings.forEach(c => {
+                selectedSubmission.criterionRatings?.forEach(c => {
                     initialScores[c.eventCriterionId] = c.score;
                 });
             }
@@ -142,7 +140,7 @@ const SubmissionsReview = () => {
                 </div>
 
                 <div className={styles.titleSection}>
-                    <h1>{eventInfo.name}</h1>
+                    <h1>{currentEvent?.title || (isEventLoading ? "Loading..." : "Event Review")}</h1>
                     <p>• Expert Evaluation System</p>
                 </div>
 

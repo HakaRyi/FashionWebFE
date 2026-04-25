@@ -51,7 +51,7 @@ const CreateEventForm = () => {
         submissionDeadline, setSubmissionDeadline, setInvitedExpertIds,
         expertBalance, totalBudget, totalRequired, isOverBudget,
         createEvent, invitedExpertIds, toggleExpert, loading, refreshBalance,
-        validateStep, platformFee, feePercentage, metadata
+        validateStep, platformFee, metadata
     } = useCreateEvent();
 
     const fileInputRef = useRef(null);
@@ -189,7 +189,6 @@ const CreateEventForm = () => {
         await saveDraft();
 
         if (isOverBudget) {
-            await saveDraft();
             const gap = totalRequired - expertBalance;
             setDepositAmount(Math.ceil(gap));
             setShowDepositModal(true);
@@ -272,7 +271,6 @@ const CreateEventForm = () => {
                                     totalBudget={totalBudget}
                                     totalRequired={totalRequired}
                                     isOverBudget={isOverBudget}
-                                    feePercentage={feePercentage}
                                     platformFee={platformFee}
                                     expertBalance={expertBalance}
                                     metadata={metadata}
@@ -289,13 +287,13 @@ const CreateEventForm = () => {
                             onClick={() => setStep(p => p - 1)}
                             disabled={step === 1 || loading}
                         >
-                            <ChevronLeft size={18} /> Quay lại
+                            <ChevronLeft size={18} /> Back
                         </button>
 
                         <div className={styles.rightButtons}>
                             {step < 5 ? (
                                 <button className={styles.btnNext} onClick={handleNextStep} >
-                                    Tiếp theo <ChevronRight size={18} />
+                                    Next <ChevronRight size={18} />
                                 </button>
                             ) : (
                                 <button

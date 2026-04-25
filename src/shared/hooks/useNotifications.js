@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import * as signalR from '@microsoft/signalr';
-import axiosClient from '../lib/axios';
+import axiosClient, { BASE_URL } from '../lib/axios';
 
 export const useNotifications = (isLoggedIn) => {
     const [hasUnread, setHasUnread] = useState(false);
@@ -78,12 +78,13 @@ export const useNotifications = (isLoggedIn) => {
         fetchNotifications();
 
         const setupConnection = async () => {
+            const hubUrl = `${BASE_URL}/notificationHub`;
             const token = localStorage.getItem('token');
             if (!token) return;
 
             const connection = new signalR.HubConnectionBuilder()
-                .withUrl('http://localhost:5196/notificationHub', {
-                    accessTokenFactory: () => token,
+                .withUrl(hubUrl, {
+                    accessTokenFactory: () => localStorage.getItem('token'),
                 })
                 .withAutomaticReconnect()
                 .configureLogging(signalR.LogLevel.None)

@@ -7,19 +7,19 @@ $accent: #1a1a1a;
 @use "sass:color";
 
 .homeContainer {
-    background: $white;
+    // background: $white;
     color: $black;
     font-family: 'Inter', sans-serif;
 }
 
 // Hero Section Nâng cấp
 .hero {
-    min-height: 100vh;
+    min-height: 80vh;
     padding: 0 8%;
     display: flex;
     align-items: center;
     position: relative;
-    background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+    // background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
 
     .heroGrid {
         display: grid;

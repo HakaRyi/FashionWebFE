@@ -13,9 +13,10 @@ export const createEventApi = async (eventData) => {
     const userWeight = 1 - expertWeight;
     formData.append('ExpertWeight', expertWeight.toFixed(2));
     formData.append('UserWeight', userWeight.toFixed(2));
-    formData.append('PointPerLike', parseFloat(eventData.pointPerLike || 1));
-    formData.append('PointPerShare', parseFloat(eventData.pointPerShare || 3));
-    formData.append('IsAutoStart', eventData.isAutoStart);
+    formData.append('EntryFee', parseFloat(eventData.entryFee || 0));
+    formData.append('PointPerLike', parseFloat(eventData.pointPerLike ?? 0));
+    formData.append('PointPerShare', parseFloat(eventData.pointPerShare ?? 0));
+    formData.append('IsAutoStart', String(!!eventData.isAutoStart));
 
     const minReq = parseInt(eventData.minExpertsRequired) || 2;
     formData.append('MinExpertsRequired', minReq);

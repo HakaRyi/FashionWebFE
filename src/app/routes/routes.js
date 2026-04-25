@@ -30,6 +30,8 @@ import FashionFeed from '../../pages/Feed';
 import SearchResultsPage from '../../pages/FeedSearch';
 import PostDetailPage from '../../pages/PostDetail';
 import EventsPage from '../../pages/Events';
+import FullArchive from '../../pages/EventFullArchive';
+import Onboarding from '../../pages/Onboarding';
 
 import DefaultLayout from '../../widgets/layouts/DefaultLayout';
 import HomeLayout from '../../widgets/layouts/HomeLayout';
@@ -63,10 +65,17 @@ export const routes = [
         path: PATHS.USER_POLICY,
         component: Policy,
         layout: HomeLayout,
-        // roles: ['user', 'expert'],
+        roles: ['user', 'expert'],
     },
 
     // ===== USER =====
+    {
+        path: PATHS.ONBOARDING,
+        component: Onboarding,
+        layout: HomeLayout,
+        isOnboardingRoute: true,
+        // roles: ['user', 'expert'],
+    },
     {
         path: PATHS.USER_FEED,
         component: FashionFeed,
@@ -100,6 +109,12 @@ export const routes = [
     {
         path: PATHS.EVENT_SUMMARY,
         component: EventSummary,
+        layout: HomeLayout,
+        roles: ['user', 'expert'],
+    },
+    {
+        path: PATHS.EVENT_SUMMARY_FULL_ARCHIVE,
+        component: FullArchive,
         layout: HomeLayout,
         roles: ['user', 'expert'],
     },

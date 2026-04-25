@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     X, CheckCircle, XCircle, Clock, DollarSign,
     Users, Trophy, Mail, AlertCircle, Image as ImageIcon
@@ -8,6 +8,17 @@ import styles from '../styles/EventManagement.module.scss';
 const EventDetailModal = ({ event, onClose, onApprove, onReject }) => {
     const [view, setView] = useState('detail'); // 'detail' hoặc 'reject'
     const [reason, setReason] = useState('');
+
+    useEffect(() => {
+        if (event) {
+            const originalStyle = window.getComputedStyle(document.body).overflow;
+            document.body.style.overflow = 'hidden';
+
+            return () => {
+                document.body.style.overflow = originalStyle;
+            };
+        }
+    }, [event]);
 
     if (!event) return null;
 

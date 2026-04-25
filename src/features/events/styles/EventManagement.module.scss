@@ -1,4 +1,8 @@
 @use "sass:color";
+@use '../../../shared/styles/abstracts/variables' as *;
+@use '../../../shared/styles/abstracts/animations' as *;
+@use '../../../shared/styles/abstracts/mixins' as *;
+
 // Variables
 $primary-color: #2563eb;
 $success-color: #10b981;
@@ -265,6 +269,7 @@ $shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 .modalBody {
     padding: 24px;
     overflow-y: auto;
+    @include custom-scrollbar;
 }
 
 .bannerSection {

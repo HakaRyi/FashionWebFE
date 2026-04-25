@@ -15,16 +15,17 @@ export { default as EventDetailModal } from '@/features/events/components/EventD
 export { eventApi } from './api/adminApi';
 export * from './utils/formatters';
 
-export { useEventDetail } from "@/features/events/hooks/useEventDetail";
-export { getExpertStatusInfo } from "@/features/events/utils/expertStatus";
-export { default as PrizeSection} from "@/features/events/components/PrizeSection";
-export { default as PostTable} from "@/features/events/components/PostTable";
-export { default as PostDetailModal} from "@/features/events/components/PostDetailModal";
+export { useEventDetail } from '@/features/events/hooks/useEventDetail';
+export { getExpertStatusInfo } from '@/features/events/utils/expertStatus';
+export { default as PrizeSection } from '@/features/events/components/PrizeSection';
+export { default as PostTable } from '@/features/events/components/PostTable';
+export { default as PostDetailModal } from '@/features/events/components/PostDetailModal';
 
 export { getEventStatusInfo } from './utils/eventStatus';
-export { default as QuickUpdateModal} from "@/features/events/components/QuickUpdateModal";
-export { default as EventMiniCard} from "@/features/events/components/EventMiniCard";
-export { default as EventQuickViewModal} from "@/features/events/components/EventQuickViewModal";
+export { default as QuickUpdateModal } from '@/features/events/components/QuickUpdateModal';
+export { default as EventSidebarSection } from '@/features/events/components/EventSidebarSection';
+export { default as EventMiniCard } from '@/features/events/components/EventMiniCard';
+export { default as EventQuickViewModal } from '@/features/events/components/EventQuickViewModal';
 
 export { default as LeaderboardTab } from '@/features/events/components/LeaderboardTab';
 export { default as PostsTab } from '@/features/events/components/PostsTab';

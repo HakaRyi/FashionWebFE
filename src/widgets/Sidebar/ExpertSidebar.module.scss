@@ -1,8 +1,12 @@
+@use '../../shared/styles/abstracts/variables' as *;
+@use '../../shared/styles/abstracts/mixins' as *;
+
 .sidebarInner {
     display: flex;
     flex-direction: column;
     height: 100%;
     padding: 0 1rem;
+    @include custom-scrollbar;
 
     .actionSection {
         margin-bottom: 2.5rem;
@@ -81,7 +85,7 @@
 
         .statusCard {
             padding: 1rem;
-            background: #f8f8f8;
+            // background: #f8f8f8;
             border-radius: 12px;
             p {
                 font-size: 0.75rem;

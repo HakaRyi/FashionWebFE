@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useFeed, FashionCard, CreatePostModal } from '@/features/feed';
-import { EventMiniCard, EventQuickViewModal } from '@/features/events';
+import { EventQuickViewModal, EventSidebarSection } from '@/features/events';
 import styles from './Feed.module.scss';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
@@ -24,10 +24,6 @@ const FashionFeed = () => {
         isEventsLoading,
         refreshAll,
     } = useFeed();
-
-    const [showAllEvents, setShowAllEvents] = useState(false);
-
-    const displayedEvents = showAllEvents ? events : events.slice(0, 2);
 
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
@@ -75,35 +71,11 @@ const FashionFeed = () => {
         <>
             <div className={styles.feedPage}>
                 <div className={styles.feedLayout}>
-                    {/* Sidebar: Quản lý Events */}
-                    <aside className={styles.sidebar}>
-                        <div className={styles.eventSection}>
-                            <h3 className={styles.sectionTitle}>Featured Events</h3>
-
-                            {isEventsLoading && (
-                                <div className={styles.loadingText}>Loading events...</div>
-                            )}
-
-                            {!isEventsLoading && events.length === 0 && (
-                                <p className={styles.emptyText}>No events available</p>
-                            )}
-
-                            <div className={styles.eventList}>
-                                {displayedEvents.map(event => (
-                                    <EventMiniCard key={event.eventId} event={event} onOpenQuickView={handleOpenQuickView} />
-                                ))}
-                            </div>
-
-                            {events.length > 2 && (
-                                <button
-                                    className={styles.showMoreBtn}
-                                    onClick={() => navigate(PATHS.USER_EVENTS)}
-                                >
-                                    Explore All Events ({events.length})
-                                </button>
-                            )}
-                        </div>
-                    </aside>
+                    <EventSidebarSection
+                        events={events}
+                        isLoading={isEventsLoading}
+                        onOpenQuickView={handleOpenQuickView}
+                    />
 
                     {/* Main: Danh sách bài viết (Infinite Scroll) */}
                     <main className={styles.feedContainer}>
@@ -151,8 +123,12 @@ const FashionFeed = () => {
 
             <CreatePostModal
                 isOpen={isCreatePostOpen}
-                onClose={() => setIsCreatePostOpen(false)}
+                onClose={() => {
+                    setIsCreatePostOpen(false);
+                    setSelectedEvent(null);
+                }}
                 fixedEventId={selectedEvent?.eventId}
+                entryFee={selectedEvent?.entryFee || 0}
                 eventName={selectedEvent?.title}
                 user={currentUser}
                 onSuccess={() => {

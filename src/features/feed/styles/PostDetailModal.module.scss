@@ -1,0 +1,82 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85); // Làm tối nền hơn để nổi bật content
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(8px);
+    padding: 20px; // Khoảng cách an toàn cho mobile
+}
+
+.modalContent {
+    background: white;
+    width: 100%;
+    max-width: 700px; // Độ rộng lý tưởng để đọc content
+    max-height: 95vh; // Gần như full chiều cao màn hình
+    border-radius: 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; // Quan trọng để bo góc không bị vỡ bởi nội dung con
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.scrollableArea {
+    overflow-y: auto;
+    flex: 1; // Chiếm toàn bộ không gian còn lại
+
+    // Tùy chỉnh thanh cuộn cho đẹp
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #dbdbdb;
+        border-radius: 10px;
+    }
+}
+
+.closeBtn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 2100; // Nằm trên cả nội dung bài viết
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: scale(1.1);
+        background: white;
+    }
+
+    svg {
+        color: #333;
+    }
+}
+
+// Tablet & Mobile
+@media (max-width: 768px) {
+    .modalContent {
+        max-height: 100vh;
+        border-radius: 0; // Full màn hình trên mobile
+    }
+    .modalOverlay {
+        padding: 0;
+    }
+}
