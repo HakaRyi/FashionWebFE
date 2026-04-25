@@ -15,7 +15,7 @@ function PostDetailModal({ post, onClose, onApprove, onReject }) {
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.container} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.header}>
-                    <h3>Chi tiết bài viết</h3>
+                    <h3>Article details</h3>
                     <button className={styles.btnClose} onClick={onClose}>
                         &times;
                     </button>
@@ -50,15 +50,15 @@ function PostDetailModal({ post, onClose, onApprove, onReject }) {
                     {post.status === 'PendingAdmin' ? (
                         <>
                             <button className={styles.btnApprove} onClick={() => onApprove(post.postId)}>
-                                <FaCheck /> Duyệt bài
+                                <FaCheck /> Approve
                             </button>
                             <button className={styles.btnReject} onClick={() => onReject(post.postId)}>
-                                <FaTimes /> Từ chối
+                                <FaTimes /> Refuse
                             </button>
                         </>
                     ) : (
                         <button className={styles.btnSecondary} onClick={onClose}>
-                            Đóng
+                            Close
                         </button>
                     )}
                 </div>

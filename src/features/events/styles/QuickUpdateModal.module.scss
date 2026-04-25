@@ -1,4 +1,7 @@
 @use 'sass:color';
+@use '../../../shared/styles/abstracts/variables' as *;
+@use '../../../shared/styles/abstracts/animations' as *;
+@use '../../../shared/styles/abstracts/mixins' as *;
 
 $primary-color: #3b82f6;
 $success-color: #10b981;
@@ -83,6 +86,7 @@ $shadow-xl:
     padding: 1.5rem;
     max-height: 70vh; // Chống tràn nội dung trên màn hình thấp
     overflow-y: auto;
+    @include custom-scrollbar;
 
     .formGroup {
         margin-bottom: 1.5rem;
@@ -117,6 +121,72 @@ $shadow-xl:
                 outline: none;
                 border-color: $primary-color;
                 box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            }
+        }
+
+        input[type='datetime-local'] {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #333333;
+            background-color: #ffffff;
+            color: #000000;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+
+            &::-webkit-calendar-picker-indicator {
+                filter: invert(0); // Chuyển icon sang màu trắng để hợp với nền tối
+                cursor: pointer;
+                opacity: 0.6;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+
+            &:focus {
+                border-color: #d4af37; // Màu vàng Gold khi focus
+            }
+        }
+
+        textarea {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #333333;
+            background-color: #ffffff;
+            color: #000000;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+
+            &::-webkit-scrollbar {
+                width: 4px;
+            }
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.1); // Màu thanh cuộn nhạt
+                border-radius: 10px;
+                &:hover {
+                    background: $primary-color;
+                }
+            }
+
+            &:focus {
+                outline: none;
+                border-color: $primary-color;
+                box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+            }
+
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.3);
             }
         }
     }

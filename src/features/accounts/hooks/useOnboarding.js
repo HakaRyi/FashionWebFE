@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/providers/AuthProvider';
 import OnboardingApi from '../api/OnboardingApi';
 import namer from 'color-namer';
 import { PATHS } from '@/app/routes/paths';
-
 
 const STYLE_OPTIONS = ['Minimalism', 'Vintage', 'Streetwear', 'Luxury', 'Casual', 'Bohemian', 'Y2K'];
 
@@ -18,15 +17,39 @@ const COLOR_OPTIONS = [
     { name: 'Burgundy', hex: '#800020' },
 ];
 
+const MATERIAL_OPTIONS = ['Cotton', 'Silk', 'Denim', 'Leather', 'Linen', 'Wool', 'Polyester'];
+
+const BRAND_SUGGESTIONS = [
+    'Nike',
+    'Adidas',
+    'Zara',
+    'H&M',
+    'Gucci',
+    'Prada',
+    'Uniqlo',
+    "Levi's",
+    'New Balance',
+    'Puma',
+    'Balenciaga',
+    'Chanel',
+    'Louis Vuitton',
+    'Hermès',
+    'Dior',
+    'Saint Laurent',
+    'Calvin Klein',
+];
+
 export const useOnboarding = () => {
     const navigate = useNavigate();
     const { setUser } = useAuth();
+    const { login } = useAuth();
 
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [isAddingOther, setIsAddingOther] = useState(false);
     const [customStyle, setCustomStyle] = useState('');
     const [customHex, setCustomHex] = useState('#6366f1');
+    const [customBrand, setCustomBrand] = useState('');
 
     const [formData, setFormData] = useState({
         gender: '',
@@ -39,7 +62,27 @@ export const useOnboarding = () => {
         skinTone: '',
         favoriteStyles: [],
         favoriteColors: [],
+        favoriteMaterials: [],
+        favoriteBrands: [],
     });
+
+    const filteredBrands = useMemo(() => {
+        const query = customBrand.trim().toLowerCase();
+        if (!query) return [];
+
+        return BRAND_SUGGESTIONS.filter(
+            (brand) => brand.toLowerCase().includes(query) && !formData.favoriteBrands.includes(brand),
+        ).slice(0, 3);
+    }, [customBrand, formData.favoriteBrands]);
+
+    const handleAddBrand = (brandName) => {
+        const targetBrand = (typeof brandName === 'string' ? brandName : customBrand).trim();
+
+        if (targetBrand && !formData.favoriteBrands.includes(targetBrand)) {
+            handleTogglePreference('favoriteBrands', targetBrand);
+            setCustomBrand('');
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
@@ -98,9 +141,18 @@ export const useOnboarding = () => {
     const handleComplete = async () => {
         setLoading(true);
         try {
-            await OnboardingApi.completeOnboarding(formData);
-            setUser((prev) => ({ ...prev, hasCompletedOnboarding: true }));
-            navigate(PATHS.USER_FEED);
+            const data = await OnboardingApi.completeOnboarding(formData);
+
+            if (data && data.accessToken) {
+                const oldRefreshToken = localStorage.getItem('refreshToken');
+
+                await login(data.accessToken, data.refreshToken || oldRefreshToken);
+
+                navigate(PATHS.USER_FEED);
+            } else {
+                setUser((prev) => ({ ...prev, hasCompletedOnboarding: true }));
+                navigate(PATHS.USER_FEED);
+            }
         } catch (error) {
             console.error('Onboarding failed', error);
             alert('Something went wrong. Please try again.');
@@ -124,10 +176,15 @@ export const useOnboarding = () => {
         customStyle,
         setCustomStyle,
         customHex,
+        customBrand,
+        setCustomBrand,
+        filteredBrands,
+        handleAddBrand,
 
         // Constants
         STYLE_OPTIONS,
         COLOR_OPTIONS,
+        MATERIAL_OPTIONS,
 
         // Computed
         isStep1Incomplete,

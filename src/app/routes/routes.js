@@ -65,7 +65,7 @@ export const routes = [
         path: PATHS.USER_POLICY,
         component: Policy,
         layout: HomeLayout,
-        // roles: ['user', 'expert'],
+        roles: ['user', 'expert'],
     },
 
     // ===== USER =====
@@ -73,7 +73,8 @@ export const routes = [
         path: PATHS.ONBOARDING,
         component: Onboarding,
         layout: HomeLayout,
-        roles: ['user', 'expert'],
+        isOnboardingRoute: true,
+        // roles: ['user', 'expert'],
     },
     {
         path: PATHS.USER_FEED,
