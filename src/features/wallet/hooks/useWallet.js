@@ -8,7 +8,7 @@ const ICON_MAP = {
     ArrowUpRight: ArrowUpRight,
 };
 
-export const useWallet = (itemsPerPage = 5, enabled = true) => {
+export const useWallet = ({ itemsPerPage = 5, enabled = true } = {}) => {
     const [stats, setStats] = useState([]);
     const [transactions, setTransactions] = useState([]);
     const [filter, setFilter] = useState('all');

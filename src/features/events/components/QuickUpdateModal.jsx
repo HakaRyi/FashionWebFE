@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../styles/QuickUpdateModal.module.scss';
 
 const QuickUpdateModal = ({ event, onClose, onSave }) => {
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
     const formatToLocalInput = (dateStr) => {
         if (!dateStr) return '';
@@ -54,7 +62,7 @@ const QuickUpdateModal = ({ event, onClose, onSave }) => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className={styles.modalHeader}>
-                    <h2>Chỉnh sửa sự kiện</h2>
+                    <h2>Edit event</h2>
                     <button className={styles.closeBtn} onClick={onClose}>&times;</button>
                 </div>
 
@@ -70,7 +78,7 @@ const QuickUpdateModal = ({ event, onClose, onSave }) => {
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label>Mô tả ngắn</label>
+                        <label>Short description</label>
                         <textarea
                             name="description"
                             value={formData.description}

@@ -26,7 +26,7 @@ const CreatePostModal = ({
     const [isDepositOpen, setIsDepositOpen] = useState(false);
     const fileInputRef = useRef(null);
     const fetchEvents = useEventStore(state => state.fetchEvents);
-    const { stats, loading: walletLoading, refreshData: refreshWallet } = useWallet();
+    const { stats, loading: walletLoading, refreshData: refreshWallet } = useWallet({ enabled: !!fixedEventId && isOpen });
 
     const currentBalance = useMemo(() => {
         if (!stats || !Array.isArray(stats)) return 0;
@@ -53,7 +53,7 @@ const CreatePostModal = ({
     }, [isInsufficientBalance, error]);
 
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && fixedEventId) {
             refreshWallet();
         } else {
             setTitle('');
@@ -62,7 +62,7 @@ const CreatePostModal = ({
             setPreviews([]);
             setError(null);
         }
-    }, [isOpen, refreshWallet]);
+    }, [isOpen, fixedEventId, refreshWallet]);
 
     useEffect(() => {
         return () => {

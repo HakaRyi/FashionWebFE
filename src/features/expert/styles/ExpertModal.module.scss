@@ -1,4 +1,7 @@
-// Variables
+@use '../../../shared/styles/abstracts/variables' as *;
+@use '../../../shared/styles/abstracts/animations' as *;
+@use '../../../shared/styles/abstracts/mixins' as *;
+
 $primary-color: #3b82f6;
 $success-color: #22c55e;
 $danger-color: #ef4444;
@@ -32,6 +35,7 @@ $border-color: #e2e8f0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  
 
   &.wideModal {
     max-width: 1000px; // Chiều rộng cho 2 cột
@@ -102,6 +106,7 @@ $border-color: #e2e8f0;
   @media (max-width: 768px) {
     flex-direction: column;
     overflow-y: auto;
+    @include custom-scrollbar;
   }
 }
 
@@ -111,6 +116,7 @@ $border-color: #e2e8f0;
   padding: 24px;
   overflow-y: auto;
   border-right: 1px solid $border-color;
+  @include custom-scrollbar;
 
   .sectionTitle {
     display: flex;
@@ -270,6 +276,7 @@ $border-color: #e2e8f0;
   background: $bg-light;
   padding: 24px;
   overflow-y: auto;
+  @include custom-scrollbar;
 
   .timelineContainer {
     display: flex;

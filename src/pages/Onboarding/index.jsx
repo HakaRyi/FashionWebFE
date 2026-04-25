@@ -13,8 +13,13 @@ const Onboarding = () => {
         customStyle,
         setCustomStyle,
         customHex,
+        customBrand,
+        setCustomBrand,
+        handleAddBrand,
+        filteredBrands,
         STYLE_OPTIONS,
         COLOR_OPTIONS,
+        MATERIAL_OPTIONS,
         isStep1Incomplete,
         isStep1PartiallyEmpty,
         handleChange,
@@ -177,7 +182,65 @@ const Onboarding = () => {
                                 </div>
                             </div>
 
-                            {/* Section: Colors */}
+                            {/* Section: Materials */}
+                            <div className={styles.preferenceGroup}>
+                                <h4>Favorite Materials</h4>
+                                <div className={styles.tagCloud}>
+                                    {MATERIAL_OPTIONS.map(m => (
+                                        <div
+                                            key={m}
+                                            className={`${styles.tag} ${formData.favoriteMaterials.includes(m) ? styles.selected : ''}`}
+                                            onClick={() => handleTogglePreference('favoriteMaterials', m)}
+                                        >
+                                            {m}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles.footer}>
+                            <button className={styles.btnBack} onClick={() => setStep(1)}>Back</button>
+                            <button className={styles.btnPrimary} onClick={() => setStep(3)}>Next: Brands & Colors</button>
+                        </div>
+                    </div>
+                )}
+                {step === 3 && (
+                    <div className={styles.content}>
+                        <div className={styles.header}>
+                            <h2>Final Touches</h2>
+                            <p>Almost done! Tell us your brand and color taste</p>
+                        </div>
+                        <div className={styles.formSection}>
+                            {/* BRAND SEARCH SECTION */}
+                            <div className={styles.preferenceGroup}>
+                                <h4>Favorite Brands</h4>
+                                <div className={styles.searchContainer}>
+                                    <input
+                                        type="text"
+                                        placeholder="Search brands (e.g. Nike, Zara...)"
+                                        value={customBrand}
+                                        onChange={(e) => setCustomBrand(e.target.value)}
+                                    />
+                                    {filteredBrands.length > 0 && (
+                                        <ul className={styles.suggestions}>
+                                            {filteredBrands.map(b => (
+                                                <li key={b} onClick={() => { handleAddBrand(b); setCustomBrand(''); }}>
+                                                    {b}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                                <div className={styles.tagCloud} style={{ marginTop: '12px' }}>
+                                    {formData.favoriteBrands.map(brand => (
+                                        <button key={brand} className={`${styles.tag} ${styles.selected}`} onClick={() => handleTogglePreference('favoriteBrands', brand)}>
+                                            {brand} <span className={styles.removeTag}>×</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* COLORS SECTION */}
                             <div className={styles.preferenceGroup}>
                                 <h4>Preferred Colors</h4>
                                 <div className={styles.colorGrid}>
@@ -215,13 +278,10 @@ const Onboarding = () => {
                                 </div>
                             </div>
                         </div>
-
                         <div className={styles.footer}>
-                            <button className={styles.btnBack} onClick={() => setStep(1)}>Back</button>
+                            <button className={styles.btnBack} onClick={() => setStep(2)}>Back</button>
                             <div className={styles.actions}>
-                                <button className={styles.btnSkip} onClick={handleComplete} disabled={loading}>
-                                    Skip
-                                </button>
+                                <button className={styles.btnSkip} onClick={handleComplete}>Skip</button>
                                 <button className={styles.btnPrimary} onClick={handleComplete} disabled={loading}>
                                     {loading ? "Saving..." : "Finish"}
                                 </button>

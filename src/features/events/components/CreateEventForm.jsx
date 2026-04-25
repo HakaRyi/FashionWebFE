@@ -287,13 +287,13 @@ const CreateEventForm = () => {
                             onClick={() => setStep(p => p - 1)}
                             disabled={step === 1 || loading}
                         >
-                            <ChevronLeft size={18} /> Quay lại
+                            <ChevronLeft size={18} /> Back
                         </button>
 
                         <div className={styles.rightButtons}>
                             {step < 5 ? (
                                 <button className={styles.btnNext} onClick={handleNextStep} >
-                                    Tiếp theo <ChevronRight size={18} />
+                                    Next <ChevronRight size={18} />
                                 </button>
                             ) : (
                                 <button
