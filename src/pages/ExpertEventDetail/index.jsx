@@ -88,7 +88,7 @@ const EventDetailPage = () => {
         return combined;
     }, [event]);
 
-    if (loading) return (
+    if (loading && !event) return (
         <div className={styles.loadingScreen}>
             <div className={styles.spinnerWrapper}>
                 <div className={styles.spinner} />
@@ -294,6 +294,48 @@ const EventDetailPage = () => {
                         </div>
                     </section>
                 </div>
+
+                {event.criteria && event.criteria.length > 0 && (
+                    <section className={styles.contentSection}>
+                        <div className={styles.sectionHeaderInline}>
+                            <h3 className={styles.sectionTitle}>Judging Criteria Structure</h3>
+                            <div className={styles.totalWeightBadge}>Total 100%</div>
+                        </div>
+
+                        {/* Thanh dài tổng thể */}
+                        <div className={styles.criteriaMainBar}>
+                            {event.criteria.map((c, idx) => (
+                                <div
+                                    key={idx}
+                                    className={styles.barSegment}
+                                    style={{
+                                        width: `${c.weightPercentage}%`,
+                                        '--segment-index': idx // Để dùng trong CSS tạo màu ngẫu nhiên
+                                    }}
+                                    title={`${c.name}: ${c.weightPercentage}%`}
+                                >
+                                    <span className={styles.barPercentage}>{c.weightPercentage}%</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Chú giải chi tiết bên dưới */}
+                        <div className={styles.criteriaLegend}>
+                            {event.criteria.map((c, idx) => (
+                                <div key={idx} className={styles.legendItem}>
+                                    <div className={styles.legendColor} style={{ '--segment-index': idx }} />
+                                    <div className={styles.legendInfo}>
+                                        <div className={styles.legendHeader}>
+                                            <span className={styles.legendName}>{c.name}</span>
+                                            <span className={styles.legendWeight}>{c.weightPercentage}%</span>
+                                        </div>
+                                        <p className={styles.legendDesc}>{c.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* DESCRIPTION */}
                 <section className={styles.contentSection}>

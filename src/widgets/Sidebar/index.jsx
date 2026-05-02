@@ -10,8 +10,9 @@ import {
     MailCheck,
     PlusCircle,
     Wallet,
-    FileBadge ,
+    FileBadge,
     ClipboardCheck,
+    ReceiptText,
 } from 'lucide-react';
 import styles from './ExpertSidebar.module.scss';
 import { PATHS } from '../../app/routes/paths';
@@ -28,6 +29,7 @@ const menuItems = [
     // { icon: <ClipboardCheck size={20} />, label: 'Submissions Review', path: PATHS.EXPERT_SUBMISSION_REVIEW },
     { icon: <BarChart3 size={20} />, label: 'Analytics', path: PATHS.EXPERT_DASHBOARD },
     { icon: <Wallet size={20} />, label: 'Wallet', path: PATHS.EXPERT_WALLET },
+    { icon: <ReceiptText size={20} />, label: 'Financial', path: PATHS.EXPERT_FINANCIAL },
     { icon: <FileBadge size={20} />, label: 'Reputation', path: PATHS.EXPERT_REPUTATION },
     // { icon: <UserCircle size={20} />, label: 'Public Profile', path: PATHS.EXPERT_PROFILE },
     // { icon: <Settings size={20} />, label: 'Settings', path: '/expert/settings' },

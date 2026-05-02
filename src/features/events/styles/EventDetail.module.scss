@@ -247,12 +247,35 @@ $shadow:
         }
 
         .scoreBadge {
-            background: $primary-color;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: bold;
+            /* Sử dụng 10% độ trong suốt của màu Slate-400 (#94a3b8) */
+            background: rgba(148, 163, 184, 0.1);
+
+            /* Màu chữ Slate-500 nhã nhặn (#64748b) */
+            color: #64748b;
+
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-weight: 500;
             font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+
+            /* Border mảnh màu Slate-400 với độ trong suốt 20% */
+            border: 1px solid rgba(148, 163, 184, 0.2);
+
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        /* Hiệu ứng khi hover vào dòng table */
+        .clickableRow:hover {
+            .scoreBadge {
+                /* Chuyển sang tông xanh dương Blue-600 cực nhạt khi hover (#2563eb) */
+                background: rgba(37, 99, 235, 0.08);
+                color: #2563eb;
+                border-color: rgba(37, 99, 235, 0.3);
+            }
         }
     }
 }
@@ -387,7 +410,8 @@ $shadow:
         border-color: #10b9814d;
     }
 
-    &.error { // Lưu ý: config bạn dùng 'error', không phải 'danger'
+    &.error {
+        // Lưu ý: config bạn dùng 'error', không phải 'danger'
         background-color: #fef2f2;
         color: #dc2626;
         border-color: #ef44444d;
@@ -573,7 +597,6 @@ $shadow:
         }
     }
 }
-
 
 // Hiệu ứng hiện chữ nhẹ nhàng
 @keyframes fadeIn {

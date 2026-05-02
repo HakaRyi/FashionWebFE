@@ -1,0 +1,449 @@
+@use '../../shared/styles/abstracts/variables' as *;
+@use '../../shared/styles/abstracts/mixins' as *;
+@use 'sass:color';
+
+// Variables
+$primary-color: #4f46e5;
+$success-color: #10b981; // Income
+$danger-color: #f43f5e; // Expense
+$warning-color: #f59e0b;
+$text-main: #1e293b;
+$text-muted: #64748b;
+$bg-page: #f8fafc;
+$white: #ffffff;
+$border-color: #e2e8f0;
+
+@mixin card-shadow {
+    box-shadow:
+        0 4px 6px -1px rgb(0 0 0 / 0.1),
+        0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.pageContainer {
+    padding: 2rem;
+    // background-color: $bg-page;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: $text-main;
+    max-height: 100vh;
+    overflow-y: auto;
+    @include custom-scrollbar;
+    padding-bottom: 80px;
+    box-sizing: border-box;
+}
+
+// --- HEADER SECTION ---
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .headerLeft {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+
+        .backBtn {
+            background: $white;
+            border: 1px solid $border-color;
+            padding: 0.6rem;
+            border-radius: 10px;
+            cursor: pointer;
+            color: $text-muted;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+
+            &:hover {
+                color: $primary-color;
+                border-color: $primary-color;
+                background: #f5f3ff;
+            }
+        }
+
+        .mainTitle {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .subTitle {
+            font-size: 0.875rem;
+            color: $text-muted;
+            margin-top: 0.25rem;
+        }
+    }
+
+    .headerActions {
+        .exportBtn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: $text-main;
+            color: $white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+
+            &:hover {
+                opacity: 0.9;
+                transform: translateY(-1px);
+            }
+        }
+    }
+}
+
+// --- DASHBOARD GRID ---
+.dashboardGrid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.metricsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .metricCard {
+        background: $white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        @include card-shadow;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid $border-color;
+
+        .label {
+            color: $text-muted;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .iconBox {
+            padding: 0.75rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &.revenue {
+            .value {
+                color: $success-color;
+            }
+            .iconBox {
+                background: rgba($success-color, 0.1);
+                color: $success-color;
+            }
+        }
+
+        &.expense {
+            .value {
+                color: $danger-color;
+            }
+            .iconBox {
+                background: rgba($danger-color, 0.1);
+                color: $danger-color;
+            }
+        }
+
+        &.profit {
+            background: linear-gradient(135deg, $primary-color, #6366f1);
+            border: none;
+            .label,
+            .value {
+                color: $white;
+            }
+            .iconBox {
+                background: rgba($white, 0.2);
+                color: $white;
+            }
+        }
+    }
+}
+
+.chartContainer {
+    background: $white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    @include card-shadow;
+    border: 1px solid $border-color;
+
+    h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 1.5rem 0;
+        color: $text-main;
+    }
+}
+
+// --- TABLE SECTION ---
+.tableSection {
+    background: $white;
+    border-radius: 16px;
+    @include card-shadow;
+    border: 1px solid $border-color;
+    overflow: hidden;
+
+    .tableToolbar {
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: $white;
+        border-bottom: 1px solid $border-color;
+
+        .tabGroup {
+            display: flex;
+            background: $bg-page;
+            padding: 0.25rem;
+            border-radius: 12px;
+            gap: 0.25rem;
+
+            button {
+                padding: 0.5rem 1.25rem;
+                border-radius: 10px;
+                border: none;
+                background: transparent;
+                color: $text-muted;
+                font-weight: 600;
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                &.active {
+                    background: $white;
+                    color: $primary-color;
+                    @include card-shadow;
+                }
+
+                &:hover:not(.active) {
+                    color: $text-main;
+                }
+            }
+        }
+
+        .filterBtn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            flex: 1;
+            max-width: 300px; // Giới hạn độ rộng của thanh search
+
+            svg {
+                color: #64748b;
+            }
+
+            &:focus-within {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+
+                svg {
+                    color: #3b82f6;
+                }
+            }
+
+            .filterInput {
+                border: none;
+                outline: none;
+                width: 100%;
+                font-size: 14px;
+                color: #1e293b;
+                background: transparent;
+
+                &::placeholder {
+                    color: #94a3b8;
+                }
+            }
+        }
+    }
+}
+
+.tableContainer {
+    overflow-x: auto;
+}
+
+.textRight {
+    text-align: right !important;
+}
+
+.auditTable {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead th {
+        background: $bg-page;
+        padding: 1rem 1.5rem;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: $text-muted;
+        letter-spacing: 0.05em;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid $border-color;
+        transition: background 0.1s;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &.expertRow {
+            background-color: rgba($primary-color, 0.02);
+        }
+
+        &:hover {
+            background-color: rgba($bg-page, 0.8);
+        }
+    }
+
+    td {
+        padding: 1rem 1.5rem;
+        font-size: 0.9rem;
+        color: $text-main;
+        vertical-align: middle;
+    }
+
+    .timeLabel {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $text-muted;
+        font-size: 0.8rem;
+    }
+
+    .userCell {
+        font-weight: 600;
+        .expertBadge {
+            background: rgba($primary-color, 0.1);
+            color: $primary-color;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+    }
+
+    .typeTag {
+        display: inline-block;
+        padding: 0.25rem 0.6rem;
+        background: $bg-page;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: $text-muted;
+        text-transform: capitalize;
+    }
+
+    .descCell {
+        max-width: 300px;
+        color: $text-muted;
+        line-height: 1.4;
+    }
+
+    .refundHint {
+        font-size: 0.75rem;
+        color: #3b82f6; // Màu xanh dương cho refund
+        font-weight: 500;
+    }
+
+
+    .pendingNote {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        font-style: italic;
+    }
+
+    .positive {
+        color: $success-color;
+        font-weight: 700;
+    }
+
+    .negative {
+        color: $danger-color;
+        font-weight: 700;
+    }
+
+    .amountCell,
+    .balanceCell,
+    .balanceCellHighlight {
+        text-align: right;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    // Cột Số dư trước (Mờ hơn)
+    .balanceCell {
+        color: $text-muted;
+    }
+
+    // Cột Số dư sau (Nổi bật hơn)
+    .balanceCellHighlight {
+        font-weight: 700;
+        color: $text-main;
+        background: rgba($bg-page, 0.3);
+    }
+
+    .guestRow {
+        opacity: 0.8; // Làm mờ các giao dịch của người khác để Expert tập trung vào ví của mình
+        td {
+            color: color.adjust($text-main, $lightness: 20%);
+        }
+    }
+}
+
+// --- LOADING STATE ---
+.loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-weight: 500;
+    color: $text-muted;
+    background: $bg-page;
+
+    &::before {
+        content: '';
+        width: 40px;
+        height: 40px;
+        border: 3px solid $border-color;
+        border-top-color: $primary-color;
+        border-radius: 50%;
+        margin-bottom: 1rem;
+        animation: spin 1s linear infinite;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

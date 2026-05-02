@@ -1,0 +1,234 @@
+// --- Variables & Mixins ---
+$bg-overlay: rgba(15, 23, 42, 0.65); // Deep Slate với độ trong suốt
+$bg-modal: #ffffff;
+$text-main: #1e293b; // Slate 800
+$text-muted: #64748b; // Slate 500
+$accent-color: #f59e0b; // Amber 500 (Tạo điểm nhấn uy tín cho tài chính)
+$accent-hover: #d97706;
+$border-color: #e2e8f0; // Slate 200
+$danger: #ef4444;
+$white: #ffffff;
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin transition {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// --- Keyframes ---
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes overlayFade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+// --- Main Styles ---
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: $bg-overlay;
+    backdrop-filter: blur(4px); // Làm mờ nhẹ nền phía sau
+    @include flex-center;
+    z-index: 9999;
+    padding: 20px;
+    animation: overlayFade 0.3s ease-out;
+}
+
+.modalContent {
+    background: $bg-modal;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 16px;
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    animation: modalFadeIn 0.35s ease-out;
+    border: 1px solid rgba($white, 0.1);
+}
+
+.modalHeader {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid $border-color;
+
+    h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $text-main;
+        letter-spacing: -0.025em;
+    }
+
+    .closeBtn {
+        background: transparent;
+        border: none;
+        color: $text-muted;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        @include transition;
+
+        &:hover {
+            background: #f1f5f9;
+            color: $text-main;
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.modalBody {
+    padding: 24px;
+
+    .fixForm {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .alertBox {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: #fffbeb; // Amber cực nhẹ
+            border: 1px solid #fef3c7;
+            border-radius: 12px;
+            color: #92400e; // Amber đậm cho text
+            font-size: 0.925rem;
+            line-height: 1.5;
+
+            svg {
+                flex-shrink: 0;
+                color: $accent-color;
+            }
+
+            b {
+                font-weight: 700;
+                text-decoration: underline decoration-skip-ink auto;
+            }
+        }
+
+        .itemSummary {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px dashed $border-color;
+
+            p {
+                margin: 4px 0;
+                font-size: 0.95rem;
+                color: $text-muted;
+                display: flex;
+                justify-content: space-between;
+
+                strong {
+                    color: $text-main;
+                    font-family: 'JetBrains Mono', monospace; // Font code cho mã số & tiền
+                }
+            }
+        }
+
+        label {
+            font-weight: 500;
+            color: $text-main;
+            font-size: 0.95rem;
+            margin-bottom: -12px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid $border-color;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            @include transition;
+            background: #ffffff;
+
+            &:focus {
+                outline: none;
+                border-color: $accent-color;
+                box-shadow: 0 0 0 4px rgba($accent-color, 0.1);
+            }
+
+            &::placeholder {
+                color: #cbd5e1;
+            }
+
+            &:disabled {
+                background: #f1f5f9;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+.modalActions {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 12px;
+    margin-top: 8px;
+
+    button {
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        @include transition;
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+
+    .btnCancel {
+        background: transparent;
+        border: 1px solid $border-color;
+        color: $text-muted;
+
+        &:hover:not(:disabled) {
+            background: #f8fafc;
+            color: $text-main;
+            border-color: $text-muted;
+        }
+    }
+
+    .btnConfirm {
+        background: $text-main; // Sử dụng Slate đậm thay vì Blue
+        border: none;
+        color: $white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+        &:hover:not(:disabled) {
+            background: #000000;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    }
+}

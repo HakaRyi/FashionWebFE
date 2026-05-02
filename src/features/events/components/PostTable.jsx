@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon, Star } from "lucide-react";
 import styles from "../styles/EventDetail.module.scss";
 import { PostDetailModal } from "@/features/feed";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,6 +37,7 @@ const PostTable = ({ posts, onPostClick }) => {
                                     <td>{post.createdAt ? post.createdAt.slice(0, 10) : "N/A"}</td>
                                     <td>
                                         <span className={styles.scoreBadge}>
+                                            <Star size={12} strokeWidth={3} />
                                             {post.score?.toFixed(1) || "N/A"}
                                         </span>
                                     </td>

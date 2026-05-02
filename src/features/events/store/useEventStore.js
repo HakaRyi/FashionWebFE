@@ -6,6 +6,7 @@ const initialState = {
     currentEvent: null,
     isLoading: false,
     lastFetched: null,
+    error: null,
 };
 
 export const useEventStore = create((set, get) => ({
@@ -13,17 +14,28 @@ export const useEventStore = create((set, get) => ({
 
     reset: () => set(initialState),
 
+    updateEventInStore: (updatedEvent) => {
+        const { events, currentEvent } = get();
+
+        const newEvents = events.map((e) => (e.eventId === updatedEvent.eventId ? { ...e, ...updatedEvent } : e));
+
+        const newCurrent =
+            currentEvent?.eventId === updatedEvent.eventId ? { ...currentEvent, ...updatedEvent } : currentEvent;
+
+        set({ events: newEvents, currentEvent: newCurrent });
+    },
+
     fetchEvents: async (forceRefresh = false) => {
         const { events, isLoading, lastFetched } = get();
 
-        if (isLoading) return;
+        if (isLoading && !forceRefresh) return;
 
         const now = Date.now();
         if (!forceRefresh && events.length > 0 && lastFetched && now - lastFetched < 300000) {
             return;
         }
 
-        set({ isLoading: true });
+        set({ isLoading: true, error: null });
         try {
             const response = await getEventApi.getAllPublicEvents();
             const data = response?.data || response || [];
@@ -31,34 +43,45 @@ export const useEventStore = create((set, get) => ({
                 events: Array.isArray(data) ? data : [],
                 lastFetched: now,
                 isLoading: false,
+                error: null,
             });
         } catch (error) {
             console.error('Event Store Error:', error);
-            set({ isLoading: false });
+            set({
+                isLoading: false,
+                error: error.message || 'Failed to fetch events',
+            });
         }
     },
 
     fetchEventDetail: async (eventId, forceRefresh = false) => {
-        const { currentEvent } = get();
+        const { currentEvent, events } = get();
 
         if (!forceRefresh && currentEvent?.eventId === eventId) return;
 
-        const existingEvent = get().events.find((e) => e.eventId === eventId);
-        if (existingEvent) {
-            set({ currentEvent: existingEvent });
+        if (!currentEvent) {
+            set({ isLoading: true, error: null });
         }
 
-        set({ isLoading: true });
+        const existingEvent = events.find((e) => e.eventId === eventId);
+        if (existingEvent) {
+            set({ currentEvent: existingEvent, error: null });
+        }
+
+        set({ isLoading: true, error: null });
         try {
             const response = await getEventApi.getEventDetail(eventId);
             const data = response?.data || response;
-            set({
+
+            set((state) => ({
                 currentEvent: data,
+                events: state.events.map((e) => (e.eventId === eventId ? data : e)),
                 isLoading: false,
-            });
+                error: null,
+            }));
         } catch (error) {
-            console.error('Fetch Detail Error:', error);
-            set({ isLoading: false });
+            set({ isLoading: false, error: error.message });
+            throw error;
         }
     },
 

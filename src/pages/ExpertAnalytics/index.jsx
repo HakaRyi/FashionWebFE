@@ -9,9 +9,11 @@ import {
 import styles from '@/features/analytics/styles/Analytics.module.scss';
 
 const Analytics = () => {
-    const [period, setPeriod] = useState('30d');
-
-    const { stats, topEvents, chartData, loading, error, refresh } = useAnalytics(period);
+    const {
+        stats, topEvents, chartData, loading, isRefreshing, error,
+        startDate, endDate, setStartDate, setEndDate,
+        handleFastSelect, dates, refresh
+    } = useAnalytics();
 
     const iconMap = {
         'Total number of entries': <ImageIcon size={20} color="#3b82f6" />,
@@ -36,72 +38,111 @@ const Analytics = () => {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <div className={styles.titleArea}>
-                    <h1>Event Analytics</h1>
-                    <p>Track submission progress, engagement, and performance across your events.</p>
+                <div className={styles.titleSection}>
+                    <h1>Analytics Dashboard</h1>
+                    <p>Detailed reports on event performance and expert engagement metrics.</p>
                 </div>
 
                 <div className={styles.controls}>
+                    {/* Time Period Toggle */}
                     <div className={styles.timeFilter}>
-                        {['30d', '90d'].map((p) => (
-                            <button
-                                key={p}
-                                className={period === p ? styles.active : ''}
-                                onClick={() => setPeriod(p)}
-                                disabled={loading}
-                            >
-                                {p === '30d' ? '30 days ago' : '90 days ago'}
-                            </button>
-                        ))}
+                        <button
+                            // Truy cập dates.last30 từ Hook trả về
+                            className={startDate === dates.last30 ? styles.active : ''}
+                            onClick={() => handleFastSelect(30)}
+                        >
+                            Last 30 Days
+                        </button>
+                        <button
+                            // Truy cập dates.last90 từ Hook trả về
+                            className={startDate === dates.last90 ? styles.active : ''}
+                            onClick={() => handleFastSelect(90)}
+                        >
+                            Last 90 Days
+                        </button>
+                    </div>
+
+                    {/* Custom Date Range Picker */}
+                    <div className={styles.datePickerGroup}>
+                        <div className={styles.inputField}>
+                            <label>From</label>
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                            />
+                        </div>
+
+                        <div className={styles.divider}></div>
+
+                        <div className={styles.inputField}>
+                            <label>To</label>
+                            <input
+                                type="date"
+                                value={endDate}
+                                max={dates.today}
+                                onChange={(e) => setEndDate(e.target.value)}
+                            />
+                        </div>
                     </div>
                 </div>
             </header>
 
-            <div className={styles.statsGrid}>
-                {loading ? (
-                    [...Array(4)].map((_, i) => (
-                        <div key={i} className={`${styles.statCard} ${styles.skeleton}`} />
-                    ))
-                ) : (
-                    stats.map((stat, index) => (
-                        <StatCard
-                            key={stat.label}
-                            stat={{
-                                ...stat,
-                                icon: iconMap[stat.label] || <PenTool size={20} />
-                            }}
-                            index={index}
-                        />
-                    ))
-                )}
-            </div>
+            <div
+                className={styles.dashboardContent}
+                style={{
+                    opacity: isRefreshing ? 0.6 : 1,
+                    transition: 'opacity 0.2s ease-in-out',
+                    pointerEvents: isRefreshing ? 'none' : 'auto'
+                }}>
 
-            <div className={styles.chartsRow}>
-                <div className={styles.mainChartWrapper}>
+                <div className={styles.statsGrid}>
                     {loading ? (
-                        <div className={`${styles.chartPlaceholder} ${styles.skeleton}`} />
+                        [...Array(4)].map((_, i) => (
+                            <div key={i} className={`${styles.statCard} ${styles.skeleton}`} />
+                        ))
                     ) : (
-                        <PerformanceChart chartData={chartData} />
+                        stats.map((stat, index) => (
+                            <StatCard
+                                key={stat.label}
+                                stat={{
+                                    ...stat,
+                                    icon: iconMap[stat.label] || <PenTool size={20} />
+                                }}
+                                index={index}
+                            />
+                        ))
                     )}
                 </div>
 
-                <aside className={styles.sideContent}>
-                    <div className={styles.sideCardHeader}>
-                        <h3>Events Requiring Attention</h3>
-                        <p>Based on the number of ungraded submissions & engagement</p>
+                <div className={styles.chartsRow}>
+                    <div className={styles.mainChartWrapper}>
+                        {loading ? (
+                            <div className={`${styles.chartPlaceholder} ${styles.skeleton}`} />
+                        ) : (
+                            <PerformanceChart chartData={chartData} />
+                        )}
                     </div>
 
-                    {loading ? (
-                        <div className={styles.listSkeleton}>
-                            {[...Array(3)].map((_, i) => (
-                                <div key={i} className={styles.skeletonItem} />
-                            ))}
+                    <aside className={styles.sideContent}>
+                        <div className={styles.sideCardHeader}>
+                            <h3>Events Requiring Attention</h3>
+                            <p>Based on the number of ungraded submissions & engagement</p>
                         </div>
-                    ) : (
-                        <TopEvents events={topEvents} />
-                    )}
-                </aside>
+
+                        {loading ? (
+                            <div className={styles.listSkeleton}>
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} className={styles.skeletonItem} />
+                                ))}
+                            </div>
+                        ) : (
+                            <TopEvents events={topEvents} />
+                        )}
+                    </aside>
+                </div>
             </div>
+            {isRefreshing && <div className={styles.topLoader} />}
         </div>
     );
 };

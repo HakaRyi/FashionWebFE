@@ -4,45 +4,57 @@ import { X, Users, Trophy, Calendar, ArrowRight, CheckCircle, Clock, Ticket } fr
 import styles from '../styles/EventQuickViewModal.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from "@/app/routes/paths";
+import { useEventStore } from '../store/useEventStore';
 
 const EventQuickViewModal = ({ isOpen, onClose, event, onJoinClick, user }) => {
     const navigate = useNavigate();
 
+    const { fetchEventDetail, currentEvent, isLoading } = useEventStore();
+
     useEffect(() => {
         if (isOpen) {
-
             const originalStyle = window.getComputedStyle(document.body).overflow;
             document.body.style.overflow = 'hidden';
-
-            return () => {
-                document.body.style.overflow = originalStyle;
-            };
+            return () => { document.body.style.overflow = originalStyle; };
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        if (isOpen && event?.eventId) {
+            fetchEventDetail(event.eventId);
+        }
+    }, [isOpen, event?.eventId, fetchEventDetail]);
+
     const eventStatus = useMemo(() => {
-        if (!event) return null;
+        const activeData = (currentEvent?.eventId === event?.eventId) ? currentEvent : event;
+
+        if (!activeData || !user) return null;
 
         const now = new Date();
-        const start = new Date(event.startTime);
-        const deadline = new Date(event.submissionDeadline);
-        const end = new Date(event.endTime);
+        const start = new Date(activeData.startTime);
+        const deadline = new Date(activeData.submissionDeadline);
+        const end = new Date(activeData.endTime);
 
         let timing = { label: 'End:', date: end };
-        if (now < start) {
-            timing = { label: 'Start:', date: start };
-        } else if (now < deadline) {
-            timing = { label: 'Submission Deadline:', date: deadline };
-        }
+        if (now < start) timing = { label: 'Start:', date: start };
+        else if (now < deadline) timing = { label: 'Submission Deadline:', date: deadline };
 
-        const canJoin = event.status === 'Active' && now < deadline;
+        const isCreator = user.userId === activeData.creatorId;
+        const isJudge = activeData.experts?.some(
+            exp => exp.expertId === user.userId && exp.status === 'Accepted'
+        ) || false;
 
-        return { timing, canJoin };
-    }, [event]);
+        const canJoin = activeData.status === 'Active' &&
+            now < deadline &&
+            !isCreator &&
+            !isJudge;
+
+        return { timing, canJoin, isCreator, isJudge };
+    }, [event, currentEvent, user]);
 
     if (!event || !eventStatus) return null;
 
-    const { timing, canJoin } = eventStatus;
+    const { timing, canJoin, isCreator, isJudge } = eventStatus;
 
     const handleViewDetail = () => {
         navigate(PATHS.EVENT_DETAIL.replace(':id', event.eventId));
@@ -117,28 +129,37 @@ const EventQuickViewModal = ({ isOpen, onClose, event, onJoinClick, user }) => {
                                     <ArrowRight size={18} />
                                 </button>
 
-                                {event.status === 'Completed' ? (
-                                    <button className={styles.summaryBtn} onClick={handleViewSummary}>
-                                        <Trophy size={18} />
-                                        View Results
-                                    </button>
-                                ) : event.isJoined ? (
-                                    <button className={styles.alreadyJoinedBtn} disabled>
-                                        <CheckCircle size={18} />
-                                        Already Joined
-                                    </button>
-                                ) : canJoin ? (
-                                    <button
-                                        className={styles.joinBtn}
-                                        onClick={() => onJoinClick(event)}
-                                    >
-                                        Join Event Now
-                                    </button>
+                                {isLoading ? (
+                                    <button className={styles.disabledBtn} disabled>Checking status...</button>
                                 ) : (
-                                    <button className={styles.disabledBtn} disabled>
-                                        <Clock size={18} />
-                                        {event.status !== 'Active' ? 'Event Closed' : 'Deadline Passed'}
-                                    </button>
+                                    <>
+                                        {event.status === 'Completed' ? (
+                                            <button className={styles.summaryBtn} onClick={handleViewSummary}>
+                                                <Trophy size={18} /> View Results
+                                            </button>
+                                        ) : event.isJoined ? (
+                                            <button className={styles.alreadyJoinedBtn} disabled>
+                                                <CheckCircle size={18} /> Already Joined
+                                            </button>
+                                        ) : isCreator ? (
+                                            <button className={styles.disabledBtn} disabled>
+                                                <Users size={18} /> You are the Creator
+                                            </button>
+                                        ) : isJudge ? (
+                                            <button className={styles.disabledBtn} disabled>
+                                                <Trophy size={18} /> You are a Judge
+                                            </button>
+                                        ) : canJoin ? (
+                                            <button className={styles.joinBtn} onClick={() => onJoinClick(event)}>
+                                                Join Event Now
+                                            </button>
+                                        ) : (
+                                            <button className={styles.disabledBtn} disabled>
+                                                <Clock size={18} />
+                                                {event.status !== 'Active' ? 'Event Closed' : 'Deadline Passed'}
+                                            </button>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>

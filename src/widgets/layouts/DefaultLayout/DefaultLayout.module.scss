@@ -1,175 +1,167 @@
+@use '../../../shared/styles/abstracts/variables' as *;
+@use '../../../shared/styles/abstracts/mixins' as *;
+
+$sidebar-bg: #0f172a; // Slate 900
+$sidebar-hover: rgba(255, 255, 255, 0.04);
+$accent-color: #6366f1; // Indigo 500
+$text-muted: #94a3b8; // Slate 400
+$text-light: #f1f5f9; // Slate 100
+
 .container {
     display: flex;
     min-height: 100vh;
     background-color: #f8fafc;
+    font-family: 'Inter', system-ui, sans-serif;
 }
 
 .sidebar {
     width: 260px;
-    background-color: #3d122d; // Màu đỏ rượu vang đậm
-    color: #ffffff; // Chữ trắng toàn cục cho sidebar
+    background-color: $sidebar-bg;
+    color: $text-light;
     display: flex;
     flex-direction: column;
     position: fixed;
     height: 100vh;
-    transition: var(--transition);
+    z-index: 100;
+    transition: all 0.3s ease;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .brand {
-    padding: 24px;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 3rem;
-    padding-left: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.brand span {
-    color: rgb(255, 0, 140);
-}
-
-.navMenu {
-    flex: 1;
-    padding: 16px 0;
-    overflow-y: auto;
-    .label {
-        color: #ffe2fa;
-    }
-    .icon {
-        color: #ffe2fa;
-    }
-    /* Cho trình duyệt Chrome, Safari, Edge */
-    &::-webkit-scrollbar {
-        width: 5px; /* Độ rộng của thanh cuộn */
-    }
-
-    &::-webkit-scrollbar-track {
-        background: transparent; /* Nền của thanh cuộn (để trong suốt cho mượt) */
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: rgba(255, 0, 217, 0.2); /* Màu hồng theo theme của bạn nhưng làm mờ đi (opacity 0.2) */
-        border-radius: 10px;
-        transition: background 0.3s ease;
-    }
-
-    /* Khi di chuột vào thanh cuộn thì nó mới hiện rõ lên */
-    &:hover::-webkit-scrollbar-thumb {
-        background: rgba(255, 0, 217, 0.5);
-    }
-
-    /* Cho trình duyệt Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 0, 217, 0.2) transparent;
-}
-
-.menuLinks {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex-grow: 1;
-}
-
-.navItem {
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius);
-    cursor: pointer;
+    padding: 32px 24px;
     display: flex;
     align-items: center;
     gap: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
 
     .logoBox {
-        background: linear-gradient(135deg, #e546b3, #f881e2);
-        width: 35px;
-        height: 35px;
+        background: linear-gradient(135deg, $accent-color, #818cf8);
+        width: 32px;
+        height: 32px;
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2rem;
+        color: white;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
 
     span {
-        color: #ff00d9;
+        color: $accent-color;
     }
 }
 
 .navMenu {
     flex: 1;
-    padding: 16px 0;
+    padding: 0 16px;
     overflow-y: auto;
+
+    // Custom Scrollbar tinh tế
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+    &:hover::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
 .menuGroup {
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 
     .groupTitle {
-        padding: 0 24px;
+        padding: 0 12px;
         font-size: 0.7rem;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: rgba(255, 255, 255, 0.4);
-        margin-bottom: 8px;
-        font-weight: 600;
+        letter-spacing: 0.1em;
+        color: $text-muted;
+        margin-bottom: 12px;
+        font-weight: 700;
     }
 }
 
 .navItem {
     display: flex;
     align-items: center;
-    padding: 12px 24px;
-    color: #94a3b8;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    color: $text-muted;
     text-decoration: none;
-    transition: all 0.2s ease;
-    border-left: 3px solid transparent;
-
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: #fff;
-    }
-
-    &.active {
-        background-color: rgba(79, 70, 229, 0.1);
-        color: #fff;
-        border-left-color: rgb(255, 59, 167);
-        
-        .icon {
-           color: rgb(255, 59, 167);
-        }
-        .label{
-            color: rgb(255, 59, 167);
-        }
-    }
+    border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 
     .icon {
-        width: 20px;
+        font-size: 1.2rem;
+        width: 24px;
+        display: flex;
+        justify-content: center;
         margin-right: 12px;
-        font-size: 1.1rem;
+        transition: color 0.2s ease;
     }
 
     .label {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         font-weight: 500;
+    }
+
+    &:hover {
+        background-color: $sidebar-hover;
+        color: $text-light;
+
+        .icon {
+            color: $accent-color;
+        }
+    }
+
+    &.active {
+        background-color: rgba(99, 102, 241, 0.1);
+        color: white;
+
+        .icon {
+            color: $accent-color;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            height: 20px;
+            width: 4px;
+            background-color: $accent-color;
+            border-radius: 0 4px 4px 0;
+        }
     }
 }
 
 .sidebarFooter {
-    padding: 20px;
+    padding: 20px 16px;
     background-color: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 
     .adminProfile {
         display: flex;
         align-items: center;
         gap: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        margin-bottom: 16px;
 
         img {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 2px solid #10b981;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1.5px solid rgba($accent-color, 0.5);
         }
 
         .adminInfo {
@@ -177,21 +169,54 @@
                 font-size: 0.85rem;
                 font-weight: 600;
                 margin: 0;
+                color: $text-light;
             }
             span {
                 font-size: 0.75rem;
-                color: #10b981;
+                color: #10b981; // Green Emerald cho trạng thái online
                 display: flex;
                 align-items: center;
-                gap: 4px;
+                gap: 5px;
                 &::before {
                     content: '';
                     width: 6px;
                     height: 6px;
                     background: #10b981;
                     border-radius: 50%;
+                    box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
                 }
             }
+        }
+    }
+}
+
+.logoutBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid rgba($text-muted, 0.2);
+    color: $text-muted;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    .icon {
+        margin-right: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        background: rgba(239, 68, 68, 0.1); // Màu đỏ nhạt tinh tế
+        color: #f87171;
+        border-color: rgba(239, 68, 68, 0.2);
+
+        .icon {
+            transform: translateX(-3px);
         }
     }
 }
@@ -199,6 +224,9 @@
 .content {
     flex: 1;
     margin-left: 260px;
+    background-color: #f8fafc;
+    overflow: hidden;
+    height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -209,66 +237,24 @@
     display: flex;
     align-items: center;
     padding: 0 32px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #e2e8f0; // Slate 200
 
     .breadcrumb {
         font-size: 0.85rem;
-        color: #64748b;
+        font-weight: 500;
+        color: $text-muted;
+
+        span {
+            color: $sidebar-bg;
+            font-weight: 600;
+        }
     }
 }
 
 .innerContent {
     padding: 32px;
+    flex: 1;
+    overflow-y: auto;
+    @include custom-scrollbar;
+    scroll-behavior: smooth;
 }
-
-.sidebarFooter {
-    padding: 24px 16px; // Tăng khoảng cách để nút thở hơn
-    background-color: rgba(0, 0, 0, 0.3); // Làm nền footer đậm hơn một chút
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.logoutBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center; // Căn giữa nội dung
-    width: 100%;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.03); // Nền mờ nhẹ
-    border: 2px solid rgba(255, 77, 79, 0.3); // Viền đỏ mờ
-    color: #ffffff;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 10px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-
-    .icon {
-        margin-right: 10px;
-        font-size: 1.1rem;
-        color: #ff00d9; // Icon hồng đặc trưng của bạn
-        transition: transform 0.3s ease;
-    }
-
-    &:hover {
-        background: white;
-        color: #3d122d;
-        border-color: #ff4d5000;
-        box-shadow: 0 4px 15px rgba(255, 77, 79, 0.2);
-        transform: translateY(-2px); // Bay nhẹ lên khi hover
-
-        .icon {
-            transform: translateX(-3px) scale(1.1);
-            filter: drop-shadow(0 0 5px #ff00d9);
-        }
-    }
-
-    &:active {
-        transform: translateY(0); // Nhấn xuống khi click
-    }
-}
-

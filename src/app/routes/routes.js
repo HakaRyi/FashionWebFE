@@ -24,6 +24,9 @@ import SubmissionsReview from '../../pages/ExpertSubmissionsReview';
 import EventSummary from '../../pages/EventSummary';
 import Policy from '../../pages/Policy';
 import ExpertReputation from '../../pages/ExpertReputation';
+import FinancialManagement from '../../pages/ExpertFinancialManagement';
+import EventFinancialDetail from '../../pages/ExpertEventFinancialDetail';
+import AdminFinancial from '../../pages/AdminFinancial';
 
 import Home from '../../pages/Home';
 import FashionFeed from '../../pages/Feed';
@@ -192,6 +195,18 @@ export const routes = [
         layout: ExpertLayout,
         roles: ['expert'],
     },
+    {
+        path: PATHS.EXPERT_FINANCIAL,
+        component: FinancialManagement,
+        layout: ExpertLayout,
+        roles: ['expert'],
+    },
+    {
+        path: PATHS.EXPERT_FINANCIAL_EVENT,
+        component: EventFinancialDetail,
+        layout: ExpertLayout,
+        roles: ['expert'],
+    },
 
     // ===== ADMIN =====
     {
@@ -232,7 +247,7 @@ export const routes = [
     },
     {
         path: PATHS.TRANSACTIONS,
-        component: TransactionManagement,
+        component: AdminFinancial,
         layout: DefaultLayout,
         roles: ['admin'],
     },
