@@ -1,0 +1,222 @@
+// --- Variables ---
+$graphite-800: #1a1c1e;
+$graphite-600: #454749;
+$slate-400: #94a3b8;
+$slate-100: #f1f5f9;
+$rose-gold: #c2998a; // Màu nhã nhặn, sang trọng
+$rose-gold-light: #f5ece9;
+$success: #10b981;
+$error: #f43f5e;
+$white: #ffffff;
+$radius: 16px;
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// --- Keyframes ---
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// --- Styles ---
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba($graphite-800, 0.6);
+    backdrop-filter: blur(8px);
+    @include flex-center;
+    z-index: 1000;
+    padding: 16px;
+    animation: fadeIn 0.3s ease;
+}
+
+.modalContent {
+    background: $white;
+    width: 100%;
+    max-width: 520px;
+    border-radius: $radius;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modalHeader {
+    padding: 24px 24px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: $graphite-800;
+        letter-spacing: -0.01em;
+    }
+
+    .closeBtn {
+        background: $slate-100;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        @include flex-center;
+        color: $graphite-600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: $rose-gold-light;
+            color: $rose-gold;
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.modalBody {
+    padding: 0 24px 24px;
+
+    .detailGrid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.detailItem {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: $slate-400;
+        font-weight: 600;
+    }
+
+    span {
+        font-size: 1rem;
+        color: $graphite-800;
+        font-weight: 500;
+    }
+
+    .highlight {
+        color: $rose-gold;
+        font-family: 'JetBrains Mono', 'Menlo', monospace;
+        font-weight: 700;
+    }
+}
+
+// Theo dõi biến động số dư (Steppers style)
+.balanceTrack {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: $slate-100;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 4px;
+
+    svg {
+        color: $slate-400;
+        flex-shrink: 0;
+    }
+
+    .step {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        small {
+            font-size: 0.7rem;
+            color: $slate-400;
+            margin-bottom: 2px;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .plus {
+            color: $success;
+        }
+        .minus {
+            color: $error;
+        }
+    }
+}
+
+.noteBox {
+    background: rgba($rose-gold, 0.05);
+    border-left: 3px solid $rose-gold;
+    padding: 12px 16px;
+    border-radius: 4px 12px 12px 4px;
+
+    label {
+        font-size: 0.8rem;
+        color: $rose-gold;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: $graphite-600;
+        font-style: italic;
+    }
+}
+
+.modalActions {
+    padding: 16px 24px 24px;
+    border-top: 1px solid $slate-100;
+    display: flex;
+    justify-content: flex-end;
+
+    .btnCancel {
+        background: $graphite-800;
+        color: $white;
+        border: none;
+        padding: 10px 32px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: #000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

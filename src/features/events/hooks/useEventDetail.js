@@ -1,15 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { getEventApi } from '../api/getEvent';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { useEventStore } from '../store/useEventStore';
 
 const MySwal = withReactContent(Swal);
 
 export const useEventDetail = (id) => {
-    const [event, setEvent] = useState(null);
+    const currentEvent = useEventStore((state) => state.currentEvent);
+    const fetchEventDetail = useEventStore((state) => state.fetchEventDetail);
+    const fetchEvents = useEventStore((state) => state.fetchEvents);
+    const isLoadingStore = useEventStore((state) => state.isLoading);
+
     const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingPosts, setLoadingPosts] = useState(true);
     const [isFinalizing, setIsFinalizing] = useState(false);
     const [isStarting, setIsStarting] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
@@ -36,31 +41,50 @@ export const useEventDetail = (id) => {
                         },
                     },
                 });
-                await fetchAllData();
+                await fetchAllData(true);
             } finally {
                 setIsStarting(false);
             }
         }
     };
 
-    const fetchAllData = async () => {
-        try {
-            const [detailRes, postsRes] = await Promise.all([
-                getEventApi.getEventDetail(id),
-                getEventApi.getEventPosts(id),
-            ]);
-            setEvent(detailRes.data);
-            setPosts(postsRes.data);
-        } catch (error) {
-            toast.error('Unable to load event information. Please try again later.');
-        } finally {
-            setLoading(false);
-        }
-    };
+    const fetchAllData = useCallback(
+        async (force = false) => {
+            if (!id) return;
+            const currentIdAtStart = id;
+            try {
+                if (!force && posts.length === 0) {
+                    setLoadingPosts(true);
+                }
+
+                const results = await Promise.all([
+                    fetchEventDetail(id, force),
+                    fetchEvents(force),
+                    getEventApi.getEventPosts(id),
+                ]);
+
+                const postsRes = results[2];
+
+                if (currentIdAtStart === id) {
+                    const data = postsRes?.data || (Array.isArray(postsRes) ? postsRes : []);
+                    setPosts(data);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                toast.error('Unable to load event details.');
+            } finally {
+                setLoadingPosts(false);
+            }
+        },
+        [id, fetchEventDetail, fetchEvents],
+    );
 
     useEffect(() => {
-        if (id) fetchAllData();
-    }, [id]);
+        fetchAllData();
+        return () => {
+            useEventStore.getState().clearCurrentEvent();
+        };
+    }, [id, fetchAllData]);
 
     const handleCancel = async () => {
         const result = await MySwal.fire({
@@ -86,7 +110,7 @@ export const useEventDetail = (id) => {
                         },
                     },
                 });
-                await fetchAllData();
+                await fetchAllData(true);
             } catch (error) {
                 console.error('Cancel error:', error);
             } finally {
@@ -119,7 +143,7 @@ export const useEventDetail = (id) => {
                         },
                     },
                 });
-                await fetchAllData();
+                await fetchAllData(true);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -129,14 +153,15 @@ export const useEventDetail = (id) => {
     };
 
     return {
-        event,
+        event: currentEvent,
         posts,
-        loading,
+        loading: isLoadingStore || loadingPosts,
         isFinalizing,
         isStarting,
         isCancelling,
         handleFinalize,
         handleManualStart,
         handleCancel,
+        refresh: fetchAllData,
     };
 };

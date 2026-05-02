@@ -6,5 +6,6 @@ export { default as WalletStats } from './components/WalletStats';
 export { default as WalletFilter } from './components/WalletFilter';
 export { default as WalletHeader } from './components/WalletHeader';
 export { default as WalletTransactionTable } from './components/WalletTransactionTable';
+export { default as WalletCharts } from './components/WalletCharts';
 
 export { useWallet } from './hooks/useWallet';

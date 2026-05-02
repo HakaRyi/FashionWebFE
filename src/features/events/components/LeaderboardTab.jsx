@@ -48,7 +48,7 @@ const LeaderboardTab = ({ leaderboardData, onOpenModal }) => {
 
               <div className={styles.imageWrapper}>
                 <img
-                  src={user.userAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.userName}`}
+                  src={user.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.userName}`}
                   alt={user.userName}
                 />
                 <div className={styles.imageOverlay} />
@@ -88,7 +88,7 @@ const LeaderboardTab = ({ leaderboardData, onOpenModal }) => {
 
                 <img
                   className={styles.avatar}
-                  src={user.userAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.userName}`}
+                  src={user.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.userName}`}
                   alt={user.userName}
                 />
 

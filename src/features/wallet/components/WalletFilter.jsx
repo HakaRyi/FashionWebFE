@@ -6,11 +6,10 @@ const WalletFilter = ({ filter, setFilter }) => {
   return (
     <div className={styles.filterGroup}>
       <Filter size={14} />
-
       <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-        <option value="all">All</option>
-        <option value="deposit">Deposit</option>
-        <option value="expense">Expense</option>
+        <option value="all">All Transactions</option>
+        <option value="deposit">Deposits</option>
+        <option value="withdrawal">Withdrawals</option>
       </select>
     </div>
   );

@@ -1,15 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Wallet, Lock, ArrowUpRight } from 'lucide-react';
+import { Wallet, Lock, CreditCard } from 'lucide-react';
 import { getWalletDashboard } from '@/features/wallet/';
 
-const ICON_MAP = {
-    Wallet: Wallet,
-    Lock: Lock,
-    ArrowUpRight: ArrowUpRight,
-};
-
 export const useWallet = ({ itemsPerPage = 5, enabled = true } = {}) => {
-    const [stats, setStats] = useState([]);
+    const [walletInfo, setWalletInfo] = useState({ balance: 0, lockedBalance: 0 });
     const [transactions, setTransactions] = useState([]);
     const [filter, setFilter] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,24 +11,15 @@ export const useWallet = ({ itemsPerPage = 5, enabled = true } = {}) => {
     const [error, setError] = useState(null);
 
     const fetchWalletData = useCallback(async () => {
-        const token = localStorage.getItem('token');
-        if (!token || !enabled) return;
+        if (!enabled) return;
 
         try {
             setLoading(true);
             setError(null);
 
-            // Gọi API Dashboard
             const data = await getWalletDashboard();
 
-            // 1. Map Icon cho Stats
-            const mappedStats = (data.stats || []).map((s) => ({
-                ...s,
-                icon: ICON_MAP[s.icon] || Wallet,
-            }));
-
-            // 2. Set thẳng dữ liệu vào state vì Backend đã format chuẩn xác
-            setStats(mappedStats);
+            setWalletInfo(data.wallet);
             setTransactions(data.transactions || []);
         } catch (err) {
             console.error('Error retrieving wallet data:', err);
@@ -46,23 +31,61 @@ export const useWallet = ({ itemsPerPage = 5, enabled = true } = {}) => {
 
     useEffect(() => {
         fetchWalletData();
-    }, [fetchWalletData, enabled]);
+    }, [fetchWalletData]);
 
-    // Lọc dữ liệu theo filter (all, deposit, expense)
+    const stats = useMemo(
+        () => [
+            {
+                label: 'Available balance',
+                value: walletInfo.balance.toLocaleString('vi-VN'),
+                sub: 'VND',
+                icon: Wallet,
+                color: 'blue',
+            },
+            {
+                label: 'Pending withdrawal',
+                value: walletInfo.lockedBalance.toLocaleString('vi-VN'),
+                sub: 'VND',
+                icon: Lock,
+                color: 'orange',
+            },
+        ],
+        [walletInfo],
+    );
+
+    const chartData = useMemo(() => {
+        return transactions
+            .slice()
+            .reverse() // Đảo ngược để vẽ từ cũ đến mới
+            .map((t) => ({
+                time: format(new Date(t.createdAt), 'dd/MM'),
+                balance: t.balanceAfter,
+                amount: t.amount,
+            }));
+    }, [transactions]);
+
+    const pieData = useMemo(() => {
+        const deposit = transactions.filter((t) => t.type === 'Credit').reduce((sum, t) => sum + t.amount, 0);
+        const withdraw = transactions.filter((t) => t.type === 'Debit').reduce((sum, t) => sum + t.amount, 0);
+
+        return [
+            { name: 'Deposit', value: deposit, fill: '#10b981' },
+            { name: 'Withdrawal', value: Math.abs(withdraw), fill: '#ef4444' },
+        ];
+    }, [transactions]);
+
     const allFilteredTransactions = useMemo(() => {
         if (filter === 'all') return transactions;
-        return transactions.filter((t) => t.type?.toLowerCase() === filter.toLowerCase());
+        return transactions.filter((t) => t.referenceType?.toLowerCase() === filter.toLowerCase());
     }, [transactions, filter]);
 
     const totalPages = Math.ceil(allFilteredTransactions.length / itemsPerPage);
 
-    // Tính toán dữ liệu hiển thị cho trang hiện tại
     const paginatedTransactions = useMemo(() => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         return allFilteredTransactions.slice(startIndex, startIndex + itemsPerPage);
     }, [allFilteredTransactions, currentPage, itemsPerPage]);
 
-    // Reset về trang 1 mỗi khi đổi bộ lọc
     useEffect(() => {
         setCurrentPage(1);
     }, [filter]);
@@ -70,14 +93,16 @@ export const useWallet = ({ itemsPerPage = 5, enabled = true } = {}) => {
     return {
         stats,
         transactions: paginatedTransactions,
-        allData: allFilteredTransactions, // Dùng cho Export CSV
+        allData: allFilteredTransactions,
         filter,
         setFilter,
         currentPage,
-        setCurrentPage,
         totalPages,
+        setCurrentPage,
         loading,
         error,
+        chartData,
+        pieData,
         refreshData: fetchWalletData,
     };
 };

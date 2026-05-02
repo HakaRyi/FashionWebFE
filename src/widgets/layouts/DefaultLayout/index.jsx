@@ -126,10 +126,10 @@ function DefaultLayout({ children }) {
             </aside>
 
             <main className={styles.content}>
-                <header className={styles.topHeader}>
+                {/* <header className={styles.topHeader}> */}
                     {/* Bạn có thể thêm thanh tìm kiếm hoặc thông báo ở đây */}
                     {/* <div className={styles.breadcrumb}>Hệ thống / Quản lý</div> */}
-                </header>
+                {/* </header> */}
                 <div className={styles.innerContent}>{children}</div>
             </main>
         </div>

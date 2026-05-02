@@ -1,0 +1,810 @@
+@use '../../shared/styles/abstracts/variables' as *;
+@use '../../shared/styles/abstracts/mixins' as *;
+@use 'sass:color';
+
+// Variables & Mixins
+$primary: #6366f1;
+$success: #10b981;
+$danger: #ef4444;
+$warning: #f59e0b;
+$text-main: #1e293b;
+$text-muted: #64748b;
+$bg-body: #f8fafc;
+$card-bg: #ffffff;
+$border-color: #e2e8f0;
+
+@mixin card {
+    background: $card-bg;
+    border-radius: 16px;
+    border: 1px solid $border-color;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    min-height: 100vh;
+    max-height: 100vh; // Cố định chiều cao trang
+    // background-color: $bg-body;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    overflow-y: auto; // Cho phép cuộn toàn bộ trang nếu cần
+    font-family: 'Inter', system-ui, sans-serif;
+    color: $text-main;
+    padding-bottom: 80px;
+    box-sizing: border-box;
+    @include custom-scrollbar;
+}
+
+// --- Header Section ---
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .welcomeText {
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: $text-main;
+        }
+        p {
+            color: $text-muted;
+            font-size: 14px;
+        }
+    }
+
+    .topActions {
+        display: flex;
+        gap: 12px;
+
+        button {
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .primaryBtn {
+            background: $primary;
+            color: white;
+            border: none;
+            &:hover {
+                background: wheat;
+            }
+        }
+
+        .secondaryBtn {
+            background: white;
+            color: $text-main;
+            border: 1px solid $border-color;
+            &:hover {
+                background: #f1f5f9;
+            }
+        }
+    }
+}
+
+// --- Stats Grid ---
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+
+    .statCard {
+        @include card;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        .iconBox {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            @include flex-center;
+
+            &.blue {
+                background: rgba($primary, 0.1);
+                color: $primary;
+            }
+            &.green {
+                background: rgba($success, 0.1);
+                color: $success;
+            }
+            &.purple {
+                background: rgba(139, 92, 246, 0.1);
+                color: #8b5cf6;
+            }
+        }
+
+        .statContent {
+            span {
+                font-size: 13px;
+                color: $text-muted;
+                font-weight: 500;
+            }
+            h2 {
+                font-size: 22px;
+                font-weight: 700;
+                margin-top: 4px;
+                &.income {
+                    color: $success;
+                }
+            }
+        }
+    }
+}
+
+// --- Main Layout ---
+.stackedLayout {
+    display: flex;
+    flex-direction: column; // Xếp chồng lên nhau
+    gap: 24px; // Khoảng cách giữa chart và bảng
+    width: 100%;
+    margin-top: 24px;
+}
+
+.fullWidthSection {
+    width: 100%; // Chiếm hết chiều rộng
+}
+
+.chartContainer {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    // Xóa các thuộc tính width/max-width cũ nếu có
+}
+
+.contentCard {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 500px; // Đảm bảo bảng có không gian hiển thị
+}
+
+// Đảm bảo bảng hiển thị tốt trên màn hình rộng
+.tableResponsive {
+    overflow-x: auto;
+    width: 100%;
+
+    .ledgerTable {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            padding: 16px;
+            // Tăng padding để bảng thoáng hơn khi ở chế độ full-width
+        }
+    }
+}
+
+// Bổ sung thêm để đảm bảo card trong bảng đẹp khi trải dài
+.contentCard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+// --- Chart Card ---
+.chartContainer {
+    @include card;
+    padding: 20px;
+
+    .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        .titleGroup {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            h3 {
+                font-size: 18px;
+                font-weight: 600;
+            }
+        }
+        .labelSmall {
+            font-size: 12px;
+            color: $text-muted;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .dateFilters {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc; // Màu nền nhẹ (slate-50)
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+
+            &:hover {
+                border-color: #cbd5e1;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            .inputGroup {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: #64748b; // Màu icon
+
+                input[type='date'] {
+                    border: none;
+                    background: transparent;
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    color: #1e293b;
+                    outline: none;
+                    cursor: pointer;
+                    font-family: inherit;
+
+                    // Tùy chỉnh icon lịch mặc định của trình duyệt
+                    &::-webkit-calendar-picker-indicator {
+                        cursor: pointer;
+                        opacity: 0.6;
+                        transition: 0.2s;
+                        &:hover {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+
+            .divider {
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                color: #94a3b8;
+                letter-spacing: 0.05em;
+            }
+        }
+
+        // Responsive cho thiết bị di động
+        @media (max-width: 768px) {
+            .cardHeader {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 16px;
+            }
+
+            .dateFilters {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    }
+}
+
+// --- Alert Banner ---
+.alertBanner {
+    background: #fffbeb;
+    border: 1px dashed $warning;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: wheat;
+    font-weight: 500;
+    cursor: pointer;
+
+    .blink {
+        animation: blink 1.5s infinite;
+    }
+}
+
+// --- Content Card (Ledger) ---
+.contentCard {
+    @include card;
+    height: 100%;
+    max-height: 600px; // Chiều cao giới hạn cho Ledger
+    display: flex;
+    flex-direction: column;
+
+    .cardHeaderTabs {
+        border-bottom: 1px solid $border-color;
+        padding: 0 20px;
+
+        .tabs {
+            display: flex;
+            gap: 24px;
+
+            button {
+                padding: 18px 0;
+                background: none;
+                border: none;
+                border-bottom: 2px solid transparent;
+                color: $text-muted;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+                transition: all 0.3s;
+
+                &.active {
+                    color: $primary;
+                    border-bottom-color: $primary;
+                }
+            }
+        }
+    }
+}
+
+// --- Filter & Search ---
+.filterBar {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    background: #fafafa;
+
+    .searchWrapper {
+        position: relative;
+        flex: 1;
+        svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: $text-muted;
+        }
+        input {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border-radius: 8px;
+            border: 1px solid $border-color;
+            font-size: 14px;
+            box-sizing: border-box;
+            display: block;
+            &:focus {
+                outline: none;
+                border-color: $primary;
+            }
+        }
+    }
+
+    .quickFilters {
+        display: flex;
+        background: #f1f5f9;
+        padding: 4px;
+        border-radius: 8px;
+
+        button {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: $text-muted;
+            cursor: pointer;
+
+            &.fActive {
+                background: white;
+                color: $primary;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+        }
+    }
+}
+
+// --- Scrollable Table Area ---
+.scrollBody {
+    flex: 1;
+    overflow-y: auto; // Cuộn riêng nội dung danh sách
+    padding: 0 20px 20px;
+    @include custom-scrollbar;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+}
+
+.ledgerTable {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10;
+        th {
+            text-align: left;
+            padding: 16px 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: $text-muted;
+            border-bottom: 1px solid $border-color;
+        }
+    }
+
+    .rowHover:hover {
+        background-color: #f8fafc;
+    }
+
+    td {
+        padding: 16px 12px;
+        border-bottom: 1px solid $border-color;
+        vertical-align: middle;
+    }
+}
+
+// --- Typography & Helpers ---
+.timeStack {
+    display: flex;
+    flex-direction: column;
+    span {
+        font-weight: 500;
+        font-size: 14px;
+    }
+    small {
+        color: $text-muted;
+        font-size: 12px;
+    }
+}
+
+.descStack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px; // Khoảng cách giữa tiêu đề và mã giao dịch
+
+    .mainDesc {
+        display: block;
+        font-weight: 500;
+        color: $text-main; // Hoặc màu đậm bạn đang dùng
+        font-size: 14px;
+        line-height: 1.2;
+    }
+
+    .code {
+        display: inline-block;
+        font-family: 'JetBrains Mono', 'Fira Code', monospace; // Font dạng code
+        font-size: 11px;
+        color: $text-muted;
+        background-color: rgba($primary, 0.05); // Nền nhạt để làm nổi bật mã
+        padding: 2px 6px;
+        border-radius: 4px;
+        width: fit-content;
+        letter-spacing: 0.5px;
+    }
+}
+
+.amountDisplay {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    font-weight: 700;
+}
+
+.plus {
+    color: $success;
+}
+.minus {
+    color: $danger;
+}
+.finalBal {
+    font-weight: 600;
+    color: $text-main;
+}
+.textRight {
+    text-align: right;
+}
+
+// --- Event & Reconciliation Specifics ---
+.eventRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: #fff;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: $primary;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+
+        .viewDetailBtn {
+            background-color: $primary;
+            color: #fff;
+        }
+    }
+}
+
+.evMain {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.evIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: rgba($primary, 0.1);
+    color: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.evInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    h4 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+        color: $text-main;
+    }
+
+    span {
+        font-size: 12px;
+        color: $text-muted;
+    }
+}
+
+.viewDetailBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background-color: $bg-body; // Màu nền nhạt mặc định
+    color: $text-main;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    svg {
+        transition: transform 0.2s ease;
+    }
+
+    &:hover {
+        svg {
+            transform: translateX(2px);
+        }
+    }
+}
+
+.approvalCard {
+    @extend .eventRow;
+    cursor: default;
+    background: white;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    .apInfo {
+        width: 100%;
+        h5 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        p {
+            font-size: 13px;
+            color: $text-muted;
+            margin-bottom: 8px;
+        }
+        .amountLabel {
+            font-size: 14px;
+            display: block;
+            strong {
+                color: $text-main;
+            }
+        }
+    }
+
+    .approveBtn {
+        width: 100%;
+        padding: 10px;
+        background: $success;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        &:hover {
+            background: wheat;
+        }
+    }
+}
+
+// --- Empty & Loader ---
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    color: $text-muted;
+    gap: 12px;
+
+    p {
+        margin: 0;
+        font-size: 14px;
+    }
+}
+
+.skeletonStrip {
+    height: 50px;
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+// --- Scroll Top Button ---
+.scrollTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    color: $primary;
+    border: 1px solid $border-color;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    @include flex-center;
+    cursor: pointer;
+    z-index: 100;
+    transition: transform 0.2s;
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+//page
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background: #fff;
+    border-top: 1px solid #f1f5f9;
+
+    .pageInfo {
+        font-size: 0.875rem;
+        color: #64748b;
+        strong {
+            color: #1e293b;
+        }
+    }
+
+    .pageControls {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+
+        .pageBtn {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            &:hover:not(:disabled) {
+                background: #f8fafc;
+            }
+        }
+
+        .pageNumber {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            background: none;
+            cursor: pointer;
+            &.activePage {
+                background: #6366f1;
+                color: white;
+                border-color: #6366f1;
+            }
+        }
+    }
+}
+
+.escrowTag {
+    background: #fff7ed; // Cam nhạt
+    color: #c2410c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.walletTag {
+    background: #f0fdf4; // Xanh lá nhạt
+    color: #15803d;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+// --- Animations ---
+@keyframes blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+// --- Responsive Adjustments ---
+@media (max-width: 1024px) {
+    .mainLayout {
+        flex-direction: column;
+        max-height: none;
+    }
+    .container {
+        max-height: none;
+        overflow-y: visible;
+    }
+    .contentCard {
+        max-height: none;
+    }
+}

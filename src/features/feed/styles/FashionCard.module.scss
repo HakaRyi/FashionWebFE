@@ -174,8 +174,10 @@ $muted-light: rgba(255, 255, 255, 0.6);
             .description {
                 font-size: 0.95rem;
                 line-height: 1.6;
-                color: rgba(0, 0, 0, 0.9); // Đã sửa: Thay #444 bằng trắng gần như tuyệt đối
+                color: rgba(0, 0, 0, 0.9);
                 margin-bottom: 15px;
+                white-space: pre-wrap;
+                word-break: break-word;
             }
 
             .timeAgo {

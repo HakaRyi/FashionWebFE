@@ -3,8 +3,8 @@ export const validateEventForm = (form, prizes, startDate, endDate, expertBalanc
     const totalBudget = safePrizes.reduce((sum, p) => sum + Number(p.amount || 0), 0);
 
     // 1. Kiểm tra các trường cơ bản
-    if (!form.title || form.title.trim().length < 5) {
-        return { isValid: false, message: 'The event name must have at least 5 characters!' };
+    if (!form.title || form.title.trim().length < 4) {
+        return { isValid: false, message: 'The event name must have at least 4 characters!' };
     }
 
     if (!form.banner) {
