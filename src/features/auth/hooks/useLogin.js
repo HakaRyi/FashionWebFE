@@ -12,28 +12,15 @@ export const useLogin = () => {
         try {
             const data = await loginApi(email, password);
 
-            await login(data.accessToken, data.refreshToken);
+            login(data.accessToken, data.refreshToken);
+            navigate(PATHS.USER_FEED, { replace: true });
 
-            const decoded = jwtDecode(data.accessToken);
-            const role = (
-                decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded.role
-            )?.toLowerCase();
-
-            const redirectPath = role === 'admin' ? PATHS.DASHBOARD : PATHS.USER_FEED;
-            navigate(redirectPath, { replace: true });
+            return data;
         } catch (error) {
+            console.error('Login failed:', error);
             throw error;
         }
     };
 
-    const handleGoogleLogin = async (idToken) => {
-        try {
-            const data = await googleLoginApi(idToken);
-            await processLoginData(data);
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    return { handleLogin, handleGoogleLogin };
+    return { handleLogin };
 };
