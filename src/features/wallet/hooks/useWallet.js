@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Wallet, Lock, CreditCard } from 'lucide-react';
 import { getWalletDashboard } from '@/features/wallet/';
+import { format } from 'date-fns';
 
 export const useWallet = ({ itemsPerPage = 5, enabled = true } = {}) => {
     const [walletInfo, setWalletInfo] = useState({ balance: 0, lockedBalance: 0 });
