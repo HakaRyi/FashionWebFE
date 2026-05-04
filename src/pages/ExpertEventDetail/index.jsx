@@ -9,6 +9,7 @@ import {
 } from "@/features/events";
 import { motion, AnimatePresence } from "motion/react";
 import styles from "./EventDetail.module.scss";
+import { PATHS } from '@/app/routes/paths';
 
 const EventDetailPage = () => {
     const { id } = useParams();
@@ -20,6 +21,10 @@ const EventDetailPage = () => {
 
     const [selectedPost, setSelectedPost] = useState(null);
     const [timeLeft, setTimeLeft] = useState(null);
+
+    const handleNavigateDetail = (post) => {
+        navigate(PATHS.POST_DETAIL.replace(':id', post.postId));
+    };
 
     // Logic Countdown
     useEffect(() => {
@@ -401,15 +406,15 @@ const EventDetailPage = () => {
                 {/* SUBMISSIONS */}
                 <section className={styles.contentSection}>
                     <h3 className={styles.sectionTitle}>Intelligence Output Logs</h3>
-                    <PostTable posts={posts} onPostClick={setSelectedPost} />
+                    <PostTable posts={posts} onPostClick={handleNavigateDetail} />
                 </section>
             </main>
 
-            <AnimatePresence>
+            {/* <AnimatePresence>
                 {selectedPost && (
                     <PostDetailModal post={selectedPost} onClose={() => setSelectedPost(null)} />
                 )}
-            </AnimatePresence>
+            </AnimatePresence> */}
         </div>
     );
 };

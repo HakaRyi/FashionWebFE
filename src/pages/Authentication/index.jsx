@@ -6,7 +6,7 @@ export default function AuthenticationPage() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <GoogleOAuthProvider clientId="851461803179-us2iqf5s9ttu59jp68462qckp10u91q4.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="851461803179-us2iqf5s9ttu59jp68462qckp10u91q4.apps.googleusercontent.com" language="en">
       <div className={styles["auth-container"]}>
 
         <div className={styles["auth-visual"]}>

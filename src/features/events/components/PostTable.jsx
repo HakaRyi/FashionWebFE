@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const PostTable = ({ posts, onPostClick }) => {
 
-    const [selectedPostId, setSelectedPostId] = useState(null);
+    // const [selectedPostId, setSelectedPostId] = useState(null);
 
     return (
         <div className={styles.card}>
@@ -26,7 +26,7 @@ const PostTable = ({ posts, onPostClick }) => {
                         <tbody>
                             {posts.map((post) => (
                                 <tr key={post.postId}
-                                    onClick={() => setSelectedPostId(post.postId)}
+                                    onClick={() => onPostClick(post)}
                                     style={{ cursor: 'pointer' }}
                                     className={styles.clickableRow}>
                                     <td>
@@ -49,14 +49,14 @@ const PostTable = ({ posts, onPostClick }) => {
             ) : (
                 <p className={styles.emptyText}>No contest entries available.</p>
             )}
-            <AnimatePresence>
+            {/* <AnimatePresence>
                 {selectedPostId && (
                     <PostDetailModal
                         id={selectedPostId}
                         onClose={() => setSelectedPostId(null)}
                     />
                 )}
-            </AnimatePresence>
+            </AnimatePresence> */}
         </div>
     );
 }

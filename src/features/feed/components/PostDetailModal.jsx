@@ -32,7 +32,7 @@ const PostDetailModal = ({ id, onClose }) => {
                     <X size={24} />
                 </button>
                 <div className={styles.scrollableArea}>
-                    <PostContent id={id} />
+                    <PostContent id={id} mode="modal" />
                 </div>
             </motion.div>
         </motion.div>

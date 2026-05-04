@@ -1,21 +1,43 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, MessageCircle, Share2, Send, MoreHorizontal } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Send, MoreHorizontal, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
+import { Pagination, Navigation } from 'swiper/modules';
 import { feedApi } from '@/features/feed';
 import styles from '../styles/PostDetailPage.module.scss';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
-const PostContent = ({ id }) => {
+const PostContent = ({ id, mode = 'page' }) => {
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState([]);
-    const [showComments, setShowComments] = useState(false);
     const [localComment, setLocalComment] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const inputRef = useRef(null);
+
+    const getAvatar = (url, name) => url || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
+
+    const formatRelativeTime = (dateString) => {
+        const now = new Date();
+        const past = new Date(dateString.endsWith('Z') ? dateString : dateString + 'Z');
+        const diffInSeconds = Math.floor((now - past) / 1000);
+
+        if (diffInSeconds < 60) return 'Just now';
+
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) return `${diffInHours}h ago`;
+
+        const diffInDays = Math.floor(diffInHours / 24);
+        if (diffInDays < 7) return `${diffInDays}d ago`;
+
+        return past.toLocaleDateString();
+    };
 
     const fetchPostDetail = useCallback(async () => {
         if (!id) return;
@@ -23,8 +45,11 @@ const PostContent = ({ id }) => {
             setLoading(true);
             const data = await feedApi.getPostDetail(id);
             setPost(data);
+            // Tự động load comment ngay từ đầu để trải nghiệm mượt hơn trong layout 2 cột
+            const commentData = await feedApi.getComments(id);
+            setComments(commentData || []);
         } catch (error) {
-            console.error("Error fetching post detail:", error);
+            console.error("Error fetching detail:", error);
         } finally {
             setLoading(false);
         }
@@ -50,18 +75,6 @@ const PostContent = ({ id }) => {
         }
     };
 
-    const handleToggleComments = async () => {
-        if (!showComments && comments.length === 0) {
-            try {
-                const data = await feedApi.getComments(id);
-                setComments(data || []);
-            } catch (error) {
-                console.error("Error fetching comments:", error);
-            }
-        }
-        setShowComments(!showComments);
-    };
-
     const handleSendComment = async () => {
         if (!localComment.trim() || isSubmitting) return;
         setIsSubmitting(true);
@@ -77,120 +90,182 @@ const PostContent = ({ id }) => {
         }
     };
 
-    const formatTime = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-    };
-
-    const getAvatarUrl = (item) => {
-        return item?.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(item?.userName || 'U')}&background=random&color=fff`;
-    };
-
-    if (loading) return <div className={styles.loading}>Loading fashion inspiration...</div>;
-    if (!post) return <div className={styles.loading}>Post not found.</div>;
+    if (loading) return <div className={styles.loadingState}><span>✨ Loading inspiration...</span></div>;
+    if (!post) return <div className={styles.loadingState}>Post not found.</div>;
 
     return (
         <motion.article
-            className={styles.articleWrapper}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            className={`${styles.splitLayout} ${styles[mode]}`}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
         >
-            {/* Header */}
-            <div className={styles.cardHeader}>
-                <div className={styles.userInfo}>
-                    <img src={getAvatarUrl(post)} alt={post.userName} className={styles.authorAvatar} />
-                    <div className={styles.userMeta}>
-                        <span className={styles.userName}>{post.userName}</span>
-                        <span className={styles.userRole}>
-                            {post.isExpertPost ? 'Expert Choice' : 'Contributor'}
-                        </span>
-                    </div>
-                </div>
-                <button className={styles.moreBtn}><MoreHorizontal size={20} /></button>
-            </div>
-
-            {/* Media Body */}
-            <div className={styles.mainImageWrapper}>
+            {/* LEFT SIDE: Visuals */}
+            <div className={styles.visualColumn}>
                 {post.images?.length > 1 ? (
-                    <Swiper modules={[Pagination]} pagination={{ clickable: true }} className={styles.imageSwiper}>
+                    <Swiper
+                        modules={[Pagination, Navigation]}
+                        pagination={{ clickable: true }}
+                        navigation
+                        className={styles.mainSwiper}
+                    >
                         {post.images.map((img, idx) => (
-                            <SwiperSlide key={idx}><img src={img} alt={post.title} /></SwiperSlide>
+                            <SwiperSlide key={idx}>
+                                <div className={styles.imageContainer}>
+                                    <img src={img} alt={`${post.title} - ${idx}`} />
+                                </div>
+                            </SwiperSlide>
                         ))}
                     </Swiper>
                 ) : (
-                    <img src={post.images?.[0] || 'https://via.placeholder.com/1200'} alt={post.title} />
+                    <div className={styles.imageContainer}>
+                        <img src={post.images?.[0] || 'https://via.placeholder.com/1200'} alt={post.title} />
+                    </div>
                 )}
             </div>
 
-            {/* Interaction Bar */}
-            <div className={styles.cardFooter}>
-                <div className={styles.actionRow}>
-                    <div className={styles.leftActions}>
-                        <div className={styles.statAction}>
-                            <motion.button whileTap={{ scale: 0.8 }} onClick={handleToggleLike}>
-                                <Heart size={24} fill={post.isLiked ? "#ff3b3b" : "none"} stroke={post.isLiked ? "#ff3b3b" : "currentColor"} />
-                            </motion.button>
-                            <span className={styles.statNumber}>{post.likeCount?.toLocaleString()}</span>
+            {/* RIGHT SIDE: Content & Interaction */}
+            <div className={styles.contentColumn}>
+                {/* Header */}
+                <header className={styles.header}>
+                    <div className={styles.authorGroup}>
+                        {/* Avatar bên trái */}
+                        <div className={styles.avatarWrapper}>
+                            <img
+                                src={getAvatar(post.avatarUrl, post.userName)}
+                                className={styles.avatar}
+                                alt={post.userName}
+                            />
+                            {post.isExpertPost && <div className={styles.verifiedBadge}><Check size={10} /></div>}
                         </div>
-                        <div className={styles.statAction}>
-                            <motion.button whileTap={{ scale: 0.8 }} onClick={handleToggleComments}>
-                                <MessageCircle size={24} stroke={showComments ? "#b23191" : "currentColor"} />
-                            </motion.button>
-                            <span className={styles.statNumber}>{post.commentCount?.toLocaleString()}</span>
-                        </div>
-                        <div className={styles.statAction}>
-                            <motion.button whileTap={{ scale: 0.8 }}><Share2 size={24} /></motion.button>
-                            <span className={styles.statNumber}>{post.shareCount?.toLocaleString()}</span>
+
+                        {/* Thông tin Text ở giữa */}
+                        <div className={styles.metaInfo}>
+                            <div className={styles.nameRow}>
+                                <h3 className={styles.userName}>{post.userName}</h3>
+                                {post.isExpertPost && <span className={styles.expertLabel}>Expert</span>}
+                            </div>
+
+                            <div className={styles.subRow}>
+                                <span className={styles.userRole}>
+                                    {post.isExpertPost ? 'Expert Choice' : 'Contributor'}
+                                </span>
+                                <span className={styles.separator}>•</span>
+                                <time className={styles.timeStamp}>
+                                    {new Date(post.createdAt).toLocaleDateString()}
+                                </time>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className={styles.captionArea}>
-                    <h1 className={styles.postTitle}>{post.title}</h1>
-                    <p className={styles.description}>{post.content}</p>
-                    <time className={styles.timeAgo}>{formatTime(post.createdAt)}</time>
-                </div>
+                    {/* Nút hành động bên phải */}
+                    <button className={styles.iconBtn} aria-label="Tùy chọn">
+                        <MoreHorizontal size={20} />
+                    </button>
+                </header>
 
-                {/* Comment Section */}
-                <AnimatePresence>
-                    {showComments && (
-                        <motion.div
-                            className={styles.commentSection}
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                        >
+                {/* Scrollable Body */}
+                <div className={styles.scrollContent}>
+                    <section className={styles.mainCaption}>
+                        <h1 className={styles.postTitle}>{post.title}</h1>
+                        <p className={styles.postDescription}>{post.content}</p>
+
+                    </section>
+
+                    <section className={styles.commentSection}>
+                        <h4 className={styles.sectionTitle}>Comments ({comments.length})</h4>
+                        {comments.length > 0 ? (
                             <div className={styles.commentList}>
-                                {comments.length > 0 ? (
-                                    comments.map((comment, i) => (
-                                        <div key={comment.id || i} className={styles.commentItem}>
-                                            <span className={styles.commentUser}>@{comment.userName}</span>
-                                            <span className={styles.commentContent}>{comment.content}</span>
+                                {comments.map((comment) => (
+                                    <div key={comment.commentId} className={styles.commentItem}>
+                                        <div className={styles.cAvatar}>
+                                            <img
+                                                src={getAvatar(comment.avatarUrl, comment.userName)}
+                                                alt={comment.userName}
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.userName)}&background=random`;
+                                                }}
+                                            />
                                         </div>
-                                    ))
-                                ) : (
-                                    <p className={styles.noComments}>No comments yet. Be the first!</p>
-                                )}
-                            </div>
 
-                            <div className={styles.inputWrapper}>
-                                <input
-                                    type="text"
-                                    placeholder="Add a comment..."
-                                    value={localComment}
-                                    onChange={(e) => setLocalComment(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleSendComment()}
-                                    disabled={isSubmitting}
-                                />
-                                <button onClick={handleSendComment} disabled={!localComment.trim() || isSubmitting}>
-                                    <Send size={18} />
-                                </button>
+                                        <div className={styles.cContentWrapper}>
+                                            <div className={styles.cBubble}>
+                                                <span className={styles.cUser}>@{comment.userName}</span>
+                                                <p className={styles.cText}>{comment.content}</p>
+                                            </div>
+
+                                            {/* Actions nằm dưới Bubble */}
+                                            <div className={styles.cActions}>
+                                                <span className={styles.cTime}>
+                                                    {formatRelativeTime(comment.createdAt)}
+                                                </span>
+                                                {/* 
+                                                <button className={styles.actionBtn}>Like</button>
+                                                <button className={styles.actionBtn}>Reply</button> */}
+
+                                                {comment.likeCount > 0 && (
+                                                    <span className={styles.cLikes}>
+                                                        • {comment.likeCount} likes
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        ) : (
+                            <div className={styles.emptyComments}>Be the first to share your thoughts!</div>
+                        )}
+                    </section>
+                </div>
+
+                {/* Bottom Fixed Interaction */}
+                <footer className={styles.footer}>
+                    <div className={styles.actionStats}>
+                        <div className={styles.leftGroup}>
+                            {/* Nút Like */}
+                            <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                onClick={handleToggleLike}
+                                className={`${styles.statBtn} ${post.isLiked ? styles.likeActive : ''}`}
+                            >
+                                <Heart size={24} fill={post.isLiked ? "#ff3b3b" : "none"} stroke={post.isLiked ? "#ff3b3b" : "currentColor"} />
+                                <span>{post.likeCount}</span>
+                            </motion.button>
+
+                            {/* Nút Comment */}
+                            <button className={styles.statBtn} onClick={() => inputRef.current?.focus()}>
+                                <MessageCircle size={24} />
+                                <span>{post.commentCount}</span>
+                            </button>
+
+                            {/* Nút Share */}
+                            <button className={styles.statBtn}>
+                                <Share2 size={24} />
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className={styles.commentInputBox}>
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            placeholder="Add a comment..."
+                            value={localComment}
+                            onChange={(e) => setLocalComment(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSendComment()}
+                        />
+                        <button
+                            onClick={handleSendComment}
+                            disabled={!localComment.trim() || isSubmitting}
+                            className={styles.sendBtn}
+                        >
+                            <Send size={20} />
+                        </button>
+                    </div>
+                </footer>
             </div>
         </motion.article>
     );

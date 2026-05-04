@@ -1,302 +1,647 @@
-// Variables - Bảng màu Fashion hiện đại
-$primary-color: #000000;
-$accent-color: #c1ff72; // Neon Green nhẹ để tạo điểm nhấn trẻ trung
-$text-secondary: #666666;
-$border-light: #efefef;
-$bg-gradient: linear-gradient(180deg, #ffffff 0%, #f9f9f9 100%);
-$shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
-$font-main:
-    'Inter',
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
-$font-header: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-$font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+@use 'sass:color';
 
-.pageContainer {
-    min-height: 100vh;
-    padding: 40px 20px;
-    background: $bg-gradient;
-    display: flex;
-    justify-content: center;
-    font-family: $font-body;
-    -webkit-font-smoothing: antialiased;
+$primary: #6366f1;
+$primary-light: #e0e7ff;
+$accent: #f43f5e;
+$bg-main: #f8fafc;
+$bg-dark: #0f172a;
+$card-bg: #ffffff;
+$text-main: #1e293b;
+$text-muted: #64748b;
+$border-light: #f1f5f9;
+$border-rich: #e2e8f0;
+$glass-white: rgba(255, 255, 255, 0.7);
+$primary-color: #3b82f6;
+$bg-hover: rgba(148, 163, 184, 0.1);
+$transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-    @media (max-width: 768px) {
-        padding: 0; // Tràn viền trên mobile giống Instagram
-        background: #fff;
-    }
-}
+// Shadows & Effects
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+$shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+$transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-.articleWrapper {
-    width: 100%;
-    max-width: 700px;
-    background: #fff;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: $shadow-soft;
-    border: 1px solid $border-light;
-
-    @media (max-width: 768px) {
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-    }
-}
-
-// Header Section
-.cardHeader {
-    padding: 16px 20px;
+// --- MIXINS ---
+@mixin flex-center {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+}
 
-    .userInfo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+@mixin custom-scrollbar {
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $border-rich;
+        border-radius: 20px;
+        &:hover {
+            background: $text-muted;
+        }
+    }
+}
 
-        .authorAvatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid $accent-color;
-            padding: 2px;
+// --- MAIN LAYOUT ---
+.splitLayout {
+    display: flex;
+    background: $card-bg;
+    color: $text-main;
+    width: 100%;
+    overflow: hidden;
+    font-family:
+        'Inter',
+        -apple-system,
+        sans-serif;
+    transition: $transition-smooth;
+
+    // --- CHẾ ĐỘ 1: FULL PAGE (CINEMA EXPERIENCE) ---
+    &.page {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        // z-index: 1000;
+        background: $bg-dark;
+
+        .visualColumn {
+            flex: 1.4;
+            // background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+
+            img {
+                filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.5));
+            }
         }
 
-        .userMeta {
+        .contentColumn {
             display: flex;
             flex-direction: column;
-
-            .userName {
-                font-weight: 700;
-                font-size: 14px;
-                color: $primary-color;
-                font-family: $font-header;
-            }
-
-            .userRole {
-                font-size: 11px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                color: $text-secondary;
-                font-weight: 500;
-            }
+            flex: 0.6;
+            min-width: 480px;
+            background: $card-bg;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
         }
     }
 
-    .moreBtn {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        color: $text-secondary;
-        transition: color 0.2s;
-
-        &:hover {
-            color: $primary-color;
-        }
-    }
-}
-
-// Media Section
-.mainImageWrapper {
-    width: 100%;
-    background: #f0f0f0;
-    position: relative;
-    overflow: hidden;
-
-    img {
-        width: 100%;
-        display: block;
-        object-fit: cover;
+    // --- CHẾ ĐỘ 2: MODAL (SOPHISTICATED BOX) ---
+    &.modal {
+        height: 85vh;
         max-height: 800px;
-    }
+        width: 95%;
+        max-width: 1200px;
+        margin: 20px auto;
+        border-radius: 24px;
+        box-shadow: $shadow-xl;
+        border: 1px solid $border-light;
 
-    // Custom Swiper Style
-    :global(.swiper-pagination-bullet-active) {
-        background: $accent-color !important;
+        .visualColumn {
+            flex: 1.2;
+        }
+        .contentColumn {
+            flex: 0.8;
+            min-width: 420px;
+        }
     }
 }
 
-// Footer & Actions
-.cardFooter {
-    padding: 20px;
+// --- LEFT COLUMN: VISUALS ---
+.visualColumn {
+    position: relative;
+    @include flex-center;
+    background: #f1f5f9;
+    overflow: hidden;
+    height: calc(100vh - 80px);
+    width: 100%;
 
-    .actionRow {
+    .mainSwiper {
+        width: 100%;
+        height: 100%;
+
+        :global {
+            .swiper-pagination-bullet {
+                background: rgba(255, 255, 255, 0.5);
+                opacity: 1;
+                transition: $transition-smooth;
+            }
+            .swiper-pagination-bullet-active {
+                background: white;
+                width: 20px;
+                border-radius: 4px;
+            }
+            .swiper-button-next,
+            .swiper-button-prev {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(8px);
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                color: $text-main;
+                transition: $transition-smooth;
+                &::after {
+                    font-size: 16px;
+                    font-weight: 800;
+                }
+                &:hover {
+                    background: white;
+                    transform: scale(1.1);
+                }
+            }
+        }
+    }
+
+    .imageContainer {
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        @include flex-center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.5s ease;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+    }
+}
+
+// --- RIGHT COLUMN: CONTENT ---
+.contentColumn {
+    display: flex;
+    flex-direction: column;
+    background: $card-bg;
+    height: calc(100vh - 80px);
+
+    .header {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        justify-content: space-between;
+        padding: 14px 20px;
+        background: rgba(255, 255, 255, 0.8); // Glassmorphism nhẹ
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        transition: $transition-bounce;
 
-        .leftActions {
+        .authorGroup {
             display: flex;
-            gap: 24px;
+            align-items: center;
+            gap: 14px;
 
-            .statAction {
-                display: flex;
-                align-items: center;
-                gap: 6px;
+            .avatarWrapper {
+                position: relative;
+                flex-shrink: 0; // Đảm bảo avatar không bị bóp méo
 
-                button {
-                    background: transparent;
-                    border: none;
-                    padding: 0;
+                .avatar {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 14px; // Squircle hiện đại thay vì hình tròn đơn điệu
+                    object-fit: cover;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                    transition: $transition-bounce;
                     cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    transition: transform 0.1s ease;
 
-                    &:active {
-                        transform: scale(1.2);
+                    &:hover {
+                        transform: scale(1.08) rotate(-2deg);
                     }
                 }
 
-                .statNumber {
-                    font-size: 13px;
+                .verifiedBadge {
+                    position: absolute;
+                    bottom: -2px;
+                    right: -4px;
+                    width: 18px;
+                    height: 18px;
+                    background: linear-gradient(135deg, $primary-color, #2563eb);
+                    color: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 2.5px solid #fff;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    animation: badgePop 0.5s ease-out;
+                }
+            }
+
+            .metaInfo {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .nameRow {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+
+                    .userName {
+                        font-size: 1rem;
+                        font-weight: 700;
+                        color: $text-main;
+                        letter-spacing: -0.01em;
+                        margin: 0;
+                        cursor: pointer;
+
+                        &:hover {
+                            color: $primary-color;
+                        }
+                    }
+
+                    .expertLabel {
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        text-transform: uppercase;
+                        letter-spacing: 0.05em;
+                        padding: 2px 8px;
+                        background: linear-gradient(120deg, rgba($primary-color, 0.15), rgba($primary-color, 0.05));
+                        color: $primary-color;
+                        border-radius: 6px;
+                        border: 1px solid rgba($primary-color, 0.2);
+                    }
+                }
+
+                .subRow {
+                    display: flex;
+                    align-items: center;
+                    font-size: 0.8rem;
+                    color: $text-muted;
+                    font-weight: 500;
+
+                    .userRole {
+                        background: linear-gradient(90deg, $text-muted, #94a3b8);
+
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+
+                        background-clip: text;
+                    }
+
+                    .separator {
+                        padding: 0 8px;
+                        color: #cbd5e1;
+                        font-size: 10px;
+                    }
+
+                    .timeStamp {
+                        opacity: 0.85;
+                        font-weight: 400;
+                    }
+                }
+            }
+        }
+
+        .iconBtn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            color: $text-muted;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+            &:hover {
+                background-color: $bg-hover;
+                color: $text-main;
+                transform: translateY(-2px);
+            }
+
+            &:active {
+                transform: scale(0.9);
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+
+            svg {
+                transition: transform 0.3s ease;
+            }
+
+            &:hover svg {
+                transform: rotate(90deg); // Xoay nhẹ icon More khi hover
+            }
+        }
+    }
+
+    // Animation cho badge xuất hiện sinh động
+    @keyframes badgePop {
+        0% {
+            transform: scale(0) rotate(-45deg);
+            opacity: 0;
+        }
+        70% {
+            transform: scale(1.2) rotate(10deg);
+        }
+        100% {
+            transform: scale(1) rotate(0);
+            opacity: 1;
+        }
+    }
+
+    .scrollContent {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 24px;
+        @include custom-scrollbar;
+
+        .mainCaption {
+            margin-bottom: 32px;
+
+            .postTitle {
+                font-size: 1.4rem;
+                font-weight: 700;
+                margin-bottom: 16px;
+                line-height: 1.2;
+                color: $text-main;
+                letter-spacing: -0.5px;
+            }
+
+            .postDescription {
+                font-size: 0.92rem;
+                line-height: 1.7;
+                color: $text-muted;
+                white-space: pre-wrap;
+            }
+        }
+
+        .commentSection {
+            border-top: 1px solid #f1f5f9;
+            padding-top: 32px;
+
+            .sectionHeader {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 24px;
+
+                .sectionTitle {
+                    font-size: 1rem;
+                    font-weight: 700;
+                    color: #1e293b;
+                    margin: 0;
+                }
+
+                .commentCount {
+                    background: #f1f5f9;
+                    color: #64748b;
+                    padding: 2px 10px;
+                    border-radius: 20px;
+                    font-size: 0.75rem;
                     font-weight: 600;
-                    color: $primary-color;
+                }
+            }
+
+            .commentList {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .commentItem {
+                display: flex;
+                gap: 12px;
+
+                .cAvatar {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    flex-shrink: 0;
+                    border: 1px solid rgba(0, 0, 0, 0.05);
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+
+                .cContentWrapper {
+                    flex: 1;
+
+                    .cBubble {
+                        background: #f1f5f9;
+                        padding: 12px 16px;
+                        border-radius: 0 16px 16px 16px;
+                        border: 1px solid #e2e8f0;
+                        display: inline-block; // Chỉ rộng bằng nội dung
+                        max-width: 100%;
+                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+
+                        .cUser {
+                            display: block;
+                            font-weight: 700;
+                            font-size: 0.85rem;
+                            color: #0f172a;
+                            margin-bottom: 4px;
+                        }
+
+                        .cText {
+                            font-size: 0.95rem;
+                            color: #475569;
+                            line-height: 1.5;
+                            margin: 0;
+                            word-wrap: break-word;
+                        }
+                    }
+
+                    .cActions {
+                        display: flex;
+                        gap: 16px;
+                        margin-top: 6px;
+                        padding-left: 4px;
+                        font-size: 0.75rem;
+                        color: #94a3b8;
+
+                        button {
+                            background: none;
+                            border: none;
+                            font-weight: 600;
+                            color: #64748b;
+                            cursor: pointer;
+                            padding: 0;
+                            &:hover {
+                                color: #3b82f6;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .emptyComments {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                padding: 40px 0;
+                font-size: 0.85rem;
+                color: #94a3b8;
+                font-style: italic;
+                text-align: center;
+
+                &::before {
+                    content: '💬';
+                    display: block;
+                    margin-bottom: 8px;
+                    font-style: normal;
+                    font-size: 1.2rem;
+                    opacity: 0.5;
+                }
+
+                flex-direction: column;
+            }
+        }
+    }
+
+    // --- FOOTER INTERACTION ---
+    .footer {
+        padding: 20px 0;
+        background: $card-bg;
+        border-top: 1px solid $border-light;
+
+        .actionStats {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 0 24px;
+
+            .leftGroup {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 90px;
+                width: 100%;
+
+                .statBtn {
+                    background: none;
+                    border: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    cursor: pointer;
+                    color: $text-muted;
+                    transition: $transition-smooth;
+                    flex: none;
+                    min-width: fit-content;
+
+                    svg {
+                        width: 22px;
+                        height: 22px;
+                    }
+                    span {
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        line-height: 1;
+                    }
+
+                    &.likeActive {
+                        color: $accent;
+                        transform: scale(1.1);
+                    }
+
+                    &:hover {
+                        color: $text-main;
+                        transform: translateY(-2px);
+                    }
+                }
+            }
+        }
+
+        .commentInputBox {
+            display: flex;
+            align-items: center;
+            background: $bg-main;
+            border-radius: 16px;
+            padding: 4px 6px 4px 16px;
+            margin: 0 24px;
+            border: 2px solid transparent;
+            transition: $transition-smooth;
+
+            &:focus-within {
+                background: white;
+                border-color: $primary-light;
+                box-shadow: 0 0 0 4px rgba($primary, 0.05);
+            }
+
+            input {
+                flex: 1;
+                border: none;
+                background: transparent;
+                padding: 12px 0;
+                font-size: 0.95rem;
+                outline: none;
+                color: $text-main;
+                &::placeholder {
+                    color: #94a3b8;
+                }
+            }
+
+            .sendBtn {
+                background: $primary;
+                border: none;
+                color: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+                cursor: pointer;
+                @include flex-center;
+                transition: $transition-smooth;
+
+                &:disabled {
+                    background: #cbd5e1;
+                    cursor: not-allowed;
+                }
+
+                &:hover:not(:disabled) {
+                    background: color.adjust($primary, $lightness: -10%);
+                    box-shadow: 0 4px 12px rgba($primary, 0.3);
                 }
             }
         }
     }
 }
 
-// Content Section
-.captionArea {
-    .postTitle {
-        font-family: $font-header;
-        font-size: 22px;
-        font-weight: 800;
-        margin-bottom: 8px;
-        line-height: 1.2;
-        color: $primary-color;
-        letter-spacing: -0.02em;
-    }
+// --- MOBILE OPTIMIZATION ---
+@media (max-width: 1024px) {
+    .splitLayout {
+        flex-direction: column;
+        height: 100vh !important;
 
-    .description {
-        font-size: 15px;
-        line-height: 1.6;
-        color: #444;
-        margin-bottom: 12px;
-        white-space: pre-line;
-    }
-
-    .timeAgo {
-        font-size: 11px;
-        color: #999;
-        text-transform: uppercase;
-        font-weight: 500;
-    }
-}
-
-// Comment Section
-.commentSection {
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid $border-light;
-    overflow: hidden;
-
-    .commentList {
-        max-height: 300px;
-        overflow-y: auto;
-        margin-bottom: 20px;
-        padding-right: 8px;
-
-        &::-webkit-scrollbar {
-            width: 4px;
-        }
-        &::-webkit-scrollbar-thumb {
-            background: #eee;
-            border-radius: 10px;
+        &.modal {
+            width: 100%;
+            height: 100vh;
+            max-height: none;
+            margin: 0;
+            border-radius: 0;
         }
 
-        .commentItem {
-            margin-bottom: 12px;
-            font-size: 14px;
-            line-height: 1.4;
-
-            .commentUser {
-                font-family: $font-header;
-                font-weight: 700;
-                margin-right: 8px;
-                color: $primary-color;
-            }
-
-            .commentContent {
-                color: #444;
-                font-family: $font-body;
-            }
+        .visualColumn {
+            flex: none;
+            height: 40vh;
         }
 
-        .noComments {
-            text-align: center;
-            color: #999;
-            font-size: 13px;
-            padding: 10px 0;
-        }
-    }
-
-    .inputWrapper {
-        display: flex;
-        align-items: center;
-        background: #f8f8f8;
-        border-radius: 100px;
-        padding: 8px 16px;
-        transition: all 0.2s ease;
-        border: 1px solid transparent;
-        font-family: $font-body;
-
-        &:focus-within {
-            background: #fff;
-            border-color: $accent-color;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        input {
+        .contentColumn {
             flex: 1;
-            border: none;
-            background: transparent;
-            padding: 8px 0;
-            font-size: 14px;
-            outline: none;
+            min-width: 100%;
 
-            &::placeholder {
-                color: #aaa;
+            .header {
+                padding: 12px 16px;
             }
-        }
-
-        button {
-            background: transparent;
-            border: none;
-            color: $primary-color;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 4px;
-
-            &:disabled {
-                color: #ccc;
-                cursor: default;
-            }
-
-            &:hover:not(:disabled) {
-                color: $accent-color;
+            .scrollContent {
+                padding: 16px;
             }
         }
     }
-}
-
-// Loading state
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60vh;
-    font-weight: 600;
-    color: $text-secondary;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 12px;
-    font-family: $font-header;
 }

@@ -7,7 +7,7 @@ const PostDetailPage = () => {
 
     return (
         <div className={styles.pageContainer}>
-            <PostContent id={id} />
+            <PostContent id={id} mode="page" />
         </div>
     );
 };

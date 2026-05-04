@@ -22,5 +22,16 @@ export const useLogin = () => {
         }
     };
 
-    return { handleLogin };
+    const handleGoogleLogin = async (credential) => {
+        try {
+            const data = await googleLoginApi(credential);
+            login(data.accessToken, data.refreshToken);
+            navigate(PATHS.USER_FEED, { replace: true });
+        } catch (error) {
+            console.error('Google login failed:', error);
+            throw error;
+        }
+    };
+
+    return { handleLogin, handleGoogleLogin };
 };
