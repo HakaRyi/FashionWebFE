@@ -60,6 +60,7 @@ const EventDetailModal = ({ event, onClose, onApprove, onReject }) => {
 
                                 <div className={styles.infoCard}>
                                     <h4><DollarSign size={16} /> Financial (VND)</h4>
+                                    <p>Entry Fee: <strong>{event.entryFee > 0 ? `${event.entryFee.toLocaleString()} đ` : 'Free'}</strong></p>
                                     <p>Total Prize Pool: <strong>{event.totalPrizePool?.toLocaleString()} đ</strong></p>
                                     <p>System Fee: <strong>{event.appliedFee?.toLocaleString()} đ</strong></p>
                                     <div className={styles.totalHighlight}>
