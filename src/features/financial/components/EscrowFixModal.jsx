@@ -22,7 +22,7 @@ const EscrowFixModal = ({ item, isOpen, onClose, onConfirm, isActionLoading }) =
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
                 <div className={styles.modalHeader}>
-                    <h2>Yêu cầu xem xét tài chính</h2>
+                    <h2>Request for financial review</h2>
                     <button onClick={onClose} className={styles.closeBtn}>
                         <X size={20} />
                     </button>
@@ -33,39 +33,39 @@ const EscrowFixModal = ({ item, isOpen, onClose, onConfirm, isActionLoading }) =
                         <div className={styles.alertBox}>
                             <Info size={18} />
                             <span>
-                                Yêu cầu này sẽ được chuyển tới bộ phận <b>Expert</b> để phê duyệt trước khi được phép giải ngân.
+                                This request will be forwarded to the <b>Expert</b> department for approval before release.
                             </span>
                         </div>
-                        
+
                         <div className={styles.itemSummary}>
-                            <p>Đang xử lý cho: <strong>#E{item.escrowSessionId}</strong></p>
-                            <p>Số tiền: <strong>{item.finalAmount?.toLocaleString()}đ</strong></p>
+                            <p>Processing for: <strong>#E{item.escrowSessionId}</strong></p>
+                            <p>Amount: <strong>{item.finalAmount?.toLocaleString()}đ</strong></p>
                         </div>
 
-                        <label htmlFor="fixReason">Lý do yêu cầu sửa đổi/giải ngân:</label>
+                        <label htmlFor="fixReason">Reason for financial review:</label>
                         <textarea
                             id="fixReason"
-                            placeholder="Mô tả cụ thể lý do cần can thiệp vào phiên tiền treo này..."
+                            placeholder="Please describe in detail the reasons why intervention is needed in this pending payment session..."
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
                             rows={5}
                             disabled={isActionLoading}
                         />
-                        
+
                         <div className={styles.modalActions}>
-                            <button 
-                                className={styles.btnCancel} 
+                            <button
+                                className={styles.btnCancel}
                                 onClick={onClose}
                                 disabled={isActionLoading}
                             >
-                                Hủy bỏ
+                                Cancel
                             </button>
                             <button
                                 className={styles.btnConfirm}
                                 onClick={handleSubmit}
                                 disabled={!reason.trim() || isActionLoading}
                             >
-                                {isActionLoading ? 'Đang gửi...' : 'Gửi yêu cầu phê duyệt'}
+                                {isActionLoading ? 'Sending...' : 'Submit Review Request'}
                             </button>
                         </div>
                     </div>

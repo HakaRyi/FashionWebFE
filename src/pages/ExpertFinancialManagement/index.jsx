@@ -288,7 +288,7 @@ const FinancialManagement = () => {
                                                         <tr key={transaction.transactionId} className={styles.rowHover}>
                                                             <td>
                                                                 <div className={styles.timeStack}>
-                                                                    <span>{new Date(transaction.createdAt).toLocaleDateString()}</span>
+                                                                    <span>{new Date(transaction.createdAt).toLocaleDateString('vi-VN')}</span>
                                                                     <small>{new Date(transaction.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
                                                                 </div>
                                                             </td>
@@ -344,7 +344,7 @@ const FinancialManagement = () => {
                                                         <div className={styles.evIcon}><Calendar size={20} /></div>
                                                         <div className={styles.evInfo}>
                                                             <h4>{event.title}</h4>
-                                                            <span>Created: {new Date(event.createdAt).toLocaleDateString()}</span>
+                                                            <span>Created: {new Date(event.createdAt).toLocaleDateString('vi-VN')}</span>
                                                         </div>
                                                     </div>
                                                     <button className={styles.viewDetailBtn}>Details <ChevronRight size={14} /></button>

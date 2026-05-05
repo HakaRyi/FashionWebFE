@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, MessageCircle, Share2, MoreHorizontal, Send } from 'lucide-react';
+import { Heart, MessageCircle, Share2, MoreHorizontal, Send, Check } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import styles from '../styles/FashionCard.module.scss';
@@ -51,15 +51,22 @@ const FashionCard = ({ post, lastPostRef, commentsMap, toggleComments, addCommen
             {/* Header: Thu gọn khoảng cách */}
             <div className={styles.cardHeader}>
                 <div className={styles.userInfo}>
-                    <img
-                        className={styles.avatar}
-                        src={post.avatarUrl || `https://ui-avatars.com/api/?name=${post.userName}&background=random`}
-                        alt={post.userName}
-                    />
+                    <div className={styles.avatarWrapper}>
+                        <img
+                            className={styles.avatar}
+                            src={post.avatarUrl || `https://ui-avatars.com/api/?name=${post.userName}&background=random`}
+                            alt={post.userName}
+                        />
+                        {post.isExpertPost && (
+                            <div className={styles.verifiedBadge}>
+                                <Check size={10} color="white" />
+                            </div>
+                        )}
+                    </div>
                     <div className={styles.userMeta}>
                         <span className={styles.userName}>{post.userName}</span>
                         <span className={styles.userRole}>
-                            {post.isEvent ? `Event: ${post.eventName}` : 'Contributor'} • {formatTime(post.createdAt)}
+                            {post.isExpertPost ? 'Expert' : (post.isEvent ? `Event: ${post.eventName}` : 'Contributor')} • {formatTime(post.createdAt)}
                         </span>
                     </div>
                 </div>
@@ -86,7 +93,7 @@ const FashionCard = ({ post, lastPostRef, commentsMap, toggleComments, addCommen
                     </Swiper>
                 ) : (
                     <img
-                        src={post.images?.[0] || 'https://via.placeholder.com/600x800'}
+                        src={post.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=550&h=650&auto=format&fit=crop'}
                         alt={post.title}
                         className={styles.feedImage}
                     />

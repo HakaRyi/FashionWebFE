@@ -9,6 +9,8 @@ export const useAdminFinancial = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isActionLoading, setIsActionLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isCampaignPickerOpen, setIsCampaignPickerOpen] = useState(false);
+    const [campaignSearch, setCampaignSearch] = useState('');
 
     // 2. Data States
     const [data, setData] = useState([]); // Transactions
@@ -77,14 +79,14 @@ export const useAdminFinancial = () => {
      * Các hàm nghiệp vụ (Actions)
      */
     const handleAdminRequestFix = async (escrowId, reason) => {
-        if (!reason.trim()) return toast.error('Vui lòng nhập lý do cụ thể.');
+        if (!reason.trim()) return toast.error('Please enter a specific reason.');
         setIsActionLoading(true);
         try {
             await financialApi.adminRequestFix(escrowId, reason);
-            toast.success('Đã gửi yêu cầu phê duyệt tới Expert.');
+            toast.success('The approval request has been sent to the Expert.');
             await fetchAdminData();
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Lỗi gửi yêu cầu');
+            toast.error(error.response?.data?.message || 'Request submission error. Please try again.');
         } finally {
             setIsActionLoading(false);
         }
@@ -94,10 +96,10 @@ export const useAdminFinancial = () => {
         setIsActionLoading(true);
         try {
             await financialApi.adminExecuteFix(escrowId);
-            toast.success('Giải ngân thành công!');
+            toast.success('The escrow has been executed successfully!');
             await fetchAdminData();
         } catch (error) {
-            toast.error('Giải ngân thất bại. Có thể Expert chưa phê duyệt.');
+            toast.error('Failed to execute the escrow. The Expert may not have approved it.');
         } finally {
             setIsActionLoading(false);
         }
@@ -135,6 +137,10 @@ export const useAdminFinancial = () => {
         return list;
     }, [data, escrowList, searchTerm, activeTab, filters.eventId]);
 
+    const filteredEventList = useMemo(() => {
+        return eventList.filter((ev) => ev.title.toLowerCase().includes(campaignSearch.toLowerCase()));
+    }, [eventList, campaignSearch]);
+
     /**
      * Logic Phân trang
      */
@@ -160,9 +166,15 @@ export const useAdminFinancial = () => {
         setSearchTerm,
         filters,
         setFilters,
+        setIsCampaignPickerOpen,
+        isCampaignPickerOpen,
+        campaignSearch,
+        setCampaignSearch,
+
 
         // Data
         eventList, // Để render Select chọn sự kiện
+        filteredEventList, // Danh sách sự kiện đã lọc
         currentTableData, // Data đã lọc và phân trang
         totalCount: filteredData.length,
         totalPages,

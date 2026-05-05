@@ -25,20 +25,20 @@ const EventCashflowModal = ({ event, onClose }) => {
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
                 <div className={styles.modalHeader}>
-                    <h3>Chi tiết dòng tiền: {event.title}</h3>
+                    <h3>Cash flow details: {event.title}</h3>
                     <button onClick={onClose}>&times;</button>
                 </div>
                 <div className={styles.modalBody}>
-                    {loading ? <p>Đang tải dữ liệu...</p> : (
+                    {loading ? <p>Loading data...</p> : (
                         <table className={styles.detailTable}>
                             <thead>
                                 <tr>
-                                    <th>Mã GD</th>
-                                    <th>Thời gian</th>
-                                    <th>Loại</th>
-                                    <th>Số tiền</th>
-                                    <th>Số dư sau GD</th>
-                                    <th>Nội dung</th>
+                                    <th>Transaction Code</th>
+                                    <th>Time</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Balance After Transaction</th>
+                                    <th>Content</th>
                                 </tr>
                             </thead>
                             <tbody>

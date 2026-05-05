@@ -1,0 +1,291 @@
+@use 'sass:color';
+
+$primary: #3b82f6;
+$primary-hover: #2563eb;
+$success: #10b981;
+$danger: #ef4444;
+$warning: #f59e0b;
+$text-main: #1e293b;
+$text-muted: #64748b;
+$bg-canvas: #f8fafc;
+$bg-card: #ffffff;
+$border-color: #e2e8f0;
+$radius: 12px;
+$shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+.adminContainer {
+    padding: 2rem;
+    background-color: $bg-canvas;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: $text-main;
+}
+
+// --- Header Section ---
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .titleGroup {
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin: 0;
+            color: $text-main;
+        }
+        p {
+            color: $text-muted;
+            margin-top: 0.25rem;
+            font-size: 0.95rem;
+        }
+    }
+
+    .btnRefresh {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        background: $bg-card;
+        border: 1px solid $border-color;
+        border-radius: $radius;
+        font-weight: 600;
+        color: $text-main;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+        &:hover:not(:disabled) {
+            background: $bg-canvas;
+            border-color: color.scale($border-color, $lightness: -10%);
+            transform: translateY(-1px);
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// --- Filter Bar ---
+.filterBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+
+    .searchBox {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: $bg-card;
+        border: 1px solid $border-color;
+        border-radius: $radius;
+        padding: 0 1rem;
+        width: 300px;
+        transition: border-color 0.2s;
+
+        &:focus-within {
+            border-color: $primary;
+            box-shadow: 0 0 0 3px rgba($primary, 0.1);
+        }
+
+        .filterIcon {
+            color: $text-muted;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem 0.5rem;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 0.9rem;
+            color: $text-main;
+            cursor: pointer;
+        }
+    }
+
+    .statusIndicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: $primary;
+        font-weight: 500;
+        background: rgba($primary, 0.08);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+    }
+}
+
+// --- Table Card ---
+.tableCard {
+    background: $bg-card;
+    border-radius: $radius;
+    border: 1px solid $border-color;
+    box-shadow: $shadow;
+    overflow: hidden; // Để bo góc table
+}
+
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.mainTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+
+    thead {
+        background: #f1f5f9;
+
+        th {
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            color: $text-muted;
+            border-bottom: 1px solid $border-color;
+        }
+    }
+
+    tbody {
+        tr {
+            transition: background 0.2s;
+            border-bottom: 1px solid $border-color;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &:hover {
+                background: #f8fafc;
+            }
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            vertical-align: middle;
+            font-size: 0.9375rem;
+        }
+    }
+
+    .textRight {
+        text-align: right;
+    }
+}
+
+// --- Pagination ---
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 1.25rem;
+    border-top: 1px solid $border-color;
+    background: #ffffff;
+
+    .pageBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid $border-color;
+        background: white;
+        color: $text-muted;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover:not(:disabled) {
+            color: $primary;
+            border-color: $primary;
+            background: rgba($primary, 0.05);
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    }
+
+    .pageInfo {
+        font-size: 0.9rem;
+        color: $text-muted;
+
+        span {
+            font-weight: 700;
+            color: $text-main;
+        }
+    }
+}
+
+// --- States ---
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 0;
+    color: $text-muted;
+
+    svg {
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+
+    p {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// --- Responsive ---
+@media (max-width: 768px) {
+    .adminContainer {
+        padding: 1rem;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+
+        .btnRefresh {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    .filterBar {
+        flex-direction: column;
+        align-items: stretch;
+
+        .searchBox {
+            width: 100%;
+        }
+    }
+}
