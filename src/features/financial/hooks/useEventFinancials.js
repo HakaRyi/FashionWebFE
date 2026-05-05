@@ -44,7 +44,12 @@ export const useEventFinancials = (eventId) => {
                     .reduce((sum, t) => sum + t.amount, 0);
 
                 const totalRefund = expertTxs
-                    .filter((t) => t.type.includes('Refund'))
+                    .filter(
+                        (t) =>
+                            t.type.includes('Event_Reject_Refund') ||
+                            t.type.includes('Event_Cancel_Refund') ||
+                            t.type.includes('Refund'),
+                    )
                     .reduce((sum, t) => sum + t.amount, 0);
 
                 const grossExpense = expertTxs
@@ -52,7 +57,9 @@ export const useEventFinancials = (eventId) => {
                     .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
                 // Chi phí thực tế = Số đã chi - Số được trả lại
-                const netExpense = grossExpense - totalRefund;
+                const netExpense = Math.max(0, grossExpense - totalRefund);
+
+                const netProfit = totalRevenue - netExpense;
 
                 setData({
                     eventInfo: eventRes.data,

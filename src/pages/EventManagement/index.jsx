@@ -1,29 +1,34 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import styles from '@/features/events/styles/EventManagement.module.scss';
-import { Filter, Loader2, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useEvents, EventRow, EventDetailModal, QuickUpdateModal } from '@/features/events';
+import { useState, useMemo, useCallback } from 'react';
+import { Filter, Loader2, RefreshCw, ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
+// Nội bộ feature
+import { useEvents, EventRow, EventDetailModal, QuickUpdateModal } from '@/features/events';
+import styles from './EventManagement.module.scss';
+
 const MySwal = withReactContent(Swal);
+const ITEMS_PER_PAGE = 10;
 
 const EventManagement = () => {
-    // --- Data Hooks ---
+    // --- 1. Data & Custom Hooks ---
     const {
-        events, loading, fetchEvents, handleApprove,
-        handleReject, fetchEventById, handleUpdate
+        events,
+        loading,
+        fetchEvents,
+        handleApprove,
+        handleReject,
+        fetchEventById,
+        handleUpdate
     } = useEvents();
 
-    // --- UI States ---
+    // --- 2. Local UI States ---
     const [filterStatus, setFilterStatus] = useState('All');
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [editingEvent, setEditingEvent] = useState(null);
-
-    // --- Pagination States ---
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
 
-    // --- Notifications ---
+    // --- 3. Helper Functions (Memoized) ---
     const showToast = useCallback((icon, title) => {
         MySwal.fire({
             icon, title, toast: true, position: 'top-end',
@@ -31,184 +36,197 @@ const EventManagement = () => {
         });
     }, []);
 
-    // --- Logic: Filter & Sort (Memoized) ---
+    // --- 4. Logic Xử lý Dữ liệu ---
+    // Lọc và Sắp xếp
     const filteredEvents = useMemo(() => {
-        const result = filterStatus === 'All'
+        let result = filterStatus === 'All'
             ? events
             : events.filter(ev => ev.status === filterStatus);
 
-        // Đảm bảo tính bất biến (immutability) khi sort
         return [...result].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }, [events, filterStatus]);
 
-    // --- Logic: Pagination Calculations ---
-    const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
+    // Phân trang
+    const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
+
     const currentTableData = useMemo(() => {
-        const start = (currentPage - 1) * itemsPerPage;
-        return filteredEvents.slice(start, start + itemsPerPage);
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        return filteredEvents.slice(start, start + ITEMS_PER_PAGE);
     }, [filteredEvents, currentPage]);
 
-    // --- Event Handlers ---
-    const handleStatusChange = (e) => {
+    // --- 5. Event Handlers ---
+    const onRefresh = useCallback(async () => {
+        await fetchEvents();
+        setCurrentPage(1);
+        showToast('success', 'Data refreshed successfully');
+    }, [fetchEvents, showToast]);
+
+    const handleFilterChange = (e) => {
         setFilterStatus(e.target.value);
         setCurrentPage(1);
     };
 
-    const onRefresh = async () => {
-        await fetchEvents();
-        setCurrentPage(1);
-        showToast('info', 'Data has been updated.');
-    };
-
-    const handleEditClick = async (briefEvent) => {
+    const handleEditClick = useCallback(async (briefEvent) => {
         const fullEvent = await fetchEventById(briefEvent.eventId);
         if (fullEvent) {
             setEditingEvent(fullEvent);
         } else {
-            showToast('error', 'Details cannot be obtained.');
+            showToast('error', 'Could not load event details.');
         }
-    };
+    }, [fetchEventById, showToast]);
 
-    const onApproveClick = async (id) => {
-        const confirm = await MySwal.fire({
+    const onApproveConfirm = useCallback(async (id) => {
+        const result = await MySwal.fire({
             title: 'Approve Event?',
-            text: "The event will be displayed publicly on the system!",
+            text: "This event will be published to the public marketplace.",
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#10b981',
-            confirmButtonText: 'Confirm Approval',
-            cancelButtonText: 'Hủy'
+            confirmButtonText: 'Yes, Approve it!',
+            cancelButtonText: 'Cancel'
         });
 
-        if (confirm.isConfirmed) {
-            const result = await handleApprove(id);
-            if (result.success) {
-                showToast('success', 'Event approved successfully!');
+        if (result.isConfirmed) {
+            const res = await handleApprove(id);
+            if (res.success) {
+                showToast('success', 'Event is now active!');
                 setSelectedEvent(null);
             } else {
-                showToast('error', result.error);
+                showToast('error', res.error || 'Approval failed');
             }
         }
-    };
+    }, [handleApprove, showToast]);
 
-    const onRejectSubmit = async (id, reason) => {
+    const onRejectSubmit = useCallback(async (id, reason) => {
         const result = await handleReject(id, reason);
         if (result.success) {
-            showToast('success', 'Event rejected successfully!');
+            showToast('success', 'Event has been rejected.');
             setSelectedEvent(null);
         } else {
             showToast('error', result.error);
         }
-    };
+    }, [handleReject, showToast]);
 
-    const onUpdateSave = async (id, dto) => {
+    const onUpdateSave = useCallback(async (id, dto) => {
         const result = await handleUpdate(id, dto);
         if (result.success) {
-            showToast('success', 'Event updated successfully!');
+            showToast('success', 'Changes saved successfully!');
             setEditingEvent(null);
         } else {
             showToast('error', result.error);
         }
+    }, [handleUpdate, showToast]);
+
+    // --- 6. Sub-render Components (Làm code sạch hơn) ---
+    const renderPagination = () => {
+        if (totalPages <= 1) return null;
+        return (
+            <div className={styles.pagination}>
+                <button
+                    className={styles.pageBtn}
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                >
+                    <ChevronLeft size={18} />
+                </button>
+                <div className={styles.pageInfo}>
+                    Page <span>{currentPage}</span> of {totalPages}
+                </div>
+                <button
+                    className={styles.pageBtn}
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                >
+                    <ChevronRight size={18} />
+                </button>
+            </div>
+        );
     };
 
     return (
         <div className={styles.adminContainer}>
-            {/* Header Section */}
+            {/* Header */}
             <header className={styles.header}>
                 <div className={styles.titleGroup}>
                     <h1>Event Management</h1>
-                    <p>Content moderation and Escrow fund management system.</p>
+                    <p>Review content and monitor escrow security funds.</p>
                 </div>
-                <button className={styles.btnRefresh} onClick={onRefresh} disabled={loading}>
+                <button
+                    className={styles.btnRefresh}
+                    onClick={onRefresh}
+                    disabled={loading}
+                >
                     <RefreshCw size={16} className={loading ? styles.spin : ''} />
-                    <span>Refresh</span>
+                    <span>{loading ? 'Updating...' : 'Refresh'}</span>
                 </button>
             </header>
 
-            {/* Filter Bar */}
+            {/* Filter & Actions Bar */}
             <div className={styles.filterBar}>
                 <div className={styles.searchBox}>
-                    <Filter size={18} />
-                    <select value={filterStatus} onChange={handleStatusChange}>
-                        <option value="All">All statuses ({events.length})</option>
+                    <Filter size={18} className={styles.filterIcon} />
+                    <select value={filterStatus} onChange={handleFilterChange}>
+                        <option value="All">All Statuses ({events.length})</option>
                         <option value="Pending_Review">Pending Review</option>
                         <option value="Active">Active</option>
                         <option value="Rejected">Rejected</option>
                     </select>
                 </div>
+
                 {loading && (
-                    <div className={styles.loader}>
-                        <Loader2 className={styles.spin} size={18} />
-                        <span>Processing...</span>
+                    <div className={styles.statusIndicator}>
+                        <Loader2 className={styles.spin} size={16} />
+                        <span>Syncing...</span>
                     </div>
                 )}
             </div>
 
-            {/* Table Section */}
-            <div className={styles.tableWrapper}>
-                <table className={styles.mainTable}>
-                    <thead>
-                        <tr>
-                            <th>Creation Date</th>
-                            <th>Event</th>
-                            <th>Time</th>
-                            <th>Total Escrow</th>
-                            <th>Status</th>
-                            <th style={{ textAlign: 'right' }}>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentTableData.length > 0 ? (
-                            currentTableData.map(ev => (
-                                <EventRow
-                                    key={ev.eventId}
-                                    event={ev}
-                                    onOpenDetail={setSelectedEvent}
-                                    onQuickEdit={() => handleEditClick(ev)}
-                                />
-                            ))
-                        ) : (
+            {/* Main Content Table */}
+            <div className={styles.tableCard}>
+                <div className={styles.tableWrapper}>
+                    <table className={styles.mainTable}>
+                        <thead>
                             <tr>
-                                <td colSpan="6" className={styles.noData}>
-                                    No matching event data found.
-                                </td>
+                                <th>Created At</th>
+                                <th>Event Details</th>
+                                <th>Schedule</th>
+                                <th>Escrow Fund</th>
+                                <th>Status</th>
+                                <th className={styles.textRight}>Actions</th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-
-                {/* Pagination Controls */}
-                {totalPages > 1 && (
-                    <div className={styles.pagination}>
-                        <button
-                            className={styles.pageBtn}
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage(prev => prev - 1)}
-                        >
-                            <ChevronLeft size={18} />
-                        </button>
-
-                        <div className={styles.pageInfo}>
-                            Page <strong>{currentPage}</strong> / {totalPages}
-                        </div>
-
-                        <button
-                            className={styles.pageBtn}
-                            disabled={currentPage === totalPages}
-                            onClick={() => setCurrentPage(prev => prev + 1)}
-                        >
-                            <ChevronRight size={18} />
-                        </button>
-                    </div>
-                )}
+                        </thead>
+                        <tbody>
+                            {currentTableData.length > 0 ? (
+                                currentTableData.map(ev => (
+                                    <EventRow
+                                        key={ev.eventId}
+                                        event={ev}
+                                        onOpenDetail={setSelectedEvent}
+                                        onQuickEdit={handleEditClick}
+                                    />
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="6">
+                                        <div className={styles.emptyState}>
+                                            <Inbox size={48} />
+                                            <p>No events match your current filter.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+                {renderPagination()}
             </div>
 
-            {/* Modals */}
+            {/* Modal Layers */}
             {selectedEvent && (
                 <EventDetailModal
                     event={selectedEvent}
                     onClose={() => setSelectedEvent(null)}
-                    onApprove={onApproveClick}
+                    onApprove={onApproveConfirm}
                     onReject={onRejectSubmit}
                 />
             )}

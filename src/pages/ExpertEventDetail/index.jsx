@@ -120,35 +120,39 @@ const EventDetailPage = () => {
                 </button>
 
                 <div className={styles.navActions}>
-                    {(event.status === "Inviting" || event.status === "Pending_Review") && (
+                    {event.isCreator && (
                         <>
-                            {event.status === "Inviting" && event.isCreator && (
+                            {(event.status === "Inviting" || event.status === "Pending_Review") && (
+                                <>
+                                    {event.status === "Inviting" && (
+                                        <button
+                                            className={styles.btnStart}
+                                            onClick={handleManualStart}
+                                            disabled={isStarting || event.isAutoStart || !event.canManualStart}
+                                        >
+                                            <PlayCircle size={18} />
+                                            {isStarting ? "Processing" : "Start Now"}
+                                        </button>
+                                    )}
+                                    <button
+                                        className={styles.btnCancel}
+                                        onClick={handleCancel}
+                                        disabled={isCancelling}
+                                    >
+                                        <XCircle size={18} /> {isCancelling ? "..." : "Cancel"}
+                                    </button>
+                                </>
+                            )}
+                            {event.status !== "Completed" && event.canFinalize && (
                                 <button
-                                    className={styles.btnStart}
-                                    onClick={handleManualStart}
-                                    disabled={isStarting || event.isAutoStart || !event.canManualStart}
+                                    className={styles.btnFinalize}
+                                    onClick={handleFinalize}
+                                    disabled={isFinalizing}
                                 >
-                                    <PlayCircle size={18} />
-                                    {isStarting ? "Processing" : "Start Now"}
+                                    <Landmark size={18} /> {isFinalizing ? "..." : "Finalize & Disburse"}
                                 </button>
                             )}
-                            <button
-                                className={styles.btnCancel}
-                                onClick={handleCancel}
-                                disabled={isCancelling}
-                            >
-                                <XCircle size={18} /> {isCancelling ? "..." : "Cancel"}
-                            </button>
                         </>
-                    )}
-                    {event.status !== "Completed" && event.canFinalize && (
-                        <button
-                            className={styles.btnFinalize}
-                            onClick={handleFinalize}
-                            disabled={isFinalizing}
-                        >
-                            <Landmark size={18} /> {isFinalizing ? "..." : "Finalize & Disburse"}
-                        </button>
                     )}
                 </div>
             </nav>

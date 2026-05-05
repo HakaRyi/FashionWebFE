@@ -36,6 +36,7 @@ const Onboarding = () => {
                 <div className={styles.stepIndicator}>
                     <div className={`${styles.dot} ${step === 1 ? styles.active : ''}`} />
                     <div className={`${styles.dot} ${step === 2 ? styles.active : ''}`} />
+                    <div className={`${styles.dot} ${step === 3 ? styles.active : ''}`} />
                 </div>
 
                 {/* BƯỚC 1: THÔNG TIN CÁ NHÂN */}

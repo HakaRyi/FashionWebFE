@@ -5,7 +5,8 @@ import {
     History, Calendar, RefreshCw, CheckCircle,
     ArrowUpRight, ArrowDownLeft, ChevronDown
 } from 'lucide-react';
-import { useAdminFinancial, TransactionDetailModal, EscrowFixModal } from '@/features/financial';
+import { useAdminFinancial, TransactionDetailModal, EscrowFixModal, CampaignPickerModal } from '@/features/financial';
+import { formatMoney } from '@/shared/utils/format';
 import styles from './AdminFinancial.module.scss';
 
 const AdminFinancial = () => {
@@ -13,6 +14,7 @@ const AdminFinancial = () => {
         activeTab, setActiveTab,
         isLoading, isActionLoading,
         searchTerm, setSearchTerm,
+        setIsCampaignPickerOpen, isCampaignPickerOpen,
         filters, setFilters,
         eventList = [],
         currentTableData = [],
@@ -53,6 +55,20 @@ const AdminFinancial = () => {
     const renderPagination = useMemo(() => {
         if (totalPages <= 1) return null;
 
+        // Tính toán phạm vi trang cần hiển thị (cửa sổ trượt)
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+
+        // Điều chỉnh lại nếu ở các trang cuối
+        if (endPage - startPage < 4) {
+            startPage = Math.max(1, endPage - 4);
+        }
+
+        const pages = [];
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+
         return (
             <div className={styles.footerPagination}>
                 <span className={styles.recordInfo}>
@@ -66,18 +82,15 @@ const AdminFinancial = () => {
                         <ChevronLeft size={18} />
                     </button>
 
-                    {[...Array(Math.min(5, totalPages))].map((_, i) => {
-                        const pageNum = i + 1;
-                        return (
-                            <button
-                                key={pageNum}
-                                className={currentPage === pageNum ? styles.activePage : ''}
-                                onClick={() => setCurrentPage(pageNum)}
-                            >
-                                {pageNum}
-                            </button>
-                        );
-                    })}
+                    {pages.map((pageNum) => (
+                        <button
+                            key={pageNum}
+                            className={currentPage === pageNum ? styles.activePage : ''}
+                            onClick={() => setCurrentPage(pageNum)}
+                        >
+                            {pageNum}
+                        </button>
+                    ))}
 
                     <button
                         disabled={currentPage === totalPages || isLoading}
@@ -159,16 +172,17 @@ const AdminFinancial = () => {
                     <div className={styles.filterItem}>
                         <Filter size={14} />
                         <div className={styles.selectWrapper}>
-                            <select
-                                value={filters.eventId || ''}
-                                onChange={(e) => setFilters({ ...filters, eventId: e.target.value })}
+                            <button
+                                className={styles.pickerTrigger}
+                                onClick={() => setIsCampaignPickerOpen(true)}
                             >
-                                <option value="">Filter by Campaign</option>
-                                {eventList.map(ev => (
-                                    <option key={ev.eventId} value={ev.eventId}>{ev.title}</option>
-                                ))}
-                            </select>
-                            <ChevronDown size={14} className={styles.chevronIcon} />
+                                {filters.eventId ?
+                                    eventList.find(e => e.eventId === filters.eventId)?.title :
+                                    "Select Campaign..."
+                                }
+                                <ChevronDown size={14} className={styles.chevronIcon} />
+                            </button>
+
                         </div>
                     </div>
 
@@ -189,7 +203,7 @@ const AdminFinancial = () => {
                                     <select value={filters.refType || ''} onChange={(e) => setFilters({ ...filters, refType: e.target.value })}>
                                         <option value="">Source: All</option>
                                         <option value="Event">Campaign Events</option>
-                                        <option value="Withdrawal">Withdrawals</option>
+                                        {/* <option value="Withdrawal">Withdrawals</option> */}
                                     </select>
                                     <ChevronDown size={14} className={styles.chevronIcon} />
                                 </div>
@@ -279,6 +293,14 @@ const AdminFinancial = () => {
                 onClose={handleCloseModal}
                 onConfirm={handleConfirmFix}
             />
+
+            <CampaignPickerModal
+                isOpen={isCampaignPickerOpen}
+                onClose={() => setIsCampaignPickerOpen(false)}
+                events={eventList}
+                onSelect={(id) => setFilters({ ...filters, eventId: id })}
+                selectedId={filters.eventId}
+            />
         </div>
     );
 };
@@ -295,45 +317,65 @@ const StatCard = ({ icon, label, value, variant = '', isStatus = false }) => (
     </div>
 );
 
-const TransactionRow = ({ item, onOpenDetail }) => (
-    <>
-        <td>
-            <div className={styles.idCell}>
-                <span className={styles.code}>{item.transactionCode || 'N/A'}</span>
-                <span className={styles.refId}>Ref: #{item.referenceId}</span>
-            </div>
-        </td>
-        <td>
-            <div className={styles.userCell}>
-                <strong>{item.userName || 'Anonymous'}</strong>
-                <span>ID: {String(item.walletId || '').slice(0, 8)}...</span>
-            </div>
-        </td>
-        <td>
-            <div className={styles.descCell}>
-                <TypeTag type={item.type} />
-                <p title={item.description}>{item.description}</p>
-            </div>
-        </td>
-        <td>
-            <div className={styles.amountCell}>
-                <span className={item.balanceAfter >= item.balanceBefore ? styles.plus : styles.minus}>
-                    {item.balanceAfter >= item.balanceBefore ? '+' : '-'}{item.amount?.toLocaleString()}đ
-                </span>
-                <small>Bal: {item.balanceAfter?.toLocaleString()}đ</small>
-            </div>
-        </td>
-        <td className={styles.timeCell}>
-            {new Date(item.createdAt).toLocaleDateString('en-US')}<br />
-            <small>{new Date(item.createdAt).toLocaleTimeString('en-US')}</small>
-        </td>
-        <td align="center">
-            <button className={styles.iconBtn} onClick={onOpenDetail} title="View Details">
-                <Eye size={18} />
-            </button>
-        </td>
-    </>
-);
+const TransactionRow = ({ item, onOpenDetail }) => {
+    const dateObj = item.createdAt ? new Date(item.createdAt) : null;
+
+    const formattedDate = dateObj ? dateObj.toLocaleDateString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    }) : 'N/A';
+
+    const formattedTime = dateObj ? dateObj.toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    }) : '';
+
+    return (
+        <>
+            <td>
+                <div className={styles.idCell}>
+                    <span className={styles.code}>{item.transactionCode || 'N/A'}</span>
+                    <span className={styles.refId}>Ref: #{item.referenceId}</span>
+                </div>
+            </td>
+            <td>
+                <div className={styles.userCell}>
+                    <strong>{item.userName || 'Anonymous'}</strong>
+                    <span>ID: {String(item.walletId || '').slice(0, 8)}...</span>
+                </div>
+            </td>
+            <td>
+                <div className={styles.descCell}>
+                    <TypeTag type={item.type} />
+                    <p title={item.description}>{item.description}</p>
+                </div>
+            </td>
+            <td>
+                <div className={styles.amountCell}>
+                    <span className={item.balanceAfter >= item.balanceBefore ? styles.plus : styles.minus}>
+                        {/* Thêm dấu + hoặc - */}
+                        {item.balanceAfter >= item.balanceBefore ? '+' : '-'}
+
+                        {formatMoney(Math.abs(item.amount || 0))}
+                    </span>
+                    <small>Bal: {formatMoney(item.balanceAfter)}</small>
+                </div>
+            </td>
+            <td className={styles.timeCell}>
+                {formattedDate}<br />
+                <small>{formattedTime}</small>
+            </td>
+            <td align="center">
+                <button className={styles.iconBtn} onClick={onOpenDetail} title="View Details">
+                    <Eye size={18} />
+                </button>
+            </td>
+        </>
+    );
+};
 
 const EscrowRow = ({ item, onFix, onExecute, isActionLoading }) => (
     <>
@@ -352,7 +394,7 @@ const EscrowRow = ({ item, onFix, onExecute, isActionLoading }) => (
             </div>
         </td>
         <td><div className={styles.receiver}>{item.receiverName || item.userName || 'System'}</div></td>
-        <td><strong className={styles.amountText}>{item.finalAmount?.toLocaleString() || item.amount?.toLocaleString()}đ</strong></td>
+        <td><strong className={styles.amountText}>{formatMoney(item.finalAmount || item.amount)}</strong></td>
         <td><StatusBadge status={item.status} /></td>
         <td align="center">
             <div className={styles.actionGrid}>

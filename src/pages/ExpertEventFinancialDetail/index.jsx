@@ -18,7 +18,7 @@ const EventFinancialDetail = () => {
         eventInfo, metrics, loading,
         activeTab, setActiveTab,
         searchQuery, setSearchQuery,
-        chartAnalysis, filteredList, currentUser
+        chartAnalysis, filteredList, currentUser,
     } = useEventFinancials(eventId);
 
     if (loading) return <div className={styles.loader}>Analyzing Financial Streams...</div>;

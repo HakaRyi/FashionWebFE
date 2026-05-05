@@ -94,8 +94,11 @@ const CreatePostModal = ({
             return;
         }
 
-        if (!content.trim() && images.length === 0) {
-            setError('Please add some content or an image');
+        const hasContent = content.trim().length > 0;
+        const hasImages = images.length > 0;
+
+        if (!hasContent || !hasImages) {
+            setError('Please add some text content or at least one image.');
             return;
         }
 
@@ -125,17 +128,23 @@ const CreatePostModal = ({
         }
     };
 
+    const handleOverlayClick = (e) => {
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    };
+
     return (
         <>
             <AnimatePresence>
                 {isOpen && (
-                    <div className={styles.modalOverlay} onClick={onClose}>
+                    <div className={styles.modalOverlay} onClick={handleOverlayClick}>
                         <motion.div
                             className={styles.modalContainer}
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            onClick={e => e.stopPropagation()}
+                        // onClick={e => e.stopPropagation()}
                         >
                             <div className={styles.header}>
                                 <h2>{fixedEventId ? 'Participate in Event' : 'Create New Post'}</h2>
@@ -233,7 +242,10 @@ const CreatePostModal = ({
                                     <button
                                         type="submit"
                                         className={styles.submitBtn}
-                                        disabled={isSubmitting || (!content && images.length === 0)}
+                                        disabled={
+                                            isSubmitting ||
+                                            !content.trim() || images.length === 0
+                                        }
                                     >
                                         {isSubmitting ? <Loader2 className={styles.spin} size={18} /> :
                                             isInsufficientBalance ? 'Insufficient Balance' : 'Post Now'}

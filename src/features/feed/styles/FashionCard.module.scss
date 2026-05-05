@@ -9,9 +9,9 @@ $font-weight-medium: 500;
 $transition-smooth: all 0.2s ease-in-out;
 
 .fashionCard {
-    margin-bottom: 30px; // Thu nhỏ margin lại một chút
-    padding: 20px; // Giảm padding để card gọn hơn
-    max-width: 550px; // Thu bé tất cả card lại theo chiều rộng
+    margin-bottom: 30px;
+    padding: 20px;
+    width: 550px;
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -22,6 +22,8 @@ $transition-smooth: all 0.2s ease-in-out;
         transform 0.3s ease,
         background 0.3s ease;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    box-sizing: border-box;
 
     &:hover {
         background: rgba(255, 255, 255, 0.05);
@@ -77,6 +79,41 @@ $transition-smooth: all 0.2s ease-in-out;
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
+            .avatarWrapper {
+                position: relative;
+                display: inline-block;
+            }
+
+            .verifiedBadge {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background-color: #0095f6; // Màu xanh verify của Instagram/Facebook
+                border-radius: 50%;
+                width: 14px;
+                height: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+            }
+
+            .nameRow {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .expertLabel {
+                background: #f0f0f0;
+                color: #666;
+                font-size: 10px;
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+
             .userMeta {
                 display: flex;
                 flex-direction: column;
@@ -128,11 +165,12 @@ $transition-smooth: all 0.2s ease-in-out;
     .imageContainer {
         position: relative;
         width: 100%;
-        aspect-ratio: 4 / 5;
-        max-height: 500px;
+        // aspect-ratio: 4 / 5;
+        height: 500px;
         // background: #1a1a1a;
         overflow: hidden;
         border-radius: 10px;
+        background-color: #f0f0f0;
 
         .imageSwiper {
             width: 100%;
@@ -142,7 +180,6 @@ $transition-smooth: all 0.2s ease-in-out;
         .feedImage {
             width: 100%;
             height: 100%;
-            // Thu bé hình to, phóng to hình nhỏ mà vẫn giữ tỷ lệ, lấp đầy khung
             object-fit: cover;
             background-color: transparent;
             object-position: center;
@@ -152,6 +189,11 @@ $transition-smooth: all 0.2s ease-in-out;
 
         &:hover .feedImage {
             transform: scale(1.03); // Zoom nhẹ khi hover vào ảnh
+        }
+
+        :global(.swiper) {
+            width: 100%;
+            height: 100%;
         }
 
         :global(.swiper-slide) {

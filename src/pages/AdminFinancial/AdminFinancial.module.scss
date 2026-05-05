@@ -278,18 +278,64 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                 }
             }
 
+            .pickerTrigger {
+                all: unset; // Reset default button styles
+                cursor: pointer;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.6rem 1rem;
+                background: #f8fafc; // Slate 50
+                border: 1px solid $border-color;
+                border-radius: $radius;
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: $text-main;
+                transition: all 0.2s ease;
+                gap: 12px;
+
+                // Giới hạn text nếu tên campaign quá dài
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                // Trạng thái khi chưa chọn (Placeholder)
+                &:empty,
+                &[textContent*='Select Campaign'] {
+                    color: $text-muted;
+                    font-weight: 400;
+                }
+
+                // Icon Chevron bên trong button
+                svg {
+                    color: $text-muted;
+                    transition: transform 0.2s ease;
+                    flex-shrink: 0;
+                }
+
+                &:active {
+                    transform: scale(0.98);
+                }
+            }
+
             .chevronIcon {
                 position: absolute;
                 right: 0;
-                pointer-events: none; // Click xuyên qua icon để vào select
+                pointer-events: none;
                 color: #94a3b8;
                 transition: $transition;
             }
 
-            // Xoay icon khi focus (chỉ hoạt động tốt trên một số trình duyệt hiện đại)
             &:focus-within .chevronIcon {
                 color: $accent-color;
                 transform: translateY(-1px) rotate(180deg);
+            }
+
+            .pickerTrigger:not([textContent*='Select Campaign']) {
+                background: white;
+                // border-left: 4px solid $primary;
+                padding-left: calc(1rem - 3px);
             }
         }
     }
