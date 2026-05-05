@@ -30,7 +30,7 @@ function PostDetailModal({ post, onClose, onApprove, onReject }) {
                         </div>
                     )}
 
-                    <h2 className={styles.title}>{post.title || 'Bài viết không có tiêu đề'}</h2>
+                    <h2 className={styles.title}>{post.title || 'The article has no title.'}</h2>
 
                     <div className={styles.meta}>
                         <span>

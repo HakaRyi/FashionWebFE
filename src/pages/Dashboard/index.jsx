@@ -10,7 +10,7 @@ import ChartSection from "@/features/Dashboard/components/ChartSection";
 import RevenueTable from "@/features/Dashboard/components/RevenueTable";
 import RecentUsers from "@/features/Dashboard/components/RecentUsers";
 import ActivityList from "@/features/Dashboard/components/ActivityList";
-
+import AnimatedBackground from "@/features/background/components/CinematicBackground";
 // Import Hook từ thư mục hooks
 import { useDashboardChart } from "@/features/dashboard/hooks/useDashboardChart";
 
@@ -25,24 +25,23 @@ function Dashboard() {
   const { chartData } = useDashboardChart(startStr, end);
 
   return (
-    <div className={styles.wrapper}>
-      <DashboardHeader />
+      <div className={styles.wrapper}>
+        <DashboardHeader />
 
-      {/* Truyền dữ liệu tổng quan vào StatsGrid */}
-      <StatsGrid data={chartData?.overview} />
+        <StatsGrid data={chartData?.overview} />
 
-      {/* ChartSection tự fetch dữ liệu riêng cho biểu đồ */}
-      <ChartSection />
+        <ChartSection />
 
-      <div className={styles.revenueSection}>
-        <RevenueTable />
+        <div className={styles.revenueSection}>
+          <RevenueTable />
+        </div>
+
+        <div className={styles.sectionGrid}>
+          <RecentUsers />
+          <ActivityList />
+        </div>
       </div>
 
-      <div className={styles.sectionGrid}>
-        <RecentUsers />
-        <ActivityList />
-      </div>
-    </div>
   );
 }
 

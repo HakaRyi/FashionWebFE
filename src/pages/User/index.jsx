@@ -2,8 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import styles from './User.module.scss';
 import { usertApi } from '../../pages/User/api/userApi';
 import { 
-    FaSearch, FaUserPlus, FaEllipsisV, FaFilter, 
-    FaUserEdit, FaUserSlash, FaUserShield, FaChevronLeft, FaChevronRight 
+    FaSearch, FaFilter, 
+    FaUserSlash, FaUserShield, FaChevronLeft, FaChevronRight,
+    FaEye, FaTimes // Thêm 2 icon này cho chức năng View Detail
 } from 'react-icons/fa';
 
 function UserManagement() {
@@ -12,14 +13,18 @@ function UserManagement() {
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState('');
     
-    // --- PHẦN THÊM MỚI: State cho phân trang ---
+    // State cho phân trang
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
+
+    // --- PHẦN THÊM MỚI: State cho Modal View Detail ---
+    const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
             setLoading(true);
             try {
+                // Tạm giả lập dữ liệu test nếu chưa gọi được API
                 const response = await usertApi.getAllUser();
                 setUsers(response.data || []);
             } catch (error) {
@@ -31,7 +36,6 @@ function UserManagement() {
         fetchUsers();
     }, []);
 
-    // Reset về trang 1 mỗi khi search hoặc lọc vai trò
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, roleFilter]);
@@ -45,7 +49,6 @@ function UserManagement() {
         }
     };
 
-    // 1. Lọc và tìm kiếm dữ liệu
     const filteredUsers = useMemo(() => {
         return users.filter(user => {
             const matchesSearch = 
@@ -56,7 +59,6 @@ function UserManagement() {
         });
     }, [users, searchTerm, roleFilter]);
 
-    // --- PHẦN THÊM MỚI: Tính toán dữ liệu hiển thị theo trang ---
     const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
     const displayedUsers = useMemo(() => {
         const startIndex = (currentPage - 1) * itemsPerPage;
@@ -65,7 +67,10 @@ function UserManagement() {
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
-        return new Date(dateString).toLocaleDateString('vi-VN');
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
     };
 
     return (
@@ -75,9 +80,6 @@ function UserManagement() {
                     <h2>User Management</h2>
                     <p>Manage user information, roles, and status</p>
                 </div>
-                <button className={styles.btnAdd}>
-                    <FaUserPlus /> Add User
-                </button>
             </div>
 
             <div className={styles.filterBar}>
@@ -98,7 +100,6 @@ function UserManagement() {
                         onChange={(e) => setRoleFilter(e.target.value)}
                     >
                         <option value="">All Roles</option>
-                        {/* <option value="Admin">Admin</option> */}
                         <option value="Expert">Expert</option>
                         <option value="User">User</option>
                     </select>
@@ -147,9 +148,15 @@ function UserManagement() {
                                     </td>
                                     <td>
                                         <div className={styles.rowActions}>
-                                            <button title="Edit"><FaUserEdit /></button>
-                                            <button title="Ban User" className={styles.btnBan}><FaUserSlash /></button>
-                                            <button title="More"><FaEllipsisV /></button>
+                                            {/* ĐỔI THÀNH NÚT VIEW DETAIL */}
+                                            <button 
+                                                title="View Details" 
+                                                onClick={() => setSelectedUser(user)}
+                                                className={styles.btnView}
+                                            >
+                                                <FaEye size={16} />
+                                            </button>
+                                            <button title="Ban User" className={styles.btnBan}><FaUserSlash size={16} /></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -161,7 +168,6 @@ function UserManagement() {
                 </table>
             </div>
             
-            {/* --- PHẦN THÊM MỚI: Giao diện phân trang --- */}
             <div className={styles.pagination}>
                 <span>
                     Showing <b>{(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredUsers.length)}</b> of <b>{filteredUsers.length}</b> users
@@ -192,6 +198,81 @@ function UserManagement() {
                     </button>
                 </div>
             </div>
+
+            {/* --- MODAL DIALOG CHI TIẾT USER --- */}
+            {selectedUser && (
+                <div className={styles.modalOverlay} onClick={() => setSelectedUser(null)}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        
+                        <div className={styles.modalHeader}>
+                            <h3>User Details</h3>
+                            <button className={styles.btnClose} onClick={() => setSelectedUser(null)}>
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <div className={styles.modalBody}>
+                            {/* Avatar & Basic Info */}
+                            <div className={styles.profileTop}>
+                                <div className={styles.largeAvatar}>
+                                    {selectedUser.avatar ? (
+                                        <img src={selectedUser.avatar} alt="avatar" />
+                                    ) : (
+                                        <span>{selectedUser.username?.charAt(0).toUpperCase()}</span>
+                                    )}
+                                    {selectedUser.isOnline === "Online" && <div className={styles.largeOnlineDot}></div>}
+                                </div>
+                                <h4>@{selectedUser.username}</h4>
+                                <p>{selectedUser.email}</p>
+                                
+                                <span className={`${styles.roleBadge} ${styles[selectedUser.role?.toLowerCase()]}`} style={{ marginTop: '8px' }}>
+                                    {selectedUser.role}
+                                </span>
+                            </div>
+
+                            {/* Stats */}
+                            <div className={styles.statsRow}>
+                                <div className={styles.statBox}>
+                                    <h5>{selectedUser.postCount}</h5>
+                                    <span>Posts</span>
+                                </div>
+                                <div className={styles.statDivider}></div>
+                                <div className={styles.statBox}>
+                                    <h5>{selectedUser.followerCount}</h5>
+                                    <span>Followers</span>
+                                </div>
+                                <div className={styles.statDivider}></div>
+                                <div className={styles.statBox}>
+                                    <h5>{selectedUser.followingCount}</h5>
+                                    <span>Following</span>
+                                </div>
+                            </div>
+
+                            {/* Info Grid */}
+                            <div className={styles.infoList}>
+                                <div className={styles.infoRow}>
+                                    <span className={styles.infoLabel}>Status:</span>
+                                    <span className={`${styles.statusBadge} ${getStatusStyle(selectedUser.status)}`}>
+                                        {selectedUser.status}
+                                    </span>
+                                </div>
+                                <div className={styles.infoRow}>
+                                    <span className={styles.infoLabel}>Joined Date:</span>
+                                    <span className={styles.infoValue}>{formatDate(selectedUser.createdAt)}</span>
+                                </div>
+                                <div className={styles.infoRow}>
+                                    <span className={styles.infoLabel}>Description:</span>
+                                </div>
+                                <div className={styles.descBox}>
+                                    {selectedUser.description ? selectedUser.description : <em style={{color: '#94a3b8'}}>No description provided.</em>}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

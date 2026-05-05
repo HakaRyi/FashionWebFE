@@ -6,4 +6,7 @@ export const expertApi = {
   getAdminNotifications: (params) => axiosClient.get('/Admin/admin-notifications', { params }),
   getNewUserRecently: () => axiosClient.get('/Admin/new-created-recently'),
   getTransactionList:  (params) => axiosClient.get('/Admin/get-transaction-list', {params}),
+  getEventDetail: (id) => {
+    return axiosClient.get(`/events/${id}`); 
+  },
 };

@@ -1,0 +1,86 @@
+.container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #f8fafc; /* Nền base sáng nhẹ */
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Các khối màu (blobs) */
+.blob {
+  position: absolute;
+  filter: blur(80px); /* Làm mờ khối màu tạo hiệu ứng gradient */
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: float 12s infinite ease-in-out alternate;
+}
+
+.blob1 {
+  top: -10%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background-color: #e0e7ff; /* Màu xanh lơ dịu */
+  animation-delay: 0s;
+}
+
+.blob2 {
+  top: 40%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background-color: #fce7f3; /* Màu hồng nhạt */
+  animation-delay: -3s;
+}
+
+.blob3 {
+  bottom: -20%;
+  left: 20%;
+  width: 600px;
+  height: 600px;
+  background-color: #dcfce7; /* Màu xanh mint nhạt */
+  animation-delay: -6s;
+}
+
+/* Lớp phủ làm mịn các khối màu */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(100px);
+}
+
+.content {
+  position: relative;
+  z-index: 1; /* Nổi lên trên nền */
+  height: 100%;
+}
+
+/* Animation trôi nổi vô cực */
+@keyframes float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}

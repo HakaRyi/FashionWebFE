@@ -70,9 +70,9 @@ function PostManagement() {
                     <h2>Post Management</h2>
                     <p>Prioritize processing posts that are pending approval</p>
                 </div>
-                <button className={styles.btnAdd}>
+                {/* <button className={styles.btnAdd}>
                     <FaPlus /> Write New Post
-                </button>
+                </button> */}
             </div>
 
             <div className={styles.toolbar}>

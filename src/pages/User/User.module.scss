@@ -212,3 +212,211 @@
     &.expert { background: #fcdcf7; color: #e70ba1; }
     &.user { background: #f1f5f9; color: #64748b; }
 }
+/* --- CÁC STYLE CŨ CỦA BẠN GIỮ NGUYÊN TỚI ĐÂY --- */
+
+/* Thêm style cho nút View Detail */
+.btnView {
+    &:hover { background: #e0e7ff !important; color: #4f46e5 !important; }
+}
+
+/* ========================================= */
+/* MODAL DIALOG USER DETAILS                 */
+/* ========================================= */
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.4); /* Màu tối mờ */
+    backdrop-filter: blur(4px); /* Làm mờ background phía sau */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modalContent {
+    background: white;
+    border-radius: 24px;
+    width: 420px;
+    max-width: 90%;
+    padding: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.3s ease-out;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #1e293b;
+        font-weight: 700;
+    }
+}
+
+.btnClose {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    transition: 0.2s;
+
+    &:hover {
+        background: #f1f5f9;
+        color: #ef4444;
+    }
+}
+
+.modalBody {
+    display: flex;
+    flex-direction: column;
+}
+
+.profileTop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 24px;
+
+    h4 {
+        margin: 12px 0 4px;
+        font-size: 1.2rem;
+        color: #0f172a;
+    }
+
+    p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+}
+
+.largeAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e0e7ff;
+    color: #4f46e5;
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+}
+
+.largeOnlineDot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: #10b981;
+    border: 3px solid white;
+    border-radius: 50%;
+}
+
+.statsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.statBox {
+    flex: 1;
+    text-align: center;
+
+    h5 {
+        margin: 0 0 4px 0;
+        font-size: 1.1rem;
+        color: #1e293b;
+    }
+
+    span {
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+}
+
+.statDivider {
+    width: 1px;
+    height: 30px;
+    background-color: #e2e8f0;
+}
+
+.infoList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.infoLabel {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.infoValue {
+    color: #334155;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.descBox {
+    background: #f1f5f9;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.95);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+    }
+}
