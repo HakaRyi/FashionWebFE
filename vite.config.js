@@ -2,12 +2,20 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        react(),
+        visualizer({
+            open: false,
+            filename: 'bundle-report.html',
+            gzipSize: true,
+        }),
+    ],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
@@ -19,6 +27,37 @@ export default defineConfig({
                 target: 'http://localhost:5196',
                 changeOrigin: true,
                 secure: false,
+            },
+        },
+    },
+    build: {
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                // TỰ ĐỘNG CHIA NHỎ CODE (Manual Chunks)
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('@microsoft/signalr')) {
+                            return 'signalr';
+                        }
+                        if (id.includes('recharts') || id.includes('d3')) {
+                            return 'charts';
+                        }
+
+                        if (id.includes('framer-motion') || id.includes('motion')) {
+                            return 'animations';
+                        }
+
+                        if (id.includes('swiper')) {
+                            return 'swiper';
+                        }
+
+                        if (id.includes('xlsx')) {
+                            return 'excel-utils';
+                        }
+                        return 'vendor';
+                    }
+                },
             },
         },
     },
