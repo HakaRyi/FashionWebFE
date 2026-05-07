@@ -15,8 +15,7 @@ $radius: 12px;
 $shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.05),
     0 2px 4px -1px rgba(0, 0, 0, 0.03);
-$bg-card: #ffffff;
-$accent-color: #5fafde; // Soft Mint/Emerald
+$accent-color: #5fafde;
 $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
 @mixin flex-center {
@@ -25,7 +24,6 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     justify-content: center;
 }
 
-// --- Container ---
 .adminContainer {
     padding: 24px;
     background-color: $bg-body;
@@ -34,7 +32,6 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     color: $text-main;
 }
 
-// --- 1. Stat Cards ---
 .statGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -69,6 +66,7 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             background: rgba($primary, 0.1);
             color: $primary;
         }
+
         &.orange {
             background: rgba($warning, 0.1);
             color: $warning;
@@ -82,18 +80,19 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             color: $text-muted;
             font-weight: 500;
         }
+
         h3 {
             margin: 4px 0 0 0;
             font-size: 1.25rem;
             font-weight: 700;
         }
+
         .statusText {
             color: $success;
         }
     }
 }
 
-// --- 2. Header ---
 .header {
     display: flex;
     justify-content: space-between;
@@ -107,12 +106,14 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 800;
             letter-spacing: -0.02em;
         }
+
         .liveIndicator {
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 0.85rem;
             color: $text-muted;
+
             &::before {
                 content: '';
                 width: 8px;
@@ -140,20 +141,20 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         &:hover {
             background: #f1f5f9;
         }
+
         &:disabled {
             opacity: 0.6;
+            cursor: not-allowed;
         }
     }
 }
 
-// --- 3. Controls & Tabs ---
 .controlHeader {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
     gap: 20px;
     flex-wrap: wrap;
-    padding-right: 60px;
 }
 
 .tabWrapper {
@@ -183,10 +184,62 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 }
 
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 660px;
+}
+
+.searchTypeBox {
+    position: relative;
+    height: 40px;
+    min-width: 170px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: 0 34px 0 12px;
+    color: $text-muted;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+
+    &:focus-within {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+
+    select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        outline: none;
+        background: transparent;
+        width: 100%;
+        height: 100%;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $text-main;
+        cursor: pointer;
+    }
+}
+
+.searchTypeChevron {
+    position: absolute;
+    right: 12px;
+    color: $text-muted;
+    pointer-events: none;
+}
+
 .searchBar {
     position: relative;
     flex: 1;
-    max-width: 400px;
+    min-width: 260px;
     box-sizing: border-box;
 
     svg {
@@ -212,16 +265,18 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 }
 
-// --- 4. Filters ---
 .filterBar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
 
     .filterGroup {
         display: flex;
         gap: 12px;
+        flex-wrap: wrap;
     }
 
     .filterItem {
@@ -245,10 +300,6 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 0 0 3px color.change($accent-color, $alpha: 0.1);
         }
 
-        .labelIcon {
-            color: #94a3b8; // Slate 400
-        }
-
         .selectWrapper {
             position: relative;
             display: flex;
@@ -256,37 +307,35 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
 
             select {
-                appearance: none; // QUAN TRỌNG: Xóa mũi tên mặc định của trình duyệt
+                appearance: none;
                 -webkit-appearance: none;
                 -moz-appearance: none;
-
                 border: none;
                 outline: none;
                 font-size: 0.875rem;
                 font-weight: 600;
                 background: transparent;
                 cursor: pointer;
-                padding-right: 24px; // Chừa chỗ cho icon mũi tên mới
+                padding-right: 24px;
                 color: inherit;
                 width: 100%;
                 height: 32px;
                 line-height: 32px;
 
-                // Loại bỏ background highlight xanh mặc định khi chọn trên một số trình duyệt
                 &:focus {
                     background: transparent;
                 }
             }
 
             .pickerTrigger {
-                all: unset; // Reset default button styles
+                all: unset;
                 cursor: pointer;
                 width: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 padding: 0.6rem 1rem;
-                background: #f8fafc; // Slate 50
+                background: #f8fafc;
                 border: 1px solid $border-color;
                 border-radius: $radius;
                 font-size: 0.9rem;
@@ -294,20 +343,10 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                 color: $text-main;
                 transition: all 0.2s ease;
                 gap: 12px;
-
-                // Giới hạn text nếu tên campaign quá dài
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
 
-                // Trạng thái khi chưa chọn (Placeholder)
-                &:empty,
-                &[textContent*='Select Campaign'] {
-                    color: $text-muted;
-                    font-weight: 400;
-                }
-
-                // Icon Chevron bên trong button
                 svg {
                     color: $text-muted;
                     transition: transform 0.2s ease;
@@ -334,7 +373,6 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
             .pickerTrigger:not([textContent*='Select Campaign']) {
                 background: white;
-                // border-left: 4px solid $primary;
                 padding-left: calc(1rem - 3px);
             }
         }
@@ -347,19 +385,39 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         font-size: 0.875rem;
         font-weight: 600;
         cursor: pointer;
+
         &:hover {
             text-decoration: underline;
         }
     }
 }
 
-// --- 5. Table Style ---
 .mainTableCard {
     background: $bg-card;
     border-radius: $radius;
     box-shadow: $shadow;
     border: 1px solid $border-color;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
 }
 
 .table {
@@ -367,12 +425,10 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     border-collapse: collapse;
     text-align: left;
     table-layout: fixed;
-    min-width: 600px;
 
     thead {
         background: #f8fafc;
         border-bottom: 1px solid $border-color;
-        padding: 16px;
 
         th {
             padding: 16px;
@@ -381,35 +437,18 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             letter-spacing: 0.05em;
             color: $text-muted;
             font-weight: 700;
-
-            &:nth-child(1) {
-                width: 180px;
-            } // Transaction Details
-            &:nth-child(2) {
-                width: 150px;
-            } // User Entity
-            &:nth-child(3) {
-                width: 150px;
-                min-width: 250px;
-            } // Description
-            &:nth-child(4) {
-                width: 160px;
-            } // Amount
-            &:nth-child(5) {
-                width: 140px;
-            } // Timestamp
-            &:nth-child(6) {
-                width: 80px;
-            } // Actions
+            white-space: nowrap;
         }
     }
 
     tbody tr {
         border-bottom: 1px solid $border-color;
         transition: background 0.2s;
+
         &:hover {
             background: #fdfdfd;
         }
+
         &:last-child {
             border-bottom: none;
         }
@@ -419,6 +458,72 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         padding: 16px;
         vertical-align: middle;
         overflow: hidden;
+    }
+}
+
+.transactionTable {
+    min-width: 860px;
+
+    th:nth-child(1) {
+        width: 170px;
+    }
+
+    th:nth-child(2) {
+        width: 120px;
+    }
+
+    th:nth-child(3) {
+        width: 230px;
+    }
+
+    th:nth-child(4) {
+        width: 150px;
+    }
+
+    th:nth-child(5) {
+        width: 120px;
+    }
+
+    th:nth-child(6) {
+        width: 70px;
+        text-align: center;
+    }
+}
+
+.escrowTable {
+    min-width: 1080px;
+
+    th:nth-child(1) {
+        width: 130px;
+    }
+
+    th:nth-child(2) {
+        width: 240px;
+    }
+
+    th:nth-child(3) {
+        width: 150px;
+    }
+
+    th:nth-child(4) {
+        width: 140px;
+    }
+
+    th:nth-child(5) {
+        width: 130px;
+    }
+
+    th:nth-child(6) {
+        width: 130px;
+    }
+
+    th:nth-child(7) {
+        width: 130px;
+    }
+
+    th:nth-child(8) {
+        width: 130px;
+        text-align: center;
     }
 }
 
@@ -435,7 +540,6 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
 }
 
-// --- Cell Components ---
 .idCell {
     display: flex;
     flex-direction: column;
@@ -452,30 +556,58 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
     .refId {
         font-size: 0.75rem;
         color: $text-muted;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
+
     .escrowId {
         color: $primary;
         font-weight: 700;
     }
+
     .timer {
         color: $warning;
         font-size: 0.7rem;
     }
 }
 
+.userEntityCell {
+    width: 120px;
+}
+
+.actionCell {
+    width: 70px;
+    text-align: center;
+}
+
+.resolutionCell {
+    text-align: center;
+}
+
 .userCell,
 .eventInfo {
     display: flex;
     flex-direction: column;
+    min-width: 0;
+
     strong {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
+
     span {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: $text-muted;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -489,7 +621,6 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         margin: 4px 0 0 0;
         font-size: 0.875rem;
         color: $text-muted;
-
         display: block;
         width: 100%;
         white-space: nowrap;
@@ -501,84 +632,166 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 .amountCell {
     display: flex;
     flex-direction: column;
-    text-align: right;
+    align-items: flex-start;
+    text-align: left;
+
     span {
         font-weight: 700;
         font-size: 1rem;
     }
-    .plus {
-        color: $success;
-    }
-    .minus {
-        color: $danger;
-    }
+
     small {
         color: $text-muted;
         font-size: 0.75rem;
+        white-space: nowrap;
     }
+}
+
+.plus {
+    color: $success;
+}
+
+.minus {
+    color: $danger;
+}
+
+.neutralAmount {
+    color: $text-main;
 }
 
 .timeCell {
     font-size: 0.875rem;
     color: $text-main;
+
     small {
         color: $text-muted;
     }
 }
 
-// --- Tags & Badges ---
+.receiver {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-main;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.amountText {
+    color: $text-main;
+    font-weight: 800;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.miniTag {
+    display: inline-block;
+    margin-top: 2px;
+}
+
 .tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
+    white-space: nowrap;
 }
+
 .revenueTag {
     background: rgba($success, 0.1);
     color: $success;
 }
+
 .refundTag {
     background: rgba($warning, 0.1);
     color: $warning;
 }
+
 .withdrawTag {
     background: rgba($danger, 0.1);
     color: $danger;
 }
+
 .depositTag {
     background: rgba($primary, 0.1);
     color: $primary;
 }
+
+.campaignTag {
+    background: rgba($warning, 0.12);
+    color: #b45309;
+}
+
+.eventFixTag {
+    background: rgba($primary, 0.12);
+    color: #1d4ed8;
+}
+
+.eventFeeTag {
+    background: rgba($danger, 0.1);
+    color: #be123c;
+}
+
+.eventRevenueTag {
+    background: rgba($success, 0.12);
+    color: #047857;
+}
+
+.prizeRewardTag {
+    background: rgba($warning, 0.14);
+    color: #92400e;
+}
+
+.eventRefundTag {
+    background: rgba($primary, 0.12);
+    color: #1d4ed8;
+}
+
 .lockedTag {
     background: #e2e8f0;
     color: #475569;
 }
 
+.defaultTag {
+    background: #f1f5f9;
+    color: #475569;
+}
+
 .statusBadge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
+    white-space: nowrap;
 }
+
 .statusHeld {
     background: #fff7ed;
     color: #c2410c;
 }
+
 .statusDone {
     background: #f0fdf4;
     color: #15803d;
 }
+
 .statusWait {
     background: #eff6ff;
     color: #1d4ed8;
 }
+
 .statusPending {
     background: #f1f5f9;
     color: #475569;
 }
 
-// --- Buttons ---
 .iconBtn {
     background: transparent;
     border: none;
@@ -587,10 +800,20 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 8px;
     border-radius: 50%;
     transition: all 0.2s;
+    @include flex-center;
+
     &:hover {
         background: #f1f5f9;
         color: $primary;
     }
+}
+
+.actionGrid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
 }
 
 .btnPrimarySmall {
@@ -602,9 +825,12 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 600;
     font-size: 0.8rem;
     cursor: pointer;
+    white-space: nowrap;
+
     &:hover {
         background: color.adjust($primary, $lightness: -10%);
     }
+
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -621,19 +847,38 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 600;
     font-size: 0.8rem;
     cursor: pointer;
+    white-space: nowrap;
+
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
         border-color: #cbd5e1;
         color: #94a3b8;
     }
+
     &:not(:disabled):hover {
         background: $warning;
         color: white;
     }
 }
 
-// --- Pagination ---
+.done {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: $success;
+    font-weight: 700;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.waiting {
+    color: $text-muted;
+    font-weight: 700;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
 .footerPagination {
     margin-top: 20px;
     display: flex;
@@ -644,6 +889,7 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     .recordInfo {
         font-size: 0.875rem;
         color: $text-muted;
+
         b {
             color: $text-main;
         }
@@ -668,10 +914,12 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                 border-color: $primary;
                 color: $primary;
             }
+
             &:disabled {
                 opacity: 0.4;
                 cursor: not-allowed;
             }
+
             &.activePage {
                 background: $primary;
                 color: white;
@@ -681,7 +929,6 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 }
 
-// --- Utilities ---
 .spinning {
     animation: spin 1s linear infinite;
 }
@@ -690,6 +937,7 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -699,13 +947,19 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 60px;
     text-align: center;
     color: $text-muted;
+
     svg {
         margin-bottom: 16px;
         opacity: 0.5;
     }
+
     h3 {
         margin: 0;
         color: $text-main;
+    }
+
+    p {
+        margin: 8px 0 0 0;
     }
 }
 
@@ -721,7 +975,76 @@ $transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     0% {
         background-position: 200% 0;
     }
+
     100% {
         background-position: -200% 0;
+    }
+}
+
+.feeText {
+    color: $danger;
+    font-weight: 800;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.payoutText {
+    color: $success;
+    font-weight: 900;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+    .transactionTable {
+        min-width: 900px;
+
+        th:nth-child(3) {
+            width: 280px;
+        }
+    }
+
+    .escrowTable {
+        min-width: 1050px;
+    }
+}
+
+@media (max-width: 768px) {
+    .adminContainer {
+        padding: 16px;
+    }
+
+    .header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .controlHeader {
+        flex-direction: column;
+    }
+
+    .searchWrapper {
+        width: 100%;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .searchTypeBox,
+    .searchBar {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .filterBar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .footerPagination {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
     }
 }

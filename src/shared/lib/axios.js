@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 export const BASE_URL = 'https://fashionwebbe.onrender.com';
 export const API_URL = `${BASE_URL}/api`;
 
