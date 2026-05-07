@@ -18,9 +18,20 @@ export default defineConfig({
   ],
 
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
+    alias: [
+      {
+        find: "@/features/dashboard",
+        replacement: path.resolve(__dirname, "./src/features/Dashboard"),
+      },
+      {
+        find: "@/feature/Dashboard",
+        replacement: path.resolve(__dirname, "./src/features/Dashboard"),
+      },
+      {
+        find: "@",
+        replacement: path.resolve(__dirname, "./src"),
+      },
+    ],
   },
 
   /**
@@ -28,11 +39,11 @@ export default defineConfig({
    * This is a bypass for files like:
    * src/features/Dashboard/index.js
    */
-    esbuild: {
+  esbuild: {
     loader: "jsx",
     include: /src[/\\].*\.js$/,
     exclude: [],
-    },
+  },
 
   optimizeDeps: {
     esbuildOptions: {
