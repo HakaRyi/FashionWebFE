@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, transformWithEsbuild } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -6,10 +6,69 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+function jsAsJsxPlugin() {
+  return {
+    name: "js-as-jsx",
+    enforce: "pre",
+
+    async transform(code, id) {
+      const normalizedId = id.replaceAll("\\", "/");
+
+      if (!normalizedId.includes("/src/")) {
+        return null;
+      }
+
+      if (!normalizedId.endsWith(".js")) {
+        return null;
+      }
+
+      return transformWithEsbuild(code, id, {
+        loader: "jsx",
+        jsx: "automatic",
+      });
+    },
+  };
+}
+
+function dashboardCasingBypassPlugin() {
+  return {
+    name: "dashboard-casing-bypass",
+    enforce: "pre",
+
+    resolveId(source) {
+      const normalizedSource = source.replaceAll("\\", "/");
+
+      if (
+        normalizedSource === "@/features/dashboard/hooks/useDashboardChart" ||
+        normalizedSource === "@/features/dashboard/hooks/useDashboardChart.js"
+      ) {
+        return path.resolve(
+          __dirname,
+          "./src/features/Dashboard/hooks/useDashboardChart.js"
+        );
+      }
+
+      if (
+        normalizedSource === "@/features/dashboard" ||
+        normalizedSource === "@/features/dashboard/index" ||
+        normalizedSource === "@/features/dashboard/index.js"
+      ) {
+        return path.resolve(__dirname, "./src/features/Dashboard/index.js");
+      }
+
+      return null;
+    },
+  };
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    dashboardCasingBypassPlugin(),
+    jsAsJsxPlugin(),
+
     react(),
+
     visualizer({
       open: false,
       filename: "bundle-report.html",
@@ -20,12 +79,12 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: "@/features/dashboard",
-        replacement: path.resolve(__dirname, "./src/features/Dashboard"),
+        find: /^@\/features\/dashboard(\/.*)?$/,
+        replacement: path.resolve(__dirname, "./src/features/Dashboard") + "$1",
       },
       {
-        find: "@/feature/Dashboard",
-        replacement: path.resolve(__dirname, "./src/features/Dashboard"),
+        find: /^@\/feature\/Dashboard(\/.*)?$/,
+        replacement: path.resolve(__dirname, "./src/features/Dashboard") + "$1",
       },
       {
         find: "@",
@@ -33,17 +92,6 @@ export default defineConfig({
       },
     ],
   },
-
-  /**
-   * Allow JSX syntax inside .js files under src.
-   * This is a bypass for files like:
-   * src/features/Dashboard/index.js
-   */
-    esbuild: {
-    loader: "jsx",
-    include: /src[/\\].*\.(js|jsx)$/,
-    exclude: [],
-    },
 
   optimizeDeps: {
     esbuildOptions: {
