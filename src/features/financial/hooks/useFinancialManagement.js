@@ -255,7 +255,7 @@ export const useFinancialManagement = () => {
                 .filter((t) => {
                     const tDate = new Date(t.createdAt);
 
-                    const isRefund = t.type?.toLowerCase().includes('refund');
+                    const isRefund = t.type?.toLowerCase().includes('refund') || t.type?.toLowerCase().includes('credit');
                     const isRealRevenue = t.amount > 0 && !isRefund;
 
                     return (
