@@ -39,11 +39,11 @@ export default defineConfig({
    * This is a bypass for files like:
    * src/features/Dashboard/index.js
    */
-  esbuild: {
+    esbuild: {
     loader: "jsx",
-    include: /src[/\\].*\.js$/,
+    include: /src[/\\].*\.(js|jsx)$/,
     exclude: [],
-  },
+    },
 
   optimizeDeps: {
     esbuildOptions: {
