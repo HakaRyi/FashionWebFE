@@ -3,7 +3,7 @@ $graphite-800: #1a1c1e;
 $graphite-600: #454749;
 $slate-400: #94a3b8;
 $slate-100: #f1f5f9;
-$rose-gold: #c2998a; // Màu nhã nhặn, sang trọng
+$rose-gold: #c2998a;
 $rose-gold-light: #f5ece9;
 $success: #10b981;
 $error: #f43f5e;
@@ -22,9 +22,20 @@ $radius: 16px;
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
     }
 }
 
@@ -119,7 +130,7 @@ $radius: 16px;
     }
 }
 
-// Theo dõi biến động số dư (Steppers style)
+// Theo dõi biến động số dư
 .balanceTrack {
     display: flex;
     align-items: center;
@@ -138,6 +149,7 @@ $radius: 16px;
         flex: 1;
         display: flex;
         flex-direction: column;
+        min-width: 0;
 
         small {
             font-size: 0.7rem;
@@ -155,8 +167,13 @@ $radius: 16px;
         .plus {
             color: $success;
         }
+
         .minus {
             color: $error;
+        }
+
+        .neutral {
+            color: $graphite-600;
         }
     }
 }
@@ -212,11 +229,21 @@ $radius: 16px;
     }
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
+@media (max-width: 640px) {
+    .modalContent {
+        max-width: 100%;
     }
-    to {
-        opacity: 1;
+
+    .balanceTrack {
+        align-items: flex-start;
+        flex-direction: column;
+
+        svg {
+            transform: rotate(90deg);
+        }
+
+        .step {
+            width: 100%;
+        }
     }
 }
