@@ -1,13 +1,16 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PATHS } from '@/app/routes/paths';
 import { financialApi } from '../api/financialApi';
 
 export const useFinancialManagement = () => {
     const navigate = useNavigate();
+    const isFirstMount = useRef(true);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const urlTab = searchParams.get('tab') || 'history';
 
     // --- UI State ---
-    const [activeTab, setActiveTab] = useState('history'); // history | events | reconciliation
+    const [activeTab, setActiveTab] = useState(urlTab); // history | events | reconciliation
     const [isLoading, setIsLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('all'); // all | income | expense
@@ -25,42 +28,88 @@ export const useFinancialManagement = () => {
         endDate: '',
     });
 
+    const fetchHistory = useCallback(async () => {
+        const res = await financialApi.getWalletHistory();
+        setTransactionHistory(res.data || []);
+    }, []);
+
+    const fetchEvents = useCallback(async () => {
+        const res = await financialApi.getMyCreatedEvents();
+        setManagedEvents(res.data || []);
+    }, []);
+
+    const fetchEscrow = useCallback(async () => {
+        const res = await financialApi.getEscrowManagement();
+        const list = res.data || [];
+        setReconciliationList(list.filter((item) => item.status === 'PendingFix'));
+    }, []);
+
+    const fetchAllData = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            await Promise.all([fetchHistory(), fetchEvents(), fetchEscrow()]);
+        } catch (error) {
+            console.error('Initial Fetch Error:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [fetchHistory, fetchEvents, fetchEscrow]);
+
     // --- 1. Fetching Logic ---
     const fetchData = useCallback(async () => {
         setIsLoading(true);
         try {
-            let response;
-            switch (activeTab) {
-                case 'history':
-                    response = await financialApi.getWalletHistory();
-                    setTransactionHistory(response.data || []);
-                    break;
-                case 'events':
-                    response = await financialApi.getMyCreatedEvents();
-                    setManagedEvents(response.data || []);
-                    break;
-                case 'reconciliation':
-                    response = await financialApi.getEscrowManagement();
-                    const list = response.data || [];
-                    setReconciliationList(list.filter((item) => item.status === 'PendingFix'));
-                    break;
-                default:
-                    break;
-            }
+            if (activeTab === 'history') await fetchHistory();
+            if (activeTab === 'events') await fetchEvents();
+            if (activeTab === 'reconciliation') await fetchEscrow();
         } catch (error) {
-            console.error('Financial Data Fetch Error:', error);
+            console.error('Tab Fetch Error:', error);
         } finally {
             setIsLoading(false);
         }
     }, [activeTab]);
 
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        const currentTabInUrl = searchParams.get('tab') || 'history';
+        if (currentTabInUrl !== activeTab) {
+            setActiveTab(currentTabInUrl);
+        }
+    }, [searchParams]);
 
-    // Reset trang khi thay đổi filter hoặc tab
+    const handleTabChange = useCallback(
+        (tab) => {
+            setActiveTab(tab);
+            setSearchParams({ tab });
+        },
+        [setSearchParams],
+    );
+
     useEffect(() => {
-        setCurrentPage(1);
+        fetchAllData();
+    }, [fetchAllData]);
+
+    useEffect(() => {
+        if (isFirstMount.current) {
+            isFirstMount.current = false;
+            return;
+        }
+        fetchData();
+    }, [activeTab]);
+
+    useEffect(() => {
+        if (searchTerm || filterType !== 'all') {
+            sessionStorage.removeItem('lastEventsPage');
+            sessionStorage.removeItem('lastClickedEventId');
+            setCurrentPage(1);
+            return;
+        }
+
+        const savedPage = sessionStorage.getItem('lastEventsPage');
+        if (activeTab === 'events' && savedPage) {
+            setCurrentPage(parseInt(savedPage, 10));
+        } else {
+            setCurrentPage(1);
+        }
     }, [activeTab, searchTerm, filterType]);
 
     useEffect(() => {
@@ -110,7 +159,32 @@ export const useFinancialManagement = () => {
     const assetDynamicsChartData = useMemo(() => {
         if (!transactionHistory || transactionHistory.length === 0) return [];
 
-        let filtered = [...transactionHistory];
+        const revenueTransactions = transactionHistory.filter(
+            (item) =>
+                item.amount > 0 && !item.type?.toLowerCase().includes('refund') && item.type !== 'Event_Revenue_Locked',
+        );
+
+        const today = new Date();
+        let startDateLabel;
+        let endDateLabel;
+
+        if (dateRange.startDate && dateRange.endDate) {
+            startDateLabel = new Date(dateRange.startDate).toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+            });
+            endDateLabel = new Date(dateRange.endDate).toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+            });
+        } else {
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            startDateLabel = thirtyDaysAgo.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+            endDateLabel = today.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+        }
+
+        let filtered = [...revenueTransactions];
 
         // Lọc theo ngày nếu có chọn range
         if (dateRange.startDate && dateRange.endDate) {
@@ -123,44 +197,66 @@ export const useFinancialManagement = () => {
             });
         }
 
+        if (filtered.length === 0) {
+            return [
+                { date: startDateLabel, value: 0 },
+                { date: endDateLabel, value: 0 },
+            ];
+        }
+
         // Sắp xếp cũ -> mới để tính tích lũy
         const sortedData = filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
         let cumulativeRevenue = 0;
-        const dailyDataMap = new Map();
+        const finalChartData = [];
+
+        finalChartData.push({ date: startDateLabel, value: 0 });
 
         sortedData.forEach((item) => {
-            const isRefund = item.type?.includes('Event_Refund') || item.type?.includes('Event_Cancel_Refund');
-
-            if (item.amount > 0 && !isRefund) {
-                cumulativeRevenue += item.amount;
-            }
+            cumulativeRevenue += item.amount;
 
             const dateKey = new Date(item.createdAt).toLocaleDateString('vi-VN', {
                 day: '2-digit',
                 month: '2-digit',
             });
 
-            // Lấy giá trị cuối cùng của ngày
-            dailyDataMap.set(dateKey, cumulativeRevenue);
+            const lastEntry = finalChartData[finalChartData.length - 1];
+
+            if (lastEntry && lastEntry.date === dateKey) {
+                // Nếu cùng ngày, cập nhật giá trị tích lũy mới nhất
+                lastEntry.value = cumulativeRevenue;
+            } else {
+                // Ngày mới, thêm điểm mới vào mảng
+                finalChartData.push({ date: dateKey, value: cumulativeRevenue });
+            }
         });
 
-        return Array.from(dailyDataMap, ([date, value]) => ({ date, value }));
+        const lastPointDate = finalChartData[finalChartData.length - 1].date;
+        if (lastPointDate !== endDateLabel) {
+            finalChartData.push({ date: endDateLabel, value: cumulativeRevenue });
+        }
+
+        return finalChartData;
     }, [transactionHistory, dateRange]);
 
     // --- 4. Tổng hợp thông tin tài chính ---
     const financialSummary = useMemo(() => {
         const now = new Date();
+
+        const latestTransaction = [...transactionHistory].sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        )[0];
+
         return {
-            availableBalance: transactionHistory.length > 0 ? transactionHistory[0].balanceAfter : 0,
+            availableBalance: latestTransaction ? latestTransaction.balanceAfter : 0,
             totalManagedEvents: managedEvents.length,
             pendingReconciliations: reconciliationList.length,
             monthlyRevenue: transactionHistory
                 .filter((t) => {
                     const tDate = new Date(t.createdAt);
 
-                    const isRealRevenue =
-                        t.amount > 0 && !t.type?.includes('Event_Refund') && !t.type?.includes('Event_Cancel_Refund');
+                    const isRefund = t.type?.toLowerCase().includes('refund');
+                    const isRealRevenue = t.amount > 0 && !isRefund;
 
                     return (
                         isRealRevenue &&
@@ -213,16 +309,37 @@ export const useFinancialManagement = () => {
     const handleApproveEscrow = async (escrowId) => {
         try {
             await financialApi.approveEscrow(escrowId);
-            fetchData();
+            fetchAllData();
         } catch (error) {
             console.error('Escrow Approval Error:', error);
         }
     };
 
-    const handleEventClick = (event) => {
-        const id = event.eventId || event.id;
-        navigate(PATHS.EXPERT_FINANCIAL_EVENT.replace(':eventId', id));
-    };
+    const handleEventClick = useCallback(
+        (event) => {
+            sessionStorage.setItem('lastEventsPage', currentPage.toString());
+
+            const targetPath = PATHS.EXPERT_FINANCIAL_EVENT.replace(':eventId', event.eventId);
+            navigate(targetPath);
+        },
+        [currentPage, navigate],
+    );
+
+    const filteredEvents = useMemo(() => {
+        return managedEvents.filter((event) => event.title?.toLowerCase().includes(searchTerm.toLowerCase()));
+    }, [managedEvents, searchTerm]);
+
+    // 2. Cắt dữ liệu Event theo trang hiện tại
+    const currentEventsData = useMemo(() => {
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        return filteredEvents.slice(startIndex, startIndex + rowsPerPage);
+    }, [filteredEvents, currentPage, rowsPerPage]);
+
+    // 3. Tính toán lại totalPages dựa trên tab đang active
+    const dynamicTotalPages = useMemo(() => {
+        const totalItems = activeTab === 'events' ? filteredEvents.length : filteredTransactions.length;
+        return Math.ceil(totalItems / rowsPerPage);
+    }, [activeTab, filteredEvents.length, filteredTransactions.length, rowsPerPage]);
 
     return {
         // States
@@ -231,7 +348,7 @@ export const useFinancialManagement = () => {
         selectedEvent,
         setSelectedEvent,
         activeTab,
-        setActiveTab,
+        setActiveTab: handleTabChange,
         isLoading,
         searchTerm,
         setSearchTerm,
@@ -246,6 +363,9 @@ export const useFinancialManagement = () => {
 
         // Data
         currentTableData,
+        currentEventsData,
+        totalPages: dynamicTotalPages,
+        totalItems: activeTab === 'events' ? filteredEvents.length : filteredTransactions.length,
         assetDynamicsChartData,
         financialSummary,
         managedEvents,

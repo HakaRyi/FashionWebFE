@@ -36,6 +36,7 @@ const FinancialManagement = () => {
 
         // Dữ liệu đã qua xử lý
         currentTableData,         // Dữ liệu hiển thị trên bảng (theo trang)
+        currentEventsData,
         assetDynamicsChartData,   // Dữ liệu biểu đồ AreaChart
         financialSummary,         // { availableBalance, totalManagedEvents, pendingReconciliations, monthlyRevenue }
         managedEvents,            // Danh sách sự kiện quản lý
@@ -59,12 +60,15 @@ const FinancialManagement = () => {
 
     const renderPagination = () => {
         if (totalPages <= 1) return null;
+
+        const totalCount = activeTab === 'events' ? managedEvents.length : filteredTransactions.length;
+
         return (
             <div className={styles.pagination}>
                 <div className={styles.pageInfo}>
                     Showing <strong>{(currentPage - 1) * rowsPerPage + 1}</strong> to{" "}
-                    <strong>{Math.min(currentPage * rowsPerPage, filteredTransactions.length)}</strong> of{" "}
-                    {filteredTransactions.length} results
+                    <strong>{Math.min(currentPage * rowsPerPage, totalCount)}</strong> of{" "}
+                    {totalCount} results
                 </div>
                 <div className={styles.pageControls}>
                     <button
@@ -156,7 +160,7 @@ const FinancialManagement = () => {
                         <div className={styles.cardHeader}>
                             <div className={styles.titleGroup}>
                                 <TrendingUp size={18} />
-                                <h3>Asset Dynamics</h3>
+                                <h3>Cumulative Revenue</h3>
                             </div>
                             <div className={styles.dateFilters}>
                                 <div className={styles.inputGroup}>
@@ -195,6 +199,7 @@ const FinancialManagement = () => {
                                         axisLine={false}
                                         tickLine={false}
                                         style={{ fontSize: '12px' }}
+                                        domain={[0, 'auto']}
                                     />
                                     <Tooltip
                                         contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', padding: '12px' }}
@@ -333,23 +338,30 @@ const FinancialManagement = () => {
                                     {/* Events Tab */}
                                     {activeTab === "events" && (
                                         <div className={styles.eventList}>
-                                            {managedEvents.length === 0 ? (
+                                            {currentEventsData.length === 0 ? (
                                                 <div className={styles.emptyState}>
                                                     <Briefcase size={40} />
                                                     <p>You haven't created any events yet</p>
                                                 </div>
-                                            ) : managedEvents.map(event => (
-                                                <div key={event.eventId} className={styles.eventRow} onClick={() => handleEventClick(event)}>
-                                                    <div className={styles.evMain}>
-                                                        <div className={styles.evIcon}><Calendar size={20} /></div>
-                                                        <div className={styles.evInfo}>
-                                                            <h4>{event.title}</h4>
-                                                            <span>Created: {new Date(event.createdAt).toLocaleDateString('vi-VN')}</span>
+                                            ) : (
+                                                <>{currentEventsData.map(event => (
+                                                    <div key={event.eventId}
+                                                        id={`event-row-${event.eventId}`}
+                                                        className={styles.eventRow}
+                                                        onClick={() => handleEventClick(event)}>
+                                                        <div className={styles.evMain}>
+                                                            <div className={styles.evIcon}><Calendar size={20} /></div>
+                                                            <div className={styles.evInfo}>
+                                                                <h4>{event.title}</h4>
+                                                                <span>Created: {new Date(event.createdAt).toLocaleDateString('vi-VN')}</span>
+                                                            </div>
                                                         </div>
+                                                        <button className={styles.viewDetailBtn}>Details <ChevronRight size={14} /></button>
                                                     </div>
-                                                    <button className={styles.viewDetailBtn}>Details <ChevronRight size={14} /></button>
-                                                </div>
-                                            ))}
+                                                ))}
+                                                    {renderPagination()}
+                                                </>
+                                            )}
                                         </div>
                                     )}
 
