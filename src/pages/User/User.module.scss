@@ -152,7 +152,17 @@
         padding: 6px;
         border-radius: 4px;
         &:hover { background: #f1f5f9; color: #4f46e5; }
-        &.btnBan:hover { color: #ef4444; }
+        &.btnBan:hover { 
+            color: #ef4444; 
+            background: #fef2f2;
+        }
+        &.btnUnban {
+            color: #10b981; // Màu xanh cho unban/shield
+            &:hover { 
+                color: #059669;
+                background: #f0fdf4;
+            }
+        }
     }
 }
 
