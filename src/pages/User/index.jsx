@@ -4,8 +4,9 @@ import { usertApi } from '../../pages/User/api/userApi';
 import { 
     FaSearch, FaFilter, 
     FaUserSlash, FaUserShield, FaChevronLeft, FaChevronRight,
-    FaEye, FaTimes // Thêm 2 icon này cho chức năng View Detail
+    FaEye, FaTimes 
 } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 function UserManagement() {
     const [users, setUsers] = useState([]);
@@ -13,32 +14,65 @@ function UserManagement() {
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState('');
     
-    // State cho phân trang
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    // --- PHẦN THÊM MỚI: State cho Modal View Detail ---
     const [selectedUser, setSelectedUser] = useState(null);
 
+    // Tách fetchUsers ra để có thể gọi lại nếu cần
+    const fetchUsers = async () => {
+        setLoading(true);
+        try {
+            const response = await usertApi.getAllUser();
+            setUsers(response.data || []);
+        } catch (error) {
+            console.error("Error retrieving user list:", error);
+            toast.error("Failed to load users");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchUsers = async () => {
-            setLoading(true);
-            try {
-                // Tạm giả lập dữ liệu test nếu chưa gọi được API
-                const response = await usertApi.getAllUser();
-                setUsers(response.data || []);
-            } catch (error) {
-                console.error("Error retrieving user list:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchUsers();
     }, []);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, roleFilter]);
+
+    // --- LOGIC BAN/UNBAN MỚI ---
+    const handleToggleBan = async (user) => {
+        const isBanning = user.status !== 'Banned';
+        const actionText = isBanning ? "BAN" : "UNBAN";
+
+        if (!window.confirm(`Are you sure you want to ${actionText} ${user.username}?`)) return;
+
+        try {
+            const apiCall = isBanning 
+                ? usertApi.banUser(user.id) 
+                : usertApi.unbanUser(user.id);
+            
+            const response = await apiCall;
+            const resultMsg = response.data.result;
+
+            if (resultMsg.includes("successfully")) {
+                toast.success(resultMsg);
+                // Cập nhật state cục bộ để UI thay đổi ngay lập tức mà ko cần reload
+                setUsers(prevUsers => 
+                    prevUsers.map(u => 
+                        u.id === user.id 
+                            ? { ...u, status: isBanning ? 'Banned' : 'Active' } 
+                            : u
+                    )
+                );
+            } else {
+                toast.warning(resultMsg);
+            }
+        } catch (error) {
+            toast.error("Error updating user status");
+        }
+    };
 
     const getStatusStyle = (status) => {
         switch (status) {
@@ -148,7 +182,6 @@ function UserManagement() {
                                     </td>
                                     <td>
                                         <div className={styles.rowActions}>
-                                            {/* ĐỔI THÀNH NÚT VIEW DETAIL */}
                                             <button 
                                                 title="View Details" 
                                                 onClick={() => setSelectedUser(user)}
@@ -156,7 +189,25 @@ function UserManagement() {
                                             >
                                                 <FaEye size={16} />
                                             </button>
-                                            <button title="Ban User" className={styles.btnBan}><FaUserSlash size={16} /></button>
+                                            
+                                            {/* Giao diện nút Ban/Unban linh hoạt theo Status */}
+                                            {user.status === 'Banned' ? (
+                                                <button 
+                                                    title="Unban User" 
+                                                    className={styles.btnUnban}
+                                                    onClick={() => handleToggleBan(user)}
+                                                >
+                                                    <FaUserShield size={16} />
+                                                </button>
+                                            ) : (
+                                                <button 
+                                                    title="Ban User" 
+                                                    className={styles.btnBan}
+                                                    onClick={() => handleToggleBan(user)}
+                                                >
+                                                    <FaUserSlash size={16} />
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>
@@ -199,20 +250,17 @@ function UserManagement() {
                 </div>
             </div>
 
-            {/* --- MODAL DIALOG CHI TIẾT USER --- */}
+            {/* Modal Detail giữ nguyên ... */}
             {selectedUser && (
                 <div className={styles.modalOverlay} onClick={() => setSelectedUser(null)}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        
                         <div className={styles.modalHeader}>
                             <h3>User Details</h3>
                             <button className={styles.btnClose} onClick={() => setSelectedUser(null)}>
                                 <FaTimes />
                             </button>
                         </div>
-
                         <div className={styles.modalBody}>
-                            {/* Avatar & Basic Info */}
                             <div className={styles.profileTop}>
                                 <div className={styles.largeAvatar}>
                                     {selectedUser.avatar ? (
@@ -224,13 +272,10 @@ function UserManagement() {
                                 </div>
                                 <h4>@{selectedUser.username}</h4>
                                 <p>{selectedUser.email}</p>
-                                
                                 <span className={`${styles.roleBadge} ${styles[selectedUser.role?.toLowerCase()]}`} style={{ marginTop: '8px' }}>
                                     {selectedUser.role}
                                 </span>
                             </div>
-
-                            {/* Stats */}
                             <div className={styles.statsRow}>
                                 <div className={styles.statBox}>
                                     <h5>{selectedUser.postCount}</h5>
@@ -247,8 +292,6 @@ function UserManagement() {
                                     <span>Following</span>
                                 </div>
                             </div>
-
-                            {/* Info Grid */}
                             <div className={styles.infoList}>
                                 <div className={styles.infoRow}>
                                     <span className={styles.infoLabel}>Status:</span>
@@ -268,11 +311,9 @@ function UserManagement() {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             )}
-
         </div>
     );
 }
