@@ -102,10 +102,12 @@ export default function LoginForm({ onSwitchMode }) {
           onError={() => {
             setErrors({ server: "Google Login Failed" });
           }}
-          useOneTap
+          // useOneTap
           theme="filled_black"
           shape="rect"
           width="100%"
+          locale="en"
+          text="signin_with"
         />
       </div>
 
