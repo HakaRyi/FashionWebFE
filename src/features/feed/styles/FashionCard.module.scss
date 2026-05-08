@@ -82,6 +82,11 @@ $transition-smooth: all 0.2s ease-in-out;
             .avatarWrapper {
                 position: relative;
                 display: inline-block;
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 0.85;
+                }
             }
 
             .verifiedBadge {
@@ -122,6 +127,12 @@ $transition-smooth: all 0.2s ease-in-out;
                     font-weight: 700;
                     font-size: 0.9rem;
                     color: $black-deep;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: #333465;
+                        text-decoration: underline;
+                    }
                 }
 
                 .userRole {

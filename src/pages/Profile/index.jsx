@@ -4,6 +4,7 @@ import {
     ProfileLayout,
     ProfileTabs,
     GalleryGrid,
+    EditProfileModal,
     useProfile
 } from '@/features/profile';
 import { useAuth } from '@/app/providers/AuthProvider';
@@ -16,11 +17,26 @@ const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState('lookbook');
 
     const accountId = paramId || currentUser?.id;
-    const { profile, posts, loading, error } = useProfile(accountId, currentUser?.id);
+    const {
+        profile,
+        posts,
+        loading,
+        error,
+        isFollowing,
+        toggleFollow,
+        refreshProfile
+    } = useProfile(accountId, currentUser?.id);
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const isOwnProfile = useMemo(() =>
         String(profile?.id) === String(currentUser?.id),
         [profile, currentUser]);
+
+    const handleUpdateSuccess = () => {
+        setIsEditModalOpen(false);
+        refreshProfile();
+    };
 
     if (loading) return <div className={styles.centered}>Loading Vogue Profile...</div>;
     if (error || !profile) return <div className={styles.centered}>User not found.</div>;
@@ -29,21 +45,30 @@ const ProfilePage = () => {
         <div className={styles.actionGroup}>
             {isOwnProfile ? (
                 <>
-                    {/* <button className={styles.primaryBtn}>
+                    <button className={styles.primaryBtn} onClick={() => setIsEditModalOpen(true)}>
                         <Edit2 size={14} /> Edit Profile
-                    </button> */}
+                    </button>
                     <button className={styles.iconBtn}>
                         <Settings size={18} />
                     </button>
                 </>
             ) : (
                 <>
-                    <button className={styles.followBtn}>
-                        <UserPlus size={14} /> Follow
+                    <button
+                        className={isFollowing ? styles.unfollowBtn : styles.followBtn}
+                        onClick={toggleFollow}
+                    >
+                        {isFollowing ? (
+                            <>Following</>
+                        ) : (
+                            <>
+                                <UserPlus size={14} /> Follow
+                            </>
+                        )}
                     </button>
-                    <button className={styles.secondaryBtn}>
+                    {/* <button className={styles.secondaryBtn}>
                         <MessageCircle size={14} /> Message
-                    </button>
+                    </button> */}
                 </>
             )}
         </div>
@@ -67,20 +92,32 @@ const ProfilePage = () => {
     };
 
     return (
-        <ProfileLayout
-            profile={profile}
-            actions={ActionButtons}
-        >
-            <ProfileTabs
-                isExpert={profile.isExpert}
-                activeTab={activeTab}
-                onChange={setActiveTab}
-            />
+        <>
+            <ProfileLayout
+                profile={profile}
+                actions={ActionButtons}
+            >
+                <ProfileTabs
+                    isExpert={profile.isExpert}
+                    activeTab={activeTab}
+                    onChange={setActiveTab}
+                />
 
-            <section className={styles.tabContent}>
-                {renderContent()}
-            </section>
-        </ProfileLayout>
+                <section className={styles.tabContent}>
+                    {renderContent()}
+                </section>
+            </ProfileLayout>
+            {
+                isOwnProfile && (
+                    <EditProfileModal
+                        profile={profile}
+                        isOpen={isEditModalOpen}
+                        onClose={() => setIsEditModalOpen(false)}
+                        onUpdateSuccess={handleUpdateSuccess}
+                    />
+                )
+            }
+        </>
     );
 };
 

@@ -39,6 +39,19 @@ const FashionCard = ({ post, lastPostRef, commentsMap, toggleComments, addCommen
         navigate(PATHS.POST_DETAIL.replace(':id', post.postId));
     };
 
+    const handleNavigateProfile = (e) => {
+        e.stopPropagation();
+
+        const targetId = post.accountId;
+
+        if (!targetId) {
+            console.warn("User ID is missing for this post");
+            return;
+        }
+
+        navigate(PATHS.EXPERT_PROFILE.replace(':id', targetId));
+    };
+
     return (
         <motion.article
             ref={lastPostRef}
@@ -51,7 +64,9 @@ const FashionCard = ({ post, lastPostRef, commentsMap, toggleComments, addCommen
             {/* Header: Thu gọn khoảng cách */}
             <div className={styles.cardHeader}>
                 <div className={styles.userInfo}>
-                    <div className={styles.avatarWrapper}>
+                    <div className={styles.avatarWrapper}
+                        onClick={handleNavigateProfile}
+                        role="button">
                         <img
                             className={styles.avatar}
                             src={post.avatarUrl || `https://ui-avatars.com/api/?name=${post.userName}&background=random`}
@@ -64,7 +79,8 @@ const FashionCard = ({ post, lastPostRef, commentsMap, toggleComments, addCommen
                         )}
                     </div>
                     <div className={styles.userMeta}>
-                        <span className={styles.userName}>{post.userName}</span>
+                        <span className={styles.userName} onClick={handleNavigateProfile}
+                            role="button">{post.userName}</span>
                         <span className={styles.userRole}>
                             {post.isExpertPost ? 'Expert' : (post.isEvent ? `Event: ${post.eventName}` : 'Contributor')} • {formatTime(post.createdAt)}
                         </span>

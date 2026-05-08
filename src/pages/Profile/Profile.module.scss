@@ -1,65 +1,85 @@
 .centered {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  color: #999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #999;
 }
 
 .actionGroup {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-
-  button {
     display: flex;
+    gap: 10px;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-radius: 4px;
-  }
+
+    button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-radius: 4px;
+    }
 }
 
 // Nút đen tuyền - Style Vogue
 .primaryBtn {
-  background: #000;
-  color: #fff;
-  border: 1px solid #000;
-  &:hover { background: #333; }
+    background: #000;
+    color: #fff;
+    border: 1px solid #000;
+    &:hover {
+        background: #333;
+    }
 }
 
 // Nút viền mảnh
-.secondaryBtn, .followBtn {
-  background: #fff;
-  color: #000;
-  border: 1px solid #dbdbdb;
-  &:hover { background: #fafafa; border-color: #a8a8a8; }
+.secondaryBtn,
+.followBtn {
+    background: #fff;
+    color: #000;
+    border: 1px solid #dbdbdb;
+    &:hover {
+        background: #fafafa;
+        border-color: #a8a8a8;
+    }
+}
+
+.unfollowBtn {
+    background-color: #efefef;
+    color: #000;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    border: 1px solid #dbdbdb;
+    &:hover {
+        background-color: #dbdbdb;
+    }
 }
 
 .iconBtn {
-  background: none;
-  border: none;
-  padding: 5px !important;
-  color: #262626;
-  &:hover { color: #8e8e8e; }
+    background: none;
+    border: none;
+    padding: 5px !important;
+    color: #262626;
+    &:hover {
+        color: #8e8e8e;
+    }
 }
 
 .tabContent {
-  margin-top: 2px; // Sát mép line của Tabs
-  min-height: 300px;
+    margin-top: 2px; // Sát mép line của Tabs
+    min-height: 300px;
 }
 
 .placeholder {
-  padding: 80px 0;
-  text-align: center;
-  color: #8e8e8e;
-  font-family: serif;
-  font-style: italic;
+    padding: 80px 0;
+    text-align: center;
+    color: #8e8e8e;
+    font-family: serif;
+    font-style: italic;
 }
