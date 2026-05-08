@@ -557,6 +557,29 @@ $radius-20: 20px;
     }
 }
 
+.infoAlert {
+    background: #eff6ff; /* Xanh dương rất nhạt */
+    border: 1px solid #93c5fd; /* Viền xanh dương */
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    gap: 1rem;
+    color: #1e40af; /* Chữ xanh dương đậm */
+    align-items: center;
+    margin-bottom: 2rem; /* Khoảng cách với các phần bên dưới */
+
+    strong {
+        display: block;
+        font-weight: 800;
+        color: #1d4ed8; /* Nhấn mạnh tiêu đề */
+    }
+
+    p {
+        font-size: 0.875rem;
+        margin: 0; /* Loại bỏ margin thừa của thẻ p */
+    }
+}
+
 // --- STATS GRID & CARDS ---
 .statsGrid {
     display: grid;

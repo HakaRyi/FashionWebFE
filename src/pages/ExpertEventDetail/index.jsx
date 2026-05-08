@@ -226,6 +226,19 @@ const EventDetailPage = () => {
                     </div>
                 )}
 
+                {event.isCreator &&
+                    event.status === "Inviting" &&
+                    !event.canManualStart &&
+                    event.reasonManualStart && (
+                        <div className={styles.infoAlert}>
+                            <Info size={24} />
+                            <div>
+                                <strong>Manual Start Restriction</strong>
+                                <p>{event.reasonManualStart}</p>
+                            </div>
+                        </div>
+                    )}
+
                 {/* ROADMAP & SCORING GRID */}
                 <div className={styles.statsGrid}>
                     {/* ROADMAP */}
