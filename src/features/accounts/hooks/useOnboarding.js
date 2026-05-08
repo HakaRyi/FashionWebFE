@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/providers/AuthProvider';
-import OnboardingApi from '../api/OnboardingApi';
+import OnboardingApi from '../api/onboardingApi';
 import namer from 'color-namer';
 import { PATHS } from '@/app/routes/paths';
 
