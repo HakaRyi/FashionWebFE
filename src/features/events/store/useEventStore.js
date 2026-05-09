@@ -31,7 +31,7 @@ export const useEventStore = create((set, get) => ({
         if (isLoading && !forceRefresh) return;
 
         const now = Date.now();
-        if (!forceRefresh && events.length > 0 && lastFetched && now - lastFetched < 300000) {
+        if (!forceRefresh && events.length > 0 && lastFetched && now - lastFetched < 60000) {
             return;
         }
 
