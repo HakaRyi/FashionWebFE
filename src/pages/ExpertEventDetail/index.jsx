@@ -77,11 +77,14 @@ const EventDetailPage = () => {
                 displayAvatar: ex.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(ex.fullName)}&background=random&color=fff`
             }));
 
+        const creatorInExperts = event.experts?.find(ex => ex.expertId === event.creatorId);
+        const actualCreatorAvatar = creatorInExperts?.avatarUrl;
+
         const creatorCard = {
             isCreator: true,
             id: 'creator',
             name: event.creatorName,
-            displayAvatar: event.creatorAvatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(event.creatorName)}&background=random&color=fff`,
+            displayAvatar: actualCreatorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(event.creatorName)}&background=random&color=fff`,
             role: "Lead Organizer",
             expertise: "Organizer"
         };
